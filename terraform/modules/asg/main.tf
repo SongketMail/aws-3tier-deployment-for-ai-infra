@@ -1,10 +1,18 @@
-# Fetch latest Amazon Linux 2023 AMI if ami_id is not specified
-data "aws_ssm_parameter" "al2023" {
+# Fetch latest Amazon Linux 2023 AMI for x86_64
+data "aws_ssm_parameter" "al2023_x86_64" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
 }
 
+# Fetch latest Amazon Linux 2023 AMI for arm64
+data "aws_ssm_parameter" "al2023_arm64" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64"
+}
+
 locals {
-  selected_ami_id = var.ami_id != "" ? var.ami_id : data.aws_ssm_parameter.al2023.value
+  # If instance type starts with t4g, m6g, c6g, r6g, etc. (typically Graviton), select arm64.
+  is_arm64        = length(regexall("^[a-z]+[0-9]g\\.", var.instance_type)) > 0
+  default_ami_id  = local.is_arm64 ? data.aws_ssm_parameter.al2023_arm64.value : data.aws_ssm_parameter.al2023_x86_64.value
+  selected_ami_id = var.ami_id != "" ? var.ami_id : local.default_ami_id
 }
 
 # IAM Role for EC2 Instance to integrate with systems or read configurations if needed
@@ -53,14 +61,10 @@ resource "aws_launch_template" "main" {
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
-              # Update packages and install Apache HTTP Server
               dnf update -y
-              dnf install -y httpd
-              systemctl start httpd
-              systemctl enable httpd
-
-              # Create a generic healthy application index
-              echo "<h1>Hello from AWS 3-tier Application Tier</h1><p>Environment: ${var.environment}</p><p>Instance ID: \$(curl -s http://169.254.169.254/latest/meta-data/instance-id)</p>" > /var/www/html/index.html
+              dnf install -y nginx
+              systemctl enable --now nginx
+              echo "<h1>3-Tier Architecture Active | AWS Malaysia (ap-southeast-5) | Host: \$(hostname -f) | Env: ${var.environment}</h1>" > /usr/share/nginx/html/index.html
               EOF
   )
 
