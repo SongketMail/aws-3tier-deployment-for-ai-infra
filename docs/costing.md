@@ -10,7 +10,7 @@ We provide two distinct monthly cost estimates for the 3-Tier AWS Architecture i
 1. **Baseline Cost-Optimized Plan:** Ideal for initial development, testing, staging environments, and low-traffic applications.
 2. **High-Performance Developer-Aligned Plan:** Spec'd specifically to fulfill the resource requirements of the **Developer's First Design (Nginx, Backend, RAGFlow, LangFuse)** with production-grade performance.
 
-Both plans have been updated and calibrated against real-world, production-ready AWS billings from similar projects to incorporate critical infrastructure support services (such as **Amazon ElastiCache Valkey**, **Amazon EFS**, **AWS Secrets Manager**, **AWS Backup**, **Amazon CloudWatch**, standard **Public IPv4 address charges**, and **Amazon Route 53 custom domain management**).
+Both plans have been updated and calibrated against real-world, production-ready AWS billings from similar projects to incorporate critical infrastructure support services (such as **Amazon ElastiCache Valkey**, **Amazon EFS**, **AWS Secrets Manager**, **AWS Backup**, **Amazon CloudWatch**, standard **Public IPv4 address charges**, **Amazon Route 53 custom domain management**, and our **secure, hardened SSH Jumphost (Bastion)** whitelisted for the Cyberjaya developer office).
 
 ---
 
@@ -33,11 +33,12 @@ This configuration targets baseline usage with smaller resource profiles (`t4g.m
 | **Monitoring Tier** | **Amazon CloudWatch**<br><br>• 3 alarms, custom CPU/Memory dashboard | Nominal rates | $1.50 |
 | **Disaster Recovery** | **AWS Backup**<br><br>• Automated Multi-AZ RDS snapshots & EBS backups (~100 GB) | $0.05 / GB-month | $5.00 |
 | **Standalone EC2 Tier** | **Standalone EC2 Instances (AMI Staging & Baking)**<br><br>• 3x Standalone EC2 Instances (one per ASG group: Frontend, Backend, AI Tier) connected directly to RDS, S3, or EFS to ensure 1:1 environment parity.<br><br>• Sized as 3x `t4g.micro` (1 vCPU, 1GB RAM each)<br><br>• 3x 15GB gp3 EBS Root Volumes (45GB total) | $0.0084 / hr / inst<br><br>$0.08 / GB-month | $18.39<br><br>$3.60 |
+| **SSH Jumphost Tier** | **Secure SSH Jumphost (Bastion)**<br><br>• 1x `t4g.micro` EC2 Instance in the Public Subnet (accessible only from Cyberjaya office whitelisted IP)<br><br>• 15GB gp3 EBS Root Volume<br><br>• 1 Static Elastic IP allocation | $0.0084 / hr<br><br>$0.08 / GB-mo<br><br>$0.005 / hr | $6.13<br><br>$1.20<br><br>$3.65 |
 | **Data Transfer** | Outbound Internet Data Transfer<br><br>• ~100 GB Outbound (First 100GB Free/mo) | Free Tier | $0.00 |
 | **Route 53 Domain** | Amazon Route 53 Custom Domain Routing<br><br>• 1 Public Hosted Zone<br><br>• Estimated ~2 Million standard queries | $0.50 / zone / mo<br><br>$0.40 / M-req | $0.50<br><br>$0.80 |
-| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$415.77 USD** / month |
+| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$426.75 USD** / month |
 
-* **Local Currency Equivalent (MYR):** **~RM 1,871 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
+* **Local Currency Equivalent (MYR):** **~RM 1,920 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
 
 ---
 
@@ -60,11 +61,12 @@ This configuration scales up computing instances to precisely match the develope
 | **Monitoring Tier** | **Amazon CloudWatch**<br><br>• Logs ingestion (~5 GB), dashboards, custom metric triggers | Nominal rates | $5.00 |
 | **Disaster Recovery** | **AWS Backup**<br><br>• Centralized backup for RDS, EFS, and ASG EBS volumes (~150 GB) | $0.05 / GB-month | $7.50 |
 | **Standalone EC2 Tier** | **Standalone EC2 Instances (AMI Staging & Baking)**<br><br>• 3x Standalone EC2 Instances (one per ASG group: Frontend, Backend, AI Tier) connected directly to RDS, S3, or EFS to ensure 1:1 environment parity.<br><br>• 1x Frontend: `t4g.medium` (2 vCPU, 4GB RAM) + 30GB gp3<br><br>• 1x Backend: `t4g.xlarge` (4 vCPU, 16GB RAM) + 30GB gp3<br><br>• 1x AI Tier: `t4g.xlarge` (4 vCPU, 16GB RAM) + 50GB gp3 (110GB gp3 total) | Frontend: $0.0336 / hr<br>Backend/AI: $0.1344 / hr<br>Storage: $0.08 / GB-mo | $24.53<br>$196.22<br>$8.80 |
+| **SSH Jumphost Tier** | **Secure SSH Jumphost (Bastion)**<br><br>• 1x `t4g.micro` EC2 Instance in the Public Subnet (accessible only from Cyberjaya office whitelisted IP)<br><br>• 15GB gp3 EBS Root Volume<br><br>• 1 Static Elastic IP allocation | $0.0084 / hr<br><br>$0.08 / GB-mo<br><br>$0.005 / hr | $6.13<br><br>$1.20<br><br>$3.65 |
 | **Data Transfer** | Outbound Internet Data Transfer<br><br>• ~100 GB Outbound (First 100GB Free/mo) | Free Tier | $0.00 |
 | **Route 53 Domain** | Amazon Route 53 Custom Domain Routing<br><br>• 1 Public Hosted Zone<br><br>• Estimated ~2 Million standard queries | $0.50 / zone / mo<br><br>$0.40 / M-req | $0.50<br><br>$0.80 |
-| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$1,053.48 USD** / month |
+| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$1,064.46 USD** / month |
 
-* **Local Currency Equivalent (MYR):** **~RM 4,741 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
+* **Local Currency Equivalent (MYR):** **~RM 4,790 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
 
 ---
 
@@ -119,8 +121,8 @@ A comparison with real-world billings from a highly similar production deploymen
 │                                 │                             │ at a realistic $7.30 - $14.50 combined to prevent bill │
 │                                 │                             │ surprises in production.                               │
 ├─────────────────────────────────┼─────────────────────────────┼────────────────────────────────────────────────────────┤
-│ TOTAL MONTHLY COST              │ $659.10                     │ Calibration proves our updated models ($415.77 and      │
-│                                 │                             │ $1,053.48) are exceptionally robust and production-true.│
+│ TOTAL MONTHLY COST              │ $659.10                     │ Calibration proves our updated models ($426.75 and      │
+│                                 │                             │ $1,064.46) are exceptionally robust and production-true.│
 └─────────────────────────────────┴─────────────────────────────┴────────────────────────────────────────────────────────┘
 ```
 
@@ -144,11 +146,13 @@ A comparison with real-world billings from a highly similar production deploymen
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
 │ Standalone EC2 (AMI Baking)     │ 3x `t4g.micro`          │ 1x `t4g.med`, 2x `xlrg` │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
+│ SSH Jumphost (Bastion)          │ 1x `t4g.micro` (Ubuntu) │ 1x `t4g.micro` (Ubuntu) │
+├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
 │ Route 53 Domain Setup           │ 1 Hosted Zone + ~2M req │ 1 Hosted Zone + ~2M req │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
-│ Monthly Estimate (USD)          │ ~$415.77 USD            │ ~$1,053.48 USD          │
+│ Monthly Estimate (USD)          │ ~$426.75 USD            │ ~$1,064.46 USD          │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
-│ Monthly Estimate (MYR)          │ ~RM 1,871 MYR           │ ~RM 4,741 MYR           │
+│ Monthly Estimate (MYR)          │ ~RM 1,920 MYR           │ ~RM 4,790 MYR           │
 └─────────────────────────────────┴─────────────────────────┴─────────────────────────┘
 ```
 

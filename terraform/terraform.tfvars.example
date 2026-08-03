@@ -52,3 +52,10 @@ valkey_node_type            = "cache.t4g.micro"
 valkey_num_cache_clusters   = 1 # 1 node for non-clustered, set >1 for high-availability multi-AZ
 valkey_engine_version       = "7.2"
 valkey_parameter_group_name = "default.valkey7"
+
+# Secure SSH Jumphost (Bastion) configurations
+enable_jumphost           = true
+jumphost_instance_type    = "t4g.micro" # Ultra-low cost Graviton instance
+jumphost_os               = "ubuntu"    # Recommended for ASIMP OS hardening compliance
+jumphost_allowed_ssh_cidr = "103.188.0.0/16" # Whitelist Cyberjaya office IP CIDR here (e.g., "103.188.14.22/32")
+jumphost_ami_id           = ""          # Optional manual override for AMI

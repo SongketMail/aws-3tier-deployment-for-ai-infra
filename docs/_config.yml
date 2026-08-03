@@ -19,3 +19,5 @@ navbar:
     url: "/costing.html"
   - title: "Route 53"
     url: "/route53.html"
+  - title: "Secure Access"
+    url: "/jumphost.html"
