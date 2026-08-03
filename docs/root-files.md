@@ -34,9 +34,10 @@ provider "aws" {
 ```
 
 ### 2. `main.tf`
-Serves as the central manifest, calling modules in sequential dependency orders (Networking -> Security Groups -> ALB -> WAF -> ASG -> RDS) and passing cross-module attributes.
+Serves as the central manifest, calling modules in sequential dependency orders (Networking -> Security Groups -> ALB -> WAF -> ASG -> RDS -> Route 53) and passing cross-module attributes.
 - **Example:** VPC subnet IDs are fed directly into ALB subnets, ASG subnets, and RDS subnets.
 - **Example:** Security Group IDs are automatically mapped to protect dependencies.
+- **Example:** Route 53 setup uses the ALB DNS name and Canonical Zone ID to route custom domain aliases.
 
 ### 3. `variables.tf`
 Declares environmental configurations, default configurations, and input parameter structures.
@@ -46,9 +47,12 @@ Declares environmental configurations, default configurations, and input paramet
   - `db_engine_version`: `"16"`
   - `db_instance_class`: `"db.t4g.micro"` (Graviton architecture)
   - `instance_type`: `"t4g.micro"` (Graviton compute)
+  - `enable_route53`: `true` (whether to provision a Route 53 hosted zone and record)
+  - `domain_name`: `"linuxmalaysia.com"` (the target root domain name)
+  - `subdomain`: `"app"` (the frontend application subdomain)
 
 ### 4. `outputs.tf`
-Exposes crucial deployment endpoints, such as the public ALB endpoint, the RDS endpoint, and the WAF Web ACL ARN for application clients.
+Exposes crucial deployment endpoints, such as the public ALB endpoint, the RDS endpoint, the WAF Web ACL ARN, and the Route 53 Name Servers for domain delegation.
 
 ```hcl
 output "alb_dns_name" {
@@ -64,6 +68,16 @@ output "rds_endpoint" {
 output "waf_web_acl_arn" {
   value       = module.waf.waf_web_acl_arn
   description = "WAF v2 Web ACL ARN"
+}
+
+output "route53_name_servers" {
+  value       = try(module.route53[0].name_servers, [])
+  description = "Route 53 delegated Name Servers for registrar configuration"
+}
+
+output "route53_fqdn" {
+  value       = try(module.route53[0].fqdn, "")
+  description = "Route 53 FQDN pointing to the Application Load Balancer"
 }
 ```
 

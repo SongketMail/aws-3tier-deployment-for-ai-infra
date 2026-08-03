@@ -64,7 +64,10 @@ The updated network topology below outlines how our three ASG application groups
 ```
                                             [ INTERNET ] (Web Client)
                                                  │
-                                                 ▼ (HTTPS)
+                                                 ▼ (HTTPS: app.linuxmalaysia.com)
+                                           [ Route 53 ]        <-- DNS Management & Alias Routing
+                                                 │
+                                                 ▼
                                            [ AWS WAFv2 ]       <-- Layer 7 Security (Core Rules, Rate Limiting)
                                                  │
                                                  ▼ (HTTPS)
@@ -125,8 +128,9 @@ The updated network topology below outlines how our three ASG application groups
 
 ### 1. Presentation / Web Layer (Public Subnets)
 - **Subnets:** `10.0.1.0/24` (AZ `ap-southeast-5a`) and `10.0.2.0/24` (AZ `ap-southeast-5b`).
-- **Description:** Hosts public-facing services. This layer routes inbound internet traffic directly through the Internet Gateway (IGW).
+- **Description:** Hosts public-facing services and manages secure domain mappings. This layer routes inbound internet traffic directly through the Internet Gateway (IGW).
 - **Resources:**
+  - **Route 53 DNS Routing:** Manages custom domain delegations and points A Alias records to the ALB. Integrated with AWS Certificate Manager (ACM) for automatic domain verification.
   - **Application Load Balancer (ALB):** Terminates and routes incoming connections. Replaces the external Nginx reverse proxy direct exposure (from Server 01), dispersing HTTP/HTTPS traffic to private instances.
   - **NAT Gateway:** A highly-available NAT Gateway deployment in public subnets provides secure outbound internet access for package retrieval and DMS API callbacks.
   - **AWS WAFv2 Web ACL:** Directly attached to the ALB with 3 rules (OWASP Core, SQLi, and IP Rate Limiting) to block bad actors at the edge.

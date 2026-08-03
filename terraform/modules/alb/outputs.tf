@@ -8,6 +8,11 @@ output "alb_dns_name" {
   value       = aws_lb.main.dns_name
 }
 
+output "alb_zone_id" {
+  description = "The Zone ID of the ALB"
+  value       = aws_lb.main.zone_id
+}
+
 output "target_group_arn" {
   description = "The ARN of the Target Group"
   value       = aws_lb_target_group.asg_tg.arn

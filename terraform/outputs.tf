@@ -37,3 +37,18 @@ output "standalone_ec2_security_group_id" {
   description = "The security group ID assigned to the standalone instances"
   value       = try(module.standalone_ec2[0].security_group_id, "")
 }
+
+output "route53_hosted_zone_id" {
+  description = "The Route 53 Hosted Zone ID"
+  value       = try(module.route53[0].hosted_zone_id, "")
+}
+
+output "route53_name_servers" {
+  description = "The list of Name Servers assigned to the Route 53 Hosted Zone"
+  value       = try(module.route53[0].name_servers, [])
+}
+
+output "route53_fqdn" {
+  description = "The FQDN created in Route 53 pointing to the ALB"
+  value       = try(module.route53[0].fqdn, "")
+}
