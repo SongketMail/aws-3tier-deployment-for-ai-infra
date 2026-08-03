@@ -27,7 +27,8 @@ Explore different sections of our infrastructure documentation:
 
 ### Core Configuration
 1. **[System Architecture](architecture.html):** Deep dive into the physical network structure, routing tables, and AWS resource layout in the Malaysia region.
-2. **[Root Terraform Files](root-files.html):** Overview of the root configuration entries (`main.tf`, `variables.tf`, `outputs.tf`, `providers.tf`).
+2. **[Root OpenTofu/Terraform Files](root-files.html):** Overview of the root configuration entries (`main.tf`, `variables.tf`, `outputs.tf`, `providers.tf`).
+3. **[OpenTofu Migration Guide](opentofu-migration.html):** Detailed compatibility research and transition path for deploying using OpenTofu on AWS.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
