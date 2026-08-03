@@ -27,24 +27,39 @@ To make this suitable for enterprise AWS deployment **without changing the AWS r
 
 | Developer's Original Server | Original Spec | AWS Production-Ready Component | AWS Architectural Benefits |
 | :--- | :--- | :--- | :--- |
-| **Server 01: Frontend** | 2 vCPU, 4GB RAM, Ubuntu | **AWS WAFv2 + Application Load Balancer (ALB) + Private Nginx ASG** | **No Public IPs:** Traffic enters via a secure, highly-available ALB with AWS WAFv2 Layer-7 protection (OWASP Top 10 + Rate Limiting). The actual Nginx reverse-proxies run on EC2 instances inside private subnets, hidden from the internet. Hardened via **ASIMP**. |
-| **Server 02: Backend** | 4 vCPU, 16GB RAM, Ubuntu | **Multi-AZ Auto Scaling Group (ASG) EC2 Instances** | **High Availability & Auto-Scaling:** Spans multiple Availability Zones. Scales compute nodes dynamically on demand. Sized using high-performance Graviton (`t4g.xlarge` / `m6g.xlarge`) running secure **Ubuntu 26.04 LTS** (or enterprise Amazon Linux 2023). Hardened via **ASIMP**. Outbound traffic is securely routed via **NAT Gateways**. |
-| **Server 03: AI Tier** | 4 vCPU, 8GB RAM, Ubuntu | **Private ASG / Secure Compute Instances** | **Isolation:** Securely hosted in Private App Subnets, completely isolated from direct public internet access. Communicates securely with the backend via private, internal network paths. Sized as Graviton (`c6g.xlarge` / `t4g.xlarge`) and running hardened **Ubuntu 26.04 LTS**. |
+| **Server 01: Frontend** | 2 vCPU, 4GB RAM, Ubuntu | **AWS WAFv2 + ALB + Private Nginx ASG & Dedicated Standalone Instance** | **No Public IPs & Local Baking Parity:** Traffic enters via secure ALB/WAF. Private Nginx reverse-proxies run inside private subnets without public IPs. Paired with a dedicated Frontend Standalone instance connected to the same S3 bucket to test configurations and pre-bake custom Nginx `ami-frontend-*` images. Hardened via **ASIMP**. |
+| **Server 02: Backend** | 4 vCPU, 16GB RAM, Ubuntu | **Multi-AZ ASG & Dedicated Standalone Instance** | **High Availability & 1:1 Database Parity:** ASG spans multiple AZs and scales compute nodes dynamically. Paired with a dedicated Backend Standalone instance connected to the identical Multi-AZ RDS PostgreSQL database and S3 buckets to securely execute database migrations, test application logic, and pre-bake `ami-backend-*` images. Hardened via **ASIMP**. |
+| **Server 03: AI Tier** | 4 vCPU, 8GB RAM, Ubuntu | **Private ASG Compute & Dedicated AI Tier Standalone Instance** | **Isolated Compute & Instant Scaling via EFS Caching:** Securely hosted in Private App Subnets. Paired with a dedicated AI Standalone instance connected to the identical Amazon EFS filesystem, RDS, and S3. Developers warm up Hugging Face model weight caches directly onto EFS from the standalone instance so that auto-scaling ASG nodes can access them instantly. Pre-baked into `ami-ai-*` images. Hardened via **ASIMP**. |
 | **Server 04: Database** | 4 vCPU, 16GB RAM, Ubuntu | **AWS RDS PostgreSQL (Multi-AZ)** | **Managed Resiliency:** Replaced self-managed SQL database with a fully managed Multi-AZ PostgreSQL database (`db.m6g.xlarge`). Synchronous replication, automated snapshots/failover, zero direct public route, and ingress restricted solely to private compute instances. |
 
 ---
 
-## Standalone EC2 Instances for Dedicated Requirements
+## Standalone EC2 Instances for AMI Creation and Parity
 
-To supplement our high-availability Auto Scaling Groups, this project also provisions secure **Standalone EC2 Instances** (running **Ubuntu 26.04 LTS** and hardened via **ASIMP**).
+To ensure seamless, reliable updates and zero-downtime rolling upgrades across our Auto Scaling Groups (ASGs), each application group (Frontend, Backend, and AI Tier) is paired with a dedicated **Standalone EC2 Instance** (running **Ubuntu 26.04 LTS** and hardened via the **ASIMP** framework).
 
-These standalone instances are deployed directly inside the **VPC Private Application Subnets** and are designed specifically to support developer sandboxes, application build-ups, one-off testing nodes, or specific application tools (like MCP, DMS staging, and AI tool experimentation) that are not ready or suited for horizontal auto-scaling fleets. They retain absolute network isolation, are integrated with AWS Systems Manager (SSM) for passwordless, secure SSH, and inherit zero direct internet ingress.
+These standalone instances are deployed directly inside the secure **VPC Private Application Subnets** and are configured to connect to the exact same shared resources (AWS RDS PostgreSQL Database, Amazon S3 Buckets, and Amazon EFS shared storage) as their corresponding ASGs:
+
+1. **Frontend Standalone Instance:**
+   - Connected to **Amazon S3** to manage and verify static assets or remote template files.
+   - Used to test Nginx routing/configurations before baking the `ami-frontend-*` image.
+2. **Backend Standalone Instance:**
+   - Connected to the **Multi-AZ RDS PostgreSQL** database (using identical DB endpoints and credentials) and **Amazon S3** (using identical IAM Role permissions).
+   - Used to verify backend service scripts, run migrations, and test application logic before baking the `ami-backend-*` image.
+3. **AI Tier Standalone Instance:**
+   - Connected to **Amazon EFS** (via Private Mount Targets) to read/write persistent AI model caches, **Amazon S3** for training documents, and **RDS PostgreSQL** for metadata storage.
+   - Used to bootstrap RAGFlow + LangFuse dependencies, warm up Hugging Face/SentenceTransformers cache directories, and test container updates before baking the `ami-ai-*` image.
+
+### Architectural Advantages of Standalone-to-AMI Parity:
+- **1:1 Environment Alignment:** Because each standalone instance connects to the exact same database and shared storage backends, developers can fully run, test, and validate configurations in a real production-like environment without any risk of deployment divergence.
+- **Pre-Audited & Hardened Base:** Standalone instances serve as the staging template. Developers run the **ASIMP** auditing and hardening pipelines directly on these instances, verifying system integrity reports before triggering the Packer/AMI capture.
+- **Zero-Downtime Releases:** Once the standalone instance is verified and the AMI is baked, updating the ASG Launch Template and running an Instance Refresh executes a safe rolling update across the live cluster.
 
 ---
 
 ## Architectural Schematic
 
-The modified network topology below outlines how the developer's AI and web application servers sit and interact within our AWS secure environment, including the newly added standalone development instances:
+The updated network topology below outlines how our three ASG application groups and their matching standalone AMI-baking instances connect to the shared database, Amazon S3, and Amazon EFS within our AWS secure environment:
 
 ```
                                             [ INTERNET ] (Web Client)
@@ -55,42 +70,38 @@ The modified network topology below outlines how the developer's AI and web appl
                                                  ▼ (HTTPS)
                                   [ Application Load Balancer ] <-- Public Subnets (ap-southeast-5a/5b)
                                                  │
-                      ┌──────────────────────────┴──────────────────────────┐
-                      ▼ (Forward REST API / HTTP)                           ▼
+                      ┌──────────────────────────┼──────────────────────────┐
+                      ▼ (Port 80/443)            ▼ (API / App Port)         ▼ (AI Queue / API)
          ┌─────────────────────────────────────────────────────────────────────────────────────┐
          │                          VPC PRIVATE APPLICATION SUBNETS                            │
          │                                                                                     │
-         │  ┌───────────────────────────────────────────────────────────────────────────────┐  │
-         │  │                     AUTO SCALING GROUP (ASG) - MULTI-AZ                       │  │
-         │  │                                                                               │  │
-         │  │   ┌───────────────────────────────────┐   ┌───────────────────────────────────┐   │  │
-         │  │   │      Instance A (ap-southeast-5a) │   │      Instance B (ap-southeast-5b) │   │  │
-         │  │   │                                   │   │                                   │   │  │
-         │  │   │  • Server 01: Nginx Web Server /  │   │  • Server 01: Nginx Web Server /  │   │  │
-         │  │   │               Reverse Proxy       │   │               Reverse Proxy       │   │  │
-         │  │   │  • Server 02: Backend (App Tier)  │   │  • Server 02: Backend (App Tier)  │   │  │
-         │  │   │               Backend + DMS + MCP │   │               Backend + DMS + MCP │   │  │
-         │  │   │  • Server 03: AI Tier             │   │  • Server 03: AI Tier             │   │  │
-         │  │   │               RAGFlow + LangFuse  │   │               RAGFlow + LangFuse  │   │  │
-         │  │   │                                   │   │                                   │   │  │
-         │  │   │  (Sizing: t4g.xlarge/m6g.xlarge)  │   │  (Sizing: t4g.xlarge/m6g.xlarge)  │   │  │
-         │  │   └─────────────────┬─────────────────┘   └─────────────────┬─────────────────┘   │  │
-         │  └─────────────────────┼───────────────────────────────────────┼─────────────────┘  │
-         │                        │                                       │                    │
-         │                        │   ┌───────────────────────────────┐   │                    │
-         │                        │   │   STANDALONE EC2 INSTANCES    │   │                    │
-         │                        │   │    (Ubuntu 26.04 Hardened)    │   │                    │
-         │                        │   │                               │   │                    │
-         │                        │   │  • Staging DMS / Sandbox App  │   │                    │
-         │                        │   │  • Sizing: t4g.micro/medium   │   │                    │
-         │                        │   └───────────────┬───────────────┘   │                    │
-         │                        │                   │                   │                    │
-         │                        └───────────────────┼───────────────────┘                    │
-         │                                            │                                        │
-         │                                            ▼ (Secure Outbound Updates / APIs)        │
+         │  ┌──────────────────────┐   ┌──────────────────────┐   ┌──────────────────────┐     │
+         │  │   FRONTEND WEB ASG   │   │   BACKEND APP ASG    │   │     AI TIER ASG      │     │
+         │  │ (Nginx Web Servers)  │   │ (Backend + DMS + MCP)│   │ (RAGFlow + LangFuse) │     │
+         │  │   • Sizing: t4g.med  │   │   • Sizing: t4g.xlrg │   │   • Sizing: t4g.xlrg │     │
+         │  └──────────┬───────────┘   └──────────┬───────────┘   └──────────┬───────────┘     │
+         │             │                          │                          │                 │
+         │             │                          │                          │                 │
+         │  ┌──────────▼───────────┐   ┌──────────▼───────────┐   ┌──────────▼───────────┐     │
+         │  │ FRONTEND STANDALONE  │   │  BACKEND STANDALONE  │   │    AI STANDALONE     │     │
+         │  │  (AMI Baker/Staging) │   │  (AMI Baker/Staging) │   │  (AMI Baker/Staging) │     │
+         │  │  • Sizing: t4g.micro │   │  • Sizing: t4g.xlrg  │   │  • Sizing: t4g.xlrg  │     │
+         │  └──────────┬───────────┘   └──────────┬───────────┘   └──────────┬───────────┘     │
+         │             │                          │                          │                 │
+         │             │                          │                          │                 │
+         │             │                          ▼                          ▼                 │
+         │             └───────────────────► [ S3 Bucket ] ◄─────────────────┘                 │
+         │                                   [ (Shared Objects)]                               │
+         │                                        ▲     ▲                                      │
+         │                                        │     │                                      │
+         │                               EFS Port │     │ EFS Port                             │
+         │                                 (2049) │     │ (2049)                               │
+         │                                        ▼     ▼                                      │
+         │                                  [ Amazon EFS ] (Model Weights & App Configs)       │
+         │                                                                                     │
          │                                    [ NAT Gateways ]                                 │
          └────────────────────────────────────────────┬────────────────────────────────────────┘
-                                                      │ (SQL Protocol)
+                                                      │ (SQL Protocol - Port 5432)
                                                       ▼
          ┌─────────────────────────────────────────────────────────────────────────────────────┐
          │                           VPC PRIVATE DATABASE SUBNETS                              │
@@ -125,7 +136,7 @@ The modified network topology below outlines how the developer's AI and web appl
 - **Description:** Holds business and compute logic. Instances have no public IP addresses and cannot be accessed directly from the internet.
 - **Resources:**
   - **Auto Scaling Group (ASG) EC2 Instances:** Hosts the application code (Nginx web service). Features **t4g.xlarge** or **m6g.xlarge** EC2 Instances (ARM Graviton, 4 vCPU, 16GB RAM each) equipped with **gp3 EBS Root Volumes**. They handle Server 02 (Backend + DMS + MCP) and Server 03 (RAGFlow + LangFuse) workloads securely on hardened Ubuntu 26.04 LTS.
-  - **Standalone EC2 Instances:** Configured for isolated application development, testing, and requirements staging. Runs Ubuntu 26.04 LTS hardened via ASIMP, with outbound internet routing secured strictly via NAT Gateway.
+  - **Standalone EC2 Instances:** Deploys a dedicated standalone instance next to each ASG application group (Frontend, Backend, and AI Tiers) inside the private subnets. These instances are connected to the exact same shared databases (RDS) and storage systems (S3 and EFS) as their respective ASGs, acting as 1:1 replica environments for application staging, testing, ASIMP auditing/hardening, and pre-baking custom AMIs.
 
 ### 3. Database Layer (Isolated Private Subnets)
 - **Subnets:** `10.0.20.0/24` (AZ `ap-southeast-5a`) and `10.0.21.0/24` (AZ `ap-southeast-5b`).
