@@ -42,6 +42,7 @@ Explore different sections of our infrastructure documentation:
 - **[ASG Module](modules/asg.html):** Auto Scaling Group, Launch Templates, and dynamic Graviton auto-detection.
 - **[RDS Module](modules/rds.html):** Multi-AZ PostgreSQL configuration and parameter group tuning.
 - **[Standalone EC2 Module](modules/standalone_ec2.html):** Secure standalone Ubuntu 26.04 LTS development and application environments.
+- **[ElastiCache Valkey Module](modules/elasticache.html):** Secure ElastiCache Valkey in-memory caching cluster for session and metadata store.
 
 ### Deployment & CI/CD
 - **[Automation Scripts](scripts.html):** Details about CLI helpers (`deploy.sh`, `destroy.sh`, `user_data.sh`).

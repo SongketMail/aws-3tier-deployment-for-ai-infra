@@ -86,6 +86,22 @@ module "standalone_ec2" {
   ubuntu_ami_filter_name = var.standalone_ubuntu_ami_filter_name
 }
 
+# ElastiCache Valkey Setup (Conditional Setup)
+module "elasticache_valkey" {
+  count  = var.enable_elasticache_valkey ? 1 : 0
+  source = "./modules/elasticache"
+
+  environment           = var.environment
+  vpc_id                = module.vpc.vpc_id
+  private_db_subnet_ids = module.vpc.private_db_subnet_ids
+  asg_sg_id             = module.security_groups.asg_sg_id
+  standalone_sg_id      = try(module.standalone_ec2[0].security_group_id, "")
+  node_type             = var.valkey_node_type
+  num_cache_clusters    = var.valkey_num_cache_clusters
+  engine_version        = var.valkey_engine_version
+  parameter_group_name  = var.valkey_parameter_group_name
+}
+
 # Route 53 Module Setup (Conditional Setup)
 module "route53" {
   count  = var.enable_route53 ? 1 : 0

@@ -42,3 +42,13 @@ standalone_ec2_instance_type      = "t4g.micro"
 standalone_ec2_count              = 1
 standalone_ec2_ami_id             = ""
 standalone_ubuntu_ami_filter_name = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-*-server-*"
+
+# ElastiCache Valkey configurations
+enable_elasticache_valkey   = true
+# Options:
+# - "cache.t4g.micro"  (2 vCPU, 0.5 GiB RAM) - Baseline / Testing
+# - "cache.t4g.medium" (2 vCPU, 3.09 GiB RAM) - High Performance Production
+valkey_node_type            = "cache.t4g.micro"
+valkey_num_cache_clusters   = 1 # 1 node for non-clustered, set >1 for high-availability multi-AZ
+valkey_engine_version       = "7.2"
+valkey_parameter_group_name = "default.valkey7"
