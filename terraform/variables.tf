@@ -173,3 +173,34 @@ variable "subdomain" {
   type        = string
   default     = "app"
 }
+
+# --- ElastiCache Valkey Variables ---
+variable "enable_elasticache_valkey" {
+  description = "Whether to enable the secure, multi-AZ ElastiCache Valkey caching cluster"
+  type        = bool
+  default     = true
+}
+
+variable "valkey_node_type" {
+  description = "The instance type of the ElastiCache Valkey cache nodes (typically Graviton e.g., cache.t4g.micro)"
+  type        = string
+  default     = "cache.t4g.micro"
+}
+
+variable "valkey_num_cache_clusters" {
+  description = "Number of cache clusters (nodes) in the replication group"
+  type        = number
+  default     = 1
+}
+
+variable "valkey_engine_version" {
+  description = "The engine version for ElastiCache Valkey"
+  type        = string
+  default     = "7.2"
+}
+
+variable "valkey_parameter_group_name" {
+  description = "The name of the parameter group to associate with Valkey"
+  type        = string
+  default     = "default.valkey7"
+}

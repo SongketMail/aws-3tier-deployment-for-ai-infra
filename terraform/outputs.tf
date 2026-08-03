@@ -52,3 +52,13 @@ output "route53_fqdn" {
   description = "The FQDN created in Route 53 pointing to the ALB"
   value       = try(module.route53[0].fqdn, "")
 }
+
+output "valkey_primary_endpoint" {
+  description = "The primary connection endpoint of the secure ElastiCache Valkey cluster"
+  value       = try(module.elasticache_valkey[0].primary_endpoint_address, "")
+}
+
+output "valkey_security_group_id" {
+  description = "The ID of the security group assigned to the Valkey cluster"
+  value       = try(module.elasticache_valkey[0].security_group_id, "")
+}
