@@ -123,3 +123,34 @@ variable "waf_rate_limit" {
   type        = number
   default     = 2000
 }
+
+# --- Standalone EC2 Instance Variables ---
+variable "enable_standalone_ec2" {
+  description = "Whether to enable the standalone EC2 instances for development/application requirements"
+  type        = boolean
+  default     = true
+}
+
+variable "standalone_ec2_instance_type" {
+  description = "The instance type to use for standalone EC2 instances (typically Graviton e.g., t4g.micro)"
+  type        = string
+  default     = "t4g.micro"
+}
+
+variable "standalone_ec2_count" {
+  description = "The number of standalone EC2 instances to provision"
+  type        = number
+  default     = 1
+}
+
+variable "standalone_ec2_ami_id" {
+  description = "Optional AMI ID to override standard Ubuntu AMI lookup for standalone instances"
+  type        = string
+  default     = ""
+}
+
+variable "standalone_ubuntu_ami_filter_name" {
+  description = "Search filter pattern for the Ubuntu AMI name (allows switching between 24.04 and 26.04)"
+  type        = string
+  default     = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-*-server-*"
+}

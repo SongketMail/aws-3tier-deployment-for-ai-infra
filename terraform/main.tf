@@ -70,3 +70,18 @@ module "rds" {
   db_password           = var.db_password
   db_port               = var.db_port
 }
+
+# Standalone EC2 Instances Module Setup
+module "standalone_ec2" {
+  count  = var.enable_standalone_ec2 ? 1 : 0
+  source = "./modules/standalone_ec2"
+
+  environment            = var.environment
+  vpc_id                 = module.vpc.vpc_id
+  private_app_subnet_ids = module.vpc.private_app_subnet_ids
+  alb_sg_id              = module.security_groups.alb_sg_id
+  instance_type          = var.standalone_ec2_instance_type
+  instance_count         = var.standalone_ec2_count
+  ami_id                 = var.standalone_ec2_ami_id
+  ubuntu_ami_filter_name = var.standalone_ubuntu_ami_filter_name
+}

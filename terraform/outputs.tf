@@ -22,3 +22,18 @@ output "waf_web_acl_arn" {
   description = "The ARN of the protecting WAFv2 Web ACL"
   value       = module.waf.web_acl_arn
 }
+
+output "standalone_ec2_instance_ids" {
+  description = "The IDs of the generated standalone EC2 instances"
+  value       = try(module.standalone_ec2[0].instance_ids, [])
+}
+
+output "standalone_ec2_private_ips" {
+  description = "The private IP addresses assigned to the standalone EC2 instances"
+  value       = try(module.standalone_ec2[0].private_ips, [])
+}
+
+output "standalone_ec2_security_group_id" {
+  description = "The security group ID assigned to the standalone instances"
+  value       = try(module.standalone_ec2[0].security_group_id, "")
+}

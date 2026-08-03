@@ -5,17 +5,17 @@ title: "Developer Design Mapping"
 
 # Developer Design Alignment Guide
 
-This guide details how we transition the **Developer's First Design** (which specified four separate, standalone Ubuntu 22.04 LTS servers) into our secure, highly-available, production-ready **AWS 3-Tier Architecture**, without changing any underlying AWS constraints or requirements.
+This guide details how we transition the **Developer's First Design** (which specified four separate, standalone Ubuntu 26.04 LTS servers) into our secure, highly-available, production-ready **AWS 3-Tier Architecture**, without changing any underlying AWS constraints or requirements.
 
 ---
 
 ## Rationale for the Architectural Transition
 
 The developer's original design was logical but modeled around static, single-node virtual machines. Running critical production infrastructure on standalone VMs presents several operational risks:
-1. **Single Points of Failure (SPOFs):** If any of the four servers experiences hardware degradation or guest OS crashes, the entire application goes offline.
+1. **Single Points of Failure (SPOFs):** If any of the servers experiences hardware degradation or guest OS crashes, the entire application goes offline.
 2. **Direct Public Exposure:** Placing database or backend servers directly on public-facing networks increases the surface area for brute-force SSH, port-scanning, and SQL injection (SQLi) attacks.
 3. **Manual Scalability & High Latency:** VM resources are fixed and cannot scale dynamically in response to user demand or computational peaks.
-4. **Backup and Patches overhead:** Managing backups, OS updates, and package security patches manually across multiple Ubuntu VMs takes significant operational effort.
+4. **Backup and Patches overhead:** Managing backups, OS updates, and package security patches manually across multiple VMs takes significant operational effort.
 
 By aligning this layout with our secure AWS design, we retain **all functionality** of the developer's original services (Nginx, Backend, DMS, MCP, RAGFlow, LangFuse, and Postgres) while inheriting cloud-native security, performance, and automation.
 
@@ -58,8 +58,48 @@ By aligning this layout with our secure AWS design, we retain **all functionalit
 To deliver maximum efficiency, we transition the underlying hardware platform from legacy x86 virtual machines to **AWS Graviton (ARM64)** processors:
 
 1. **Price-Performance Efficiency:** AWS Graviton (`t4g` and `m6g` instances) delivers up to **40% better price-performance** compared to equivalent x86 instances, significantly lowering the monthly run costs.
-2. **Amazon Linux 2023 (AL2023):** Our default OS is AL2023, providing a minimal, security-hardened, and cloud-optimized package system.
-3. **Ubuntu 22.04 LTS Fallback:** If specific libraries in RAGFlow/LangFuse require native Ubuntu kernel modules, our Terraform Launch Templates can easily load an Ubuntu ARM64 AMI by overriding the `ami_id` variable, maintaining high-availability and security group configurations seamlessly.
+2. **Ubuntu 26.04 LTS Base Operating System:** To leverage the latest performance improvements, security features, and modern container support, we standardize our base platform on **Ubuntu 26.04 LTS (Noble Numbat successor)**.
+3. **Amazon Linux 2023 Option:** For lightweight workloads that do not depend on Canonical specific packages, **Amazon Linux 2023 (AL2023)** remains available as a minimal, cloud-optimized option.
+
+---
+
+## Server Hardening & Security Compliance (ASIMP Integration)
+
+In aligning the developer design with AWS enterprise standards, all Ubuntu 26.04 LTS compute resources (both ASG instances and Standalone instances) are hardened and tuned using **ASIMP (Ansible System Integrity Management Platform)** (available at [github.com/linuxmalaysia/ASIMP](https://github.com/linuxmalaysia/ASIMP)).
+
+ASIMP is a host-based, automated security hardening, compliance, and auditing framework that implements a strict **"Measure, Harden, Re-Measure"** paradigm to verify and guarantee security posturing before the machine is allowed to process production traffic.
+
+### The ASIMP Hardening & Auditing Pipeline
+
+```
+  [ PHASE 1: Baseline Auditing ]
+               │
+               ▼ Generates /var/log/asimp-baseline-scores.json
+  [ PHASE 2: Hardening & Mitigations ]
+               │  • OS updates, debsums packages verification
+               │  • OpenStack ansible-hardening & Dev-Sec SSH hardening
+               │  • Lynis system level modifications
+               ▼
+  [ PHASE 3: Verification & Reporting ]
+                  • Re-runs audits and outputs comparison scorecard
+                  • HTML reports written to /var/log/openscap-after-report.html
+```
+
+### Key ASIMP Hardening Capabilities Applied:
+
+1. **Dual-Engine Security Auditing:**
+   - **OpenSCAP:** Conducts formal vulnerability and security compliance scanning mapped against the **CIS Security Ubuntu Linux Benchmark Level 2** profile.
+   - **Lynis:** Performs comprehensive system configuration auditing, examining OS parameters, boot configurations, cryptography standards, and active network ports.
+2. **Pre & Post Scorecard Comparison:**
+   - Runs audits prior to hardening to capture initial baselines, then executes them afterwards, logging comparative metrics in `/var/log/asimp-baseline-scores.json`.
+   - Generates visually comprehensive, standalone HTML inspection reports at `/var/log/openscap-before-report.html` and `/var/log/openscap-after-report.html`.
+3. **Automated Package Updates & debsums Verification:**
+   - Standardizes the Ubuntu system upgrade procedures and checks package-level code integrity via `debsums` to detect any unauthorized binary modifications.
+4. **Standardized OS Hardening Benchmarks:**
+   - Deploys rigorous security compliance controls utilizing OpenStack's `ansible-hardening` role.
+   - Standardizes and restricts SSH configuration endpoints using Dev-Sec's certified `ssh-hardening` roles, enforcing secure cipher suites, disabling password-based root access, and specifying key exchange standards.
+5. **Detailed System Tuning & Custom Fixes:**
+   - Automatically tunes virtual memory configuration parameters, core kernel dumps, file system mounting options (e.g., nodev, nosuid, noexec where appropriate), and limits access to system compilers.
 
 ---
 
@@ -80,5 +120,7 @@ Through this alignment, the developer gets their exact applications deployed wit
 │ Data Protection         │ Automatic, daily snapshots + Multi-AZ backups.  │
 ├─────────────────────────┼─────────────────────────────────────────────────┤
 │ Security Principle      │ Zero-Trust isolated subnets & IAM roles.       │
+├─────────────────────────┼─────────────────────────────────────────────────┤
+│ System Integrity        │ Hardened and audited via ASIMP framework.       │
 └─────────────────────────┴─────────────────────────────────────────────────┘
 ```
