@@ -29,6 +29,7 @@ By aligning this layout with our secure AWS design, we retain **all functionalit
   - **Layer 7 Firewall (AWS WAFv2):** Blocks common exploits (OWASP Top 10, SQLi, XSS) and manages brute-force or DDoS attempts via dynamic IP Rate Limiting.
   - **Application Load Balancer (ALB):** Terminates external SSL/TLS, manages routing rules, and automatically performs health checks to route traffic only to healthy instances.
   - **Private Nginx Web Tier (ASG):** Sized as `t4g.medium` (2 vCPU, 4GB RAM) but deployed within **private subnets** under an Auto Scaling Group (ASG). This ensures the Nginx instance has *no public IP*, can scale out horizontally, and is protected from brute-force exposure.
+  - **Dedicated Standalone Instance (AMI Baking):** Paired with a dedicated Frontend Standalone instance inside the private subnets. Connected directly to identical S3 resources to test routing/static templates and pre-bake certified `ami-frontend-*` images.
 
 ### 2. Server 02: Backend App Tier (Backend + DMS + MCP)
 * **Developer's First Design:** A single Ubuntu server (4 vCPU, 16GB RAM) running Backend, DMS, and MCP APIs.
@@ -36,6 +37,7 @@ By aligning this layout with our secure AWS design, we retain **all functionalit
   - **Zero Direct Ingress:** Deployed inside Private App Subnets, completely blocked from direct public ingress. The ALB only forwards verified requests to this layer on Port 80 (or your custom API port).
   - **Sizing Alignment:** Sized using Graviton `t4g.xlarge` (4 vCPU, 16GB RAM) to perfectly match the developer's CPU/Memory requirements while saving up to 20% in raw compute costs over comparable x86_64 nodes.
   - **Secure Egress:** Outbound integrations (such as external DMS syncs, Webhooks, or payment gateway APIs) traverse a managed **AWS NAT Gateway** in the public subnet, masking instance IPs and preventing inbound traffic.
+  - **Dedicated Standalone Instance (AMI Baking & Schema Migrations):** Paired with a dedicated Backend Standalone instance connected to the identical Multi-AZ RDS database and S3 buckets. Used to test application updates, safely run database migrations, and pre-bake `ami-backend-*` images under a 1:1 replica environment.
 
 ### 3. Server 03: AI Tier (RAGFlow + LangFuse)
 * **Developer's First Design:** A single Ubuntu server (4 vCPU, 8GB RAM) running RAGFlow + LangFuse AI stack.
@@ -43,6 +45,7 @@ By aligning this layout with our secure AWS design, we retain **all functionalit
   - **Intra-VPC Security:** Placed in the same Private App Subnets. Secure, ultra-low-latency private communication paths are used to connect the Backend (Server 02) to RAGFlow + LangFuse (Server 03) via internal DNS or security-group-protected private endpoints.
   - **Sizing Alignment:** Sized as `c6g.xlarge` or `t4g.xlarge` to provide the required 4 vCPU and 8-16GB RAM. If CPU-bound AI processing becomes intensive, the ASG will scale these instances dynamically.
   - **Environment Compatibility:** Fully compatible with containerized environments (Docker Compose / ECS) or native package runtimes.
+  - **Dedicated Standalone Instance (AMI Baking & EFS Caching):** Paired with a dedicated AI Standalone instance connected to the identical Amazon EFS filesystem, RDS, and S3. Developers pre-download and warm up AI model caches on EFS using this standalone instance to allow instant bootstrapping across the auto-scaled nodes. Used to pre-bake `ami-ai-*` images.
 
 ### 4. Server 04: Database Data Tier (SQL Database)
 * **Developer's First Design:** A single Ubuntu server (4 vCPU, 16GB RAM) running self-managed PostgreSQL.

@@ -32,10 +32,11 @@ This configuration targets baseline usage with smaller resource profiles (`t4g.m
 | **Secrets Management** | **AWS Secrets Manager**<br><br>• 2 Secrets (one for RDS DB, one for external API keys) | $0.40 / secret/mo | $0.80 |
 | **Monitoring Tier** | **Amazon CloudWatch**<br><br>• 3 alarms, custom CPU/Memory dashboard | Nominal rates | $1.50 |
 | **Disaster Recovery** | **AWS Backup**<br><br>• Automated Multi-AZ RDS snapshots & EBS backups (~100 GB) | $0.05 / GB-month | $5.00 |
+| **Standalone EC2 Tier** | **Standalone EC2 Instances (AMI Staging & Baking)**<br><br>• 3x Standalone EC2 Instances (one per ASG group: Frontend, Backend, AI Tier) connected directly to RDS, S3, or EFS to ensure 1:1 environment parity.<br><br>• Sized as 3x `t4g.micro` (1 vCPU, 1GB RAM each)<br><br>• 3x 15GB gp3 EBS Root Volumes (45GB total) | $0.0084 / hr / inst<br><br>$0.08 / GB-month | $18.39<br><br>$3.60 |
 | **Data Transfer** | Outbound Internet Data Transfer<br><br>• ~100 GB Outbound (First 100GB Free/mo) | Free Tier | $0.00 |
-| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$394.82 USD** / month |
+| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$416.81 USD** / month |
 
-* **Local Currency Equivalent (MYR):** **~RM 1,777 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
+* **Local Currency Equivalent (MYR):** **~RM 1,876 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
 
 ---
 
@@ -57,10 +58,11 @@ This configuration scales up computing instances to precisely match the develope
 | **Secrets Management** | **AWS Secrets Manager**<br><br>• 5 Secrets (RDS, LLM API keys, external integrations, LangFuse, WAF keys) | $0.40 / secret/mo | $2.00 |
 | **Monitoring Tier** | **Amazon CloudWatch**<br><br>• Logs ingestion (~5 GB), dashboards, custom metric triggers | Nominal rates | $5.00 |
 | **Disaster Recovery** | **AWS Backup**<br><br>• Centralized backup for RDS, EFS, and ASG EBS volumes (~150 GB) | $0.05 / GB-month | $7.50 |
+| **Standalone EC2 Tier** | **Standalone EC2 Instances (AMI Staging & Baking)**<br><br>• 3x Standalone EC2 Instances (one per ASG group: Frontend, Backend, AI Tier) connected directly to RDS, S3, or EFS to ensure 1:1 environment parity.<br><br>• 1x Frontend: `t4g.medium` (2 vCPU, 4GB RAM) + 30GB gp3<br><br>• 1x Backend: `t4g.xlarge` (4 vCPU, 16GB RAM) + 30GB gp3<br><br>• 1x AI Tier: `t4g.xlarge` (4 vCPU, 16GB RAM) + 50GB gp3 (110GB gp3 total) | Frontend: $0.0336 / hr<br>Backend/AI: $0.1344 / hr<br>Storage: $0.08 / GB-mo | $24.53<br>$196.22<br>$8.80 |
 | **Data Transfer** | Outbound Internet Data Transfer<br><br>• ~100 GB Outbound (First 100GB Free/mo) | Free Tier | $0.00 |
-| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$832.56 USD** / month |
+| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$1,062.11 USD** / month |
 
-* **Local Currency Equivalent (MYR):** **~RM 3,747 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
+* **Local Currency Equivalent (MYR):** **~RM 4,780 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
 
 ---
 
@@ -109,8 +111,8 @@ A comparison with real-world billings from a highly similar production deploymen
 │                                 │                             │ at a realistic $7.30 - $14.50 combined to prevent bill │
 │                                 │                             │ surprises in production.                               │
 ├─────────────────────────────────┼─────────────────────────────┼────────────────────────────────────────────────────────┤
-│ TOTAL MONTHLY COST              │ $659.10                     │ Calibration proves our updated models ($394.82 and      │
-│                                 │                             │ $832.56) are exceptionally robust and production-true. │
+│ TOTAL MONTHLY COST              │ $659.10                     │ Calibration proves our updated models ($416.81 and      │
+│                                 │                             │ $1,062.11) are exceptionally robust and production-true.│
 └─────────────────────────────────┴─────────────────────────────┴────────────────────────────────────────────────────────┘
 ```
 
@@ -132,9 +134,11 @@ A comparison with real-world billings from a highly similar production deploymen
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
 │ Shared storage (EFS)            │ 10 GB (Configs/Logs)    │ 50 GB (AI model caches) │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
-│ Monthly Estimate (USD)          │ ~$394.82 USD            │ ~$832.56 USD            │
+│ Standalone EC2 (AMI Baking)     │ 3x `t4g.micro`          │ 1x `t4g.med`, 2x `xlrg` │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
-│ Monthly Estimate (MYR)          │ ~RM 1,777 MYR           │ ~RM 3,747 MYR           │
+│ Monthly Estimate (USD)          │ ~$416.81 USD            │ ~$1,062.11 USD          │
+├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
+│ Monthly Estimate (MYR)          │ ~RM 1,876 MYR           │ ~RM 4,780 MYR           │
 └─────────────────────────────────┴─────────────────────────┴─────────────────────────┘
 ```
 
