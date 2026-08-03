@@ -33,6 +33,7 @@ Explore different sections of our infrastructure documentation:
 5. **[OpenTofu Migration Guide](opentofu-migration.html):** Detailed compatibility research and transition path for deploying using OpenTofu on AWS.
 6. **[AMI Design & Hardening Guide](ami-design.html):** Architectural guide outlining the pre-baked AMI strategy, Packer/Ansible pipeline, and ASIMP compliance integration.
 7. **[Route 53 & DNS Troubleshooting](route53.html):** Deep dive into custom domain integration, ACM SSL/TLS setup, and extensive research on resolving ASG private subnet DNS resolution failures.
+8. **[Secure Developer Access Guide](jumphost.html):** Comprehensive guide on using our secure SSH Jumphost (Bastion) to access private and standalone nodes from Cyberjaya, with Windows/macOS/Linux client setups and private key security guidelines.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
@@ -43,6 +44,7 @@ Explore different sections of our infrastructure documentation:
 - **[RDS Module](modules/rds.html):** Multi-AZ PostgreSQL configuration and parameter group tuning.
 - **[Standalone EC2 Module](modules/standalone_ec2.html):** Secure standalone Ubuntu 26.04 LTS development and application environments.
 - **[ElastiCache Valkey Module](modules/elasticache.html):** Secure ElastiCache Valkey in-memory caching cluster for session and metadata store.
+- **[Jumphost Module](modules/jumphost.html):** Secure public-subnet SSH Jumphost (Bastion) whitelisted for Cyberjaya office with automated downstream ingress configuration.
 
 ### Deployment & CI/CD
 - **[Automation Scripts](scripts.html):** Details about CLI helpers (`deploy.sh`, `destroy.sh`, `user_data.sh`).

@@ -86,6 +86,22 @@ module "standalone_ec2" {
   ubuntu_ami_filter_name = var.standalone_ubuntu_ami_filter_name
 }
 
+# Secure SSH Jumphost (Bastion) Setup (Conditional Setup)
+module "jumphost" {
+  count  = var.enable_jumphost ? 1 : 0
+  source = "./modules/jumphost"
+
+  environment            = var.environment
+  vpc_id                 = module.vpc.vpc_id
+  public_subnet_ids      = module.vpc.public_subnet_ids
+  instance_type          = var.jumphost_instance_type
+  allowed_ssh_cidr       = var.jumphost_allowed_ssh_cidr
+  jumphost_os            = var.jumphost_os
+  ami_id                 = var.jumphost_ami_id
+  asg_sg_id              = module.security_groups.asg_sg_id
+  standalone_sg_id       = try(module.standalone_ec2[0].security_group_id, "")
+}
+
 # ElastiCache Valkey Setup (Conditional Setup)
 module "elasticache_valkey" {
   count  = var.enable_elasticache_valkey ? 1 : 0

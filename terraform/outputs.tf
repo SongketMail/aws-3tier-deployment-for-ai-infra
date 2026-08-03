@@ -62,3 +62,18 @@ output "valkey_security_group_id" {
   description = "The ID of the security group assigned to the Valkey cluster"
   value       = try(module.elasticache_valkey[0].security_group_id, "")
 }
+
+output "jumphost_public_ip" {
+  description = "The static Elastic IP address assigned to the secure SSH Jumphost"
+  value       = try(module.jumphost[0].jumphost_public_ip, "")
+}
+
+output "jumphost_private_ip" {
+  description = "The private IP address of the secure SSH Jumphost within the VPC"
+  value       = try(module.jumphost[0].jumphost_private_ip, "")
+}
+
+output "jumphost_security_group_id" {
+  description = "The security group ID assigned to the secure SSH Jumphost"
+  value       = try(module.jumphost[0].security_group_id, "")
+}

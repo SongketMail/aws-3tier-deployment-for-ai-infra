@@ -204,3 +204,34 @@ variable "valkey_parameter_group_name" {
   type        = string
   default     = "default.valkey7"
 }
+
+# --- Jumphost Variables ---
+variable "enable_jumphost" {
+  description = "Whether to enable the secure, hardened SSH Jumphost (Bastion)"
+  type        = bool
+  default     = true
+}
+
+variable "jumphost_instance_type" {
+  description = "The instance type to use for the Jumphost (typically Graviton e.g., t4g.micro)"
+  type        = string
+  default     = "t4g.micro"
+}
+
+variable "jumphost_os" {
+  description = "The operating system of the Jumphost ('ubuntu' or 'amazon-linux-2023')"
+  type        = string
+  default     = "ubuntu" # Recommended for ASIMP OS hardening compatibility
+}
+
+variable "jumphost_allowed_ssh_cidr" {
+  description = "IP CIDR allowed to connect to the Jumphost via SSH (e.g., Cyberjaya office public IP)"
+  type        = string
+  default     = "103.188.0.0/16" # Default dummy representing Cyberjaya ISP subnet
+}
+
+variable "jumphost_ami_id" {
+  description = "Optional specific AMI ID override for the Jumphost"
+  type        = string
+  default     = ""
+}
