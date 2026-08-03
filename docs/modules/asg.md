@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Auto Scaling Group (ASG) Module"
+---
+
 # Auto Scaling Group (ASG) Module
 
 This module deploys an Auto Scaling Group (ASG) of EC2 instances spanning multiple Availability Zones. It automates high-availability application scaling and supports dynamic resource scaling based on real-time CPU consumption.

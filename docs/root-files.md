@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Root Terraform Configuration"
+---
+
 # Root Terraform Configuration
 
 The root folder of the `terraform/` directory orchestrates the execution order, specifies environmental variables, defines provider versions, and outputs key service endpoints.

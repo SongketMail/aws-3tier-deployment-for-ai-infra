@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Security Groups Module"
+---
+
 # Security Groups Module
 
 This module defines stateful firewall rules (Security Groups) that isolate each layer of the 3-Tier topology, strictly adhering to the **Zero-Trust Network Principle**.

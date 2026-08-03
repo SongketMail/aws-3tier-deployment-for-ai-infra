@@ -1,3 +1,8 @@
+---
+layout: default
+title: "RDS Module"
+---
+
 # RDS Module
 
 The RDS Module deploys a secure, fully-managed RDS Database instance running in Multi-AZ configuration to ensure maximum availability and seamless automatic failover in the event of an availability zone outage.

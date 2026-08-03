@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Application Load Balancer (ALB) Module"
+---
+
 # Application Load Balancer (ALB) Module
 
 This module deploys a highly available, public-facing Application Load Balancer (ALB) that acts as the entry point for all incoming HTTP web traffic. It handles request distribution and active health checking.
