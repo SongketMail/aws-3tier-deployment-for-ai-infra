@@ -1,3 +1,8 @@
+---
+layout: default
+title: "VPC Module"
+---
+
 # VPC Module
 
 The VPC Module deploys the foundational multi-AZ networking infrastructure for the 3-tier layout. It partitions the network into public subnets, private application subnets, and isolated private database subnets, ensuring high availability and physical logical boundaries.

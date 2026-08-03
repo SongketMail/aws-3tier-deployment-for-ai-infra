@@ -1,3 +1,8 @@
+---
+layout: default
+title: "AWS Secure 3-Tier Architecture Documentation"
+---
+
 # AWS Secure 3-Tier Architecture Documentation
 
 Welcome to the official technical documentation for our **AWS 3-Tier Deployment for AI & Web Infra** project. This project is optimized for deployment in the **AWS Asia Pacific (Malaysia) region (`ap-southeast-5`)** utilizing AWS Graviton (ARM64) instances, Multi-AZ RDS Postgres, and AWS WAFv2 regional protection.

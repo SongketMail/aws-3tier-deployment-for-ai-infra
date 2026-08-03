@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Web Application Firewall (WAF) Module"
+---
+
 # Web Application Firewall (WAF) Module
 
 The WAF Module provisions an AWS WAFv2 Web ACL (Web Application Firewall) configured with modern security rules to defend against automated layer-7 attacks, SQL Injection (SQLi) attempts, and brute-force traffic floods.

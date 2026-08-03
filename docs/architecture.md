@@ -1,3 +1,8 @@
+---
+layout: default
+title: "System Architecture"
+---
+
 # System Architecture
 
 This document describes the high-availability 3-tier network topology, AWS component layouts, and routing architectures deployed by this Terraform project.

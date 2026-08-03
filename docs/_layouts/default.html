@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+
+  <script>
+    // Initialize theme early to prevent flash
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('theme-dark');
+      } else {
+        document.documentElement.classList.add('theme-light');
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="{{ '/assets/css/global.css' | relative_url }}">
+</head>
+<body>
+  <div id="container">
+
+    <!-- GRID AREA: HEADER -->
+    <div id="top">
+      <table class="header-table" style="width: 100%; border-collapse: collapse; border: none; margin: 0;">
+        <tr style="border: none; background: none;">
+          <td style="text-align: left; padding: 15px 20px; border: none; background: none;">
+            <div style="font-family: 'SF Mono', monospace; font-weight: 900; font-size: 24px; color: var(--lab-text);">
+              AWS Secure 3-Tier <span style="color: var(--lab-highlight)">::</span> LAB
+            </div>
+            <div style="font-size: 11px; opacity: 0.8; letter-spacing: 1px; font-family: 'SF Mono', monospace; color: var(--lab-muted);">
+              AWS SECURE 3-TIER ARCHITECTURE // PRODUCTION READY
+            </div>
+          </td>
+          <td style="text-align: right; vertical-align: middle; padding: 15px 20px; border: none; background: none;">
+            <div class="theme-switcher-container" style="display: inline-flex; align-items: center; gap: 8px; font-family: 'SF Mono', monospace; font-size: 11px;">
+              <span style="opacity: 0.7; font-weight: bold; text-transform: uppercase; color: var(--lab-text);">MODE:</span>
+              <div class="theme-btn-group" style="display: inline-flex; border: 1px solid var(--lab-border); border-radius: 6px; overflow: hidden; background: var(--lab-bg);">
+                <button id="theme-btn-light" style="background: none; border: none; color: var(--lab-text); padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: inherit; font-weight: bold; transition: background 0.2s;">☀️ LIGHT</button>
+                <button id="theme-btn-dark" style="background: none; border: none; color: var(--lab-text); padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: inherit; font-weight: bold; border-left: 1px solid var(--lab-border); transition: background 0.2s;">🌙 DARK</button>
+                <button id="theme-btn-auto" style="background: none; border: none; color: var(--lab-text); padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: inherit; font-weight: bold; border-left: 1px solid var(--lab-border); transition: background 0.2s;">💻 AUTO</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- GRID AREA: LEFT NAV -->
+    <div id="left">
+      <div class="buttonscontainer">
+        <h3>Documentation</h3>
+        <div class="buttons">
+          <a href="{{ '/' | relative_url }}">Home</a>
+          {% assign sorted_pages = site.pages | sort: "path" %}
+          {% for p in sorted_pages %}
+            {% if p.path != "index.md" and p.path contains ".md" and p.path != "README.md" %}
+              {% unless p.path contains "modules/" %}
+                {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize %}
+                <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
+
+          <h3 style="margin-top: 25px;">Modules</h3>
+          {% for p in sorted_pages %}
+            {% if p.path contains "modules/" and p.path contains ".md" %}
+              {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize | replace: "_", " " %}
+              <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <br>
+      <h3>E-Mail</h3>
+      <p style="font-size: 0.8em; color: var(--lab-muted); margin-top: 5px; font-family: var(--f-mono);">
+        contact@linuxmalaysia.com
+      </p>
+
+      <br>
+      <h3>Join Us</h3>
+      <aside class="group-box" style="background: var(--lab-bg); border: 1px solid var(--lab-border); border-radius: var(--radius); padding: 12px; font-family: var(--f-sans);">
+        <span class="group-title" style="font-weight: bold; font-size: 0.85em; display: block; margin-bottom: 5px;">Community</span>
+        <p style="font-size: 0.8em; color: var(--lab-muted); margin: 0 0 10px 0;">Join the <strong>cmsfornerd</strong> discussion group.</p>
+        <a href="https://groups.google.com/group/cmsfornerd" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: var(--lab-purple); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.75em; text-align: center; border: none; font-weight: bold; width: 100%; box-sizing: border-box; text-decoration: none;" class="btn-google-group">Visit Group</a>
+      </aside>
+    </div>
+
+    <!-- GRID AREA: RIGHT NAV -->
+    <div id="right">
+      <h3>Search</h3>
+      <!-- Search Google -->
+      <div class="search-container" style="text-align: center; padding: 10px 0;">
+        <form method="get" action="https://www.google.com/custom" target="_blank">
+          <a href="https://www.google.com/">
+            <img src="https://www.google.com/logos/Logo_25wht.gif" alt="Google" style="border:0; vertical-align: middle; width: 100px;">
+          </a>
+          <br><br>
+          <input type="text" name="q" size="15" maxlength="255" placeholder="Search..." style="width: 100%; padding: 6px; border: 1px solid var(--lab-border); border-radius: 6px; background: var(--lab-bg); color: var(--lab-text); box-sizing: border-box;">
+          <br><br>
+          <input type="submit" name="sa" value="Search" style="width: 100%; padding: 6px; border: none; border-radius: 6px; background: var(--lab-purple); color: #fff; font-weight: bold; cursor: pointer;">
+          <input type="hidden" name="client" value="pub-9240760101409835">
+          <input type="hidden" name="forid" value="1">
+          <input type="hidden" name="ie" value="UTF-8">
+          <input type="hidden" name="oe" value="UTF-8">
+          <input type="hidden" name="hl" value="en">
+        </form>
+      </div>
+
+      <br>
+      <h3>Validation</h3>
+      <a href="https://github.com/htacg/tidy-html5" target="_blank" rel="noopener noreferrer" style="border: none; text-align: center; display: block; padding: 8px 0;">
+        <img src="https://cmsfornerd2.onrender.com/images/tidy.png" alt="Validated by HTML Validator (based on Tidy)" style="height: 16px; width: 39px; border: 0; display: inline-block;">
+      </a>
+    </div>
+
+    <!-- GRID AREA: MAIN CONTENT -->
+    <div id="content">
+      <main class="content-body">
+
+        <!-- Custom Hero / Header for each documentation page -->
+        <header class="hero-section" style="margin-bottom: 25px;">
+          <h1 style="border-bottom: 4px solid var(--lab-purple); padding-bottom: 10px; margin-bottom: 10px;">
+            {{ page.title | default: site.title }}
+          </h1>
+          <div class="runtime-status" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px;">
+            <span class="badge" style="background: #e67e22; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">Terraform >= 1.5.0</span>
+            <span class="badge" style="background: #2ecc71; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">AWS: ap-southeast-5</span>
+            <span class="badge" style="background: #3498db; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">WAFv2: Enabled</span>
+            <span class="badge" style="background: #9b59b6; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">Graviton: ARM64</span>
+          </div>
+        </header>
+
+        <article class="lab-home">
+          {{ content }}
+        </article>
+      </main>
+    </div>
+
+    <!-- GRID AREA: FOOTER -->
+    <div id="footer">
+      <div class="lab-footer-wrap" style="padding: 15px 0; border-top: 1px solid var(--lab-border);">
+        CmsForNerd Infrastructure: <a href="https://linuxmalaysia.com" style="display: inline; border: none; color: var(--lab-purple);">linuxmalaysia.com</a><br>
+        Copyright &copy; 2005 - 2026 Harisfazillah Jamel<br>
+        [ REL: 3.5.1 ] | [ STD: RFC_9116 ] | [ ENV: TERRAFORM_1.5 ] | [ VIEW: STANDARD ]<br>
+        Rendered: Statically Compiled at Build-time | MEM: 0 KB (Zero-runtime database-free)
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Theme toggle logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnLight = document.getElementById('theme-btn-light');
+      const btnDark = document.getElementById('theme-btn-dark');
+      const btnAuto = document.getElementById('theme-btn-auto');
+
+      function updateActiveButton(theme) {
+        [btnLight, btnDark, btnAuto].forEach(btn => {
+          if (btn) btn.style.background = 'none';
+        });
+        if (theme === 'light' && btnLight) {
+          btnLight.style.background = 'var(--lab-border)';
+        } else if (theme === 'dark' && btnDark) {
+          btnDark.style.background = 'var(--lab-border)';
+        } else if (theme === 'auto' && btnAuto) {
+          btnAuto.style.background = 'var(--lab-border)';
+        }
+      }
+
+      function setTheme(theme) {
+        if (theme === 'dark') {
+          document.documentElement.classList.add('theme-dark');
+          document.documentElement.classList.remove('theme-light');
+          localStorage.setItem('theme', 'dark');
+        } else if (theme === 'light') {
+          document.documentElement.classList.add('theme-light');
+          document.documentElement.classList.remove('theme-dark');
+          localStorage.setItem('theme', 'light');
+        } else {
+          localStorage.removeItem('theme');
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('theme-dark');
+            document.documentElement.classList.remove('theme-light');
+          } else {
+            document.documentElement.classList.add('theme-light');
+            document.documentElement.classList.remove('theme-dark');
+          }
+        }
+        updateActiveButton(theme);
+      }
+
+      btnLight?.addEventListener('click', () => setTheme('light'));
+      btnDark?.addEventListener('click', () => setTheme('dark'));
+      btnAuto?.addEventListener('click', () => setTheme('auto'));
+
+      const savedTheme = localStorage.getItem('theme') || 'auto';
+      setTheme(savedTheme);
+    });
+  </script>
+</body>
+</html>

@@ -1,3 +1,8 @@
+---
+layout: default
+title: "CI/CD Pipeline Documentation"
+---
+
 # CI/CD Pipeline Documentation
 
 This project includes a fully automated CI/CD pipeline configured via GitHub Actions in `.github/workflows/terraform.yml`. It ensures that every code submission is vetted for quality, syntax correctness, and security boundaries.

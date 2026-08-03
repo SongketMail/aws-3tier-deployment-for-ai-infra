@@ -1,3 +1,8 @@
+---
+layout: default
+title: "Automation Scripts"
+---
+
 # Automation Scripts
 
 The project includes CLI helper scripts and bootstrapping scripts under the `scripts/` directory to automate common tasks, local testing, and instance provisioning.
