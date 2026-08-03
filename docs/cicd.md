@@ -5,7 +5,7 @@ title: "CI/CD Pipeline Documentation"
 
 # CI/CD Pipeline Documentation
 
-This project includes a fully automated CI/CD pipeline configured via GitHub Actions in `.github/workflows/terraform.yml`. It ensures that every code submission is vetted for quality, syntax correctness, and security boundaries.
+This project includes a fully automated CI/CD pipeline configured via GitHub Actions in `.github/workflows/opentofu.yml`. It ensures that every code submission is vetted for quality, syntax correctness, and security boundaries.
 
 ---
 
@@ -21,28 +21,28 @@ The pipeline is triggered automatically on:
 
 The workflow consists of three major jobs designed with security and safety gates:
 
-### 1. Terraform Format and Validate (`terraform-lint-and-validate`)
+### 1. OpenTofu Format and Validate (`opentofu-lint-and-validate`)
 - **Environment:** `ubuntu-latest`
 - **Steps:**
   - **Checkout Code:** Checks out the repository files.
-  - **Setup Terraform:** Installs Terraform version `1.5.0` on the runner.
-  - **Format Check:** Verifies formatting recursively via `terraform fmt -check -recursive`.
-  - **Initialize:** Runs `terraform init -backend=false` to configure modules locally.
-  - **Validate:** Evaluates configurations for semantic validity via `terraform validate`.
+  - **Setup OpenTofu:** Installs OpenTofu version `1.8.2` on the runner using `opentofu/setup-opentofu@v1`.
+  - **Format Check:** Verifies formatting recursively via `tofu fmt -check -recursive`.
+  - **Initialize:** Runs `tofu init -backend=false` to configure modules locally.
+  - **Validate:** Evaluates configurations for semantic validity via `tofu validate`.
 
-### 2. Terraform Planning (`terraform-plan`)
+### 2. OpenTofu Planning (`opentofu-plan`)
 - **Trigger:** Runs only on **Pull Request** events.
-- **Dependency:** Requires the `terraform-lint-and-validate` job to pass.
+- **Dependency:** Requires the `opentofu-lint-and-validate` job to pass.
 - **Steps:**
   - **Configure AWS OIDC Credentials:** Authenticates securely with AWS using OpenID Connect (OIDC) through `aws-actions/configure-aws-credentials@v4` with `secrets.AWS_ROLE_TO_ASSUME` and `secrets.AWS_REGION`.
-  - **Terraform Init & Plan:** Performs complete backend initialization and generates an execution plan showing what changes will be applied.
+  - **OpenTofu Init & Plan:** Performs complete backend initialization and generates an execution plan showing what changes will be applied.
 
-### 3. Terraform Deployment (`terraform-apply`)
+### 3. OpenTofu Deployment (`opentofu-apply`)
 - **Trigger:** Runs only on **Pushes** or Merges to the `main` branch.
-- **Dependency:** Requires the `terraform-lint-and-validate` job to pass.
+- **Dependency:** Requires the `opentofu-lint-and-validate` job to pass.
 - **Steps:**
   - **Configure AWS OIDC Credentials:** Authenticates securely with AWS using OIDC.
-  - **Terraform Init & Apply:** Runs `terraform apply -auto-approve` to deploy the target infrastructure.
+  - **OpenTofu Init & Apply:** Runs `tofu apply -auto-approve` to deploy the target infrastructure.
 
 ---
 

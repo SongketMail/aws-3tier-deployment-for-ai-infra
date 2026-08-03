@@ -10,12 +10,19 @@ NC='\033[0;3m' # No Color
 
 echo -e "${RED}=== WARNING: Starting AWS 3-Tier Infrastructure Destruction ===${NC}"
 
+# Verify OpenTofu is installed
+if ! command -v tofu &> /dev/null; then
+    echo -e "${RED}[Error] OpenTofu (tofu) CLI is not installed.${NC}"
+    echo "To install OpenTofu, please refer to: https://opentofu.org/docs/intro/install/"
+    exit 1
+fi
+
 # Navigate to terraform directory
 cd "$(dirname "$0")/../terraform"
 
-# Verify terraform state exists
+# Verify OpenTofu state exists
 if [ ! -d ".terraform" ]; then
-    echo -e "${RED}[Error] Terraform is not initialized. Run deploy.sh first or run 'terraform init' in the terraform/ directory.${NC}"
+    echo -e "${RED}[Error] OpenTofu is not initialized. Run deploy.sh first or run 'tofu init' in the terraform/ directory.${NC}"
     exit 1
 fi
 
@@ -23,8 +30,8 @@ fi
 read -p "Are you absolutely sure you want to completely DESTROY all deployed AWS resources? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "${BLUE}Running terraform destroy...${NC}"
-    terraform destroy -auto-approve
+    echo -e "${BLUE}Running tofu destroy...${NC}"
+    tofu destroy -auto-approve
     echo -e "${RED}=== Infrastructure Destroyed! ===${NC}"
 else
     echo -e "${BLUE}Destruction cancelled by user.${NC}"

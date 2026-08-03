@@ -11,6 +11,13 @@ NC='\033[0;3m' # No Color
 
 echo -e "${BLUE}=== Starting AWS 3-Tier Infrastructure Deployment ===${NC}"
 
+# Verify OpenTofu is installed
+if ! command -v tofu &> /dev/null; then
+    echo -e "${RED}[Error] OpenTofu (tofu) CLI is not installed.${NC}"
+    echo "To install OpenTofu, please refer to: https://opentofu.org/docs/intro/install/"
+    exit 1
+fi
+
 # Navigate to terraform directory
 cd "$(dirname "$0")/../terraform"
 
@@ -28,28 +35,28 @@ if [ ! -f "terraform.tfvars" ]; then
     fi
 fi
 
-# Terraform Initialization
-echo -e "${BLUE}Initializing Terraform...${NC}"
-terraform init
+# OpenTofu Initialization
+echo -e "${BLUE}Initializing OpenTofu...${NC}"
+tofu init
 
-# Terraform Format
-echo -e "${BLUE}Formatting Terraform configs...${NC}"
-terraform fmt -recursive
+# OpenTofu Format
+echo -e "${BLUE}Formatting OpenTofu/HCL configs...${NC}"
+tofu fmt -recursive
 
-# Terraform Validate
-echo -e "${BLUE}Validating Terraform configs...${NC}"
-terraform validate
+# OpenTofu Validate
+echo -e "${BLUE}Validating OpenTofu configs...${NC}"
+tofu validate
 
-# Terraform Plan
-echo -e "${BLUE}Generating Terraform execution plan...${NC}"
-terraform plan -out=tfplan
+# OpenTofu Plan
+echo -e "${BLUE}Generating OpenTofu execution plan...${NC}"
+tofu plan -out=tfplan
 
 # Ask for approval before applying
 read -p "Do you want to apply this deployment? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "${BLUE}Applying Terraform plan...${NC}"
-    terraform apply tfplan
+    echo -e "${BLUE}Applying OpenTofu plan...${NC}"
+    tofu apply tfplan
     echo -e "${GREEN}=== Deployment Complete! ===${NC}"
 else
     echo -e "${RED}Deployment cancelled by user.${NC}"

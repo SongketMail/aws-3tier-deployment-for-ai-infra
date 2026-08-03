@@ -1,6 +1,6 @@
-# AWS 3-tier Deployment for AI & Web Infra
+# AWS 3-tier Deployment for AI & Web Infra (with OpenTofu)
 
-A complete, production-ready Terraform project and CI/CD workflow to deploy a highly-available, secure **3-Tier Architecture** on AWS, fully integrated with **AWS WAFv2** for protection against malicious requests and DDoS attacks.
+A complete, production-ready OpenTofu project and CI/CD workflow to deploy a highly-available, secure **3-Tier Architecture** on AWS, fully integrated with **AWS WAFv2** for protection against malicious requests and DDoS attacks.
 
 ---
 
@@ -70,7 +70,7 @@ This repository follows industry-standard conventions suitable for GitHub integr
 
 ## Prerequisites
 
-- [Terraform](https://www.terraform.io/downloads.html) >= 1.5.0
+- [OpenTofu](https://opentofu.org/downloads.html) >= 1.6.0
 - [AWS CLI](https://aws.amazon.com/cli/) configured with administrative credentials
 - Git (for tracking changes)
 
@@ -109,11 +109,11 @@ This repository follows industry-standard conventions suitable for GitHub integr
 
 ## CI/CD Pipeline (GitHub Actions)
 
-This repository includes a complete GitHub Actions workflow configured in `.github/workflows/terraform.yml`. It is fully prepared to use **OIDC (OpenID Connect)** to authenticate with AWS securely without hardcoding secret access keys.
+This repository includes a complete GitHub Actions workflow configured in `.github/workflows/opentofu.yml`. It is fully prepared to use **OIDC (OpenID Connect)** to authenticate with AWS securely without hardcoding secret access keys.
 
 ### CI/CD Steps
-1. **Pull Requests:** When a PR is created to `main`, the workflow executes `terraform fmt`, `terraform init -backend=false`, `terraform validate`, and displays a `terraform plan`.
-2. **Merge/Push to Main:** When changes are merged or pushed directly to the `main` branch, the pipeline deploys the infrastructure dynamically to AWS using `terraform apply -auto-approve`.
+1. **Pull Requests:** When a PR is created to `main`, the workflow executes `tofu fmt`, `tofu init -backend=false`, `tofu validate`, and displays a `tofu plan`.
+2. **Merge/Push to Main:** When changes are merged or pushed directly to the `main` branch, the pipeline deploys the infrastructure dynamically to AWS using `tofu apply -auto-approve`.
 
 ### Required GitHub Secrets
 Configure the following secrets under your GitHub repository **Settings -> Secrets and variables -> Actions**:
