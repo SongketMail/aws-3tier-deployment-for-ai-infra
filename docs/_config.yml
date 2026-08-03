@@ -15,3 +15,5 @@ navbar:
     url: "/scripts.html"
   - title: "CI/CD Pipeline"
     url: "/cicd.html"
+  - title: "Costing"
+    url: "/costing.html"

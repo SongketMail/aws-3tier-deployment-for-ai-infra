@@ -40,6 +40,7 @@ Explore different sections of our infrastructure documentation:
 ### Deployment & CI/CD
 - **[Automation Scripts](scripts.html):** Details about CLI helpers (`deploy.sh`, `destroy.sh`, `user_data.sh`).
 - **[CI/CD Pipeline](cicd.html):** GitHub Actions workflow for automatic formatting, testing, validation, and OIDC deployment.
+- **[Costing Estimate](costing.html):** Comprehensive monthly cost breakdown, local currency estimates, and Day-2 cost optimization pathways.
 
 ---
 
