@@ -85,3 +85,15 @@ module "standalone_ec2" {
   ami_id                 = var.standalone_ec2_ami_id
   ubuntu_ami_filter_name = var.standalone_ubuntu_ami_filter_name
 }
+
+# Route 53 Module Setup (Conditional Setup)
+module "route53" {
+  count  = var.enable_route53 ? 1 : 0
+  source = "./modules/route53"
+
+  environment  = var.environment
+  domain_name  = var.domain_name
+  subdomain    = var.subdomain
+  alb_dns_name = module.alb.alb_dns_name
+  alb_zone_id  = module.alb.alb_zone_id
+}

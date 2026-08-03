@@ -154,3 +154,22 @@ variable "standalone_ubuntu_ami_filter_name" {
   type        = string
   default     = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-*-server-*"
 }
+
+# --- Route 53 Variables ---
+variable "enable_route53" {
+  description = "Whether to enable Route 53 domain management and create an alias record for the ALB"
+  type        = bool
+  default     = true
+}
+
+variable "domain_name" {
+  description = "The custom root domain name (e.g., linuxmalaysia.com)"
+  type        = string
+  default     = "linuxmalaysia.com"
+}
+
+variable "subdomain" {
+  description = "The subdomain to point to the ALB (e.g., app). If empty, points to the root domain."
+  type        = string
+  default     = "app"
+}

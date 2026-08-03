@@ -10,7 +10,7 @@ We provide two distinct monthly cost estimates for the 3-Tier AWS Architecture i
 1. **Baseline Cost-Optimized Plan:** Ideal for initial development, testing, staging environments, and low-traffic applications.
 2. **High-Performance Developer-Aligned Plan:** Spec'd specifically to fulfill the resource requirements of the **Developer's First Design (Nginx, Backend, RAGFlow, LangFuse)** with production-grade performance.
 
-Both plans have been updated and calibrated against real-world, production-ready AWS billings from similar projects to incorporate critical infrastructure support services (such as **Amazon ElastiCache Redis**, **Amazon EFS**, **AWS Secrets Manager**, **AWS Backup**, **Amazon CloudWatch**, and standard **Public IPv4 address charges**).
+Both plans have been updated and calibrated against real-world, production-ready AWS billings from similar projects to incorporate critical infrastructure support services (such as **Amazon ElastiCache Redis**, **Amazon EFS**, **AWS Secrets Manager**, **AWS Backup**, **Amazon CloudWatch**, standard **Public IPv4 address charges**, and **Amazon Route 53 custom domain management**).
 
 ---
 
@@ -34,9 +34,10 @@ This configuration targets baseline usage with smaller resource profiles (`t4g.m
 | **Disaster Recovery** | **AWS Backup**<br><br>• Automated Multi-AZ RDS snapshots & EBS backups (~100 GB) | $0.05 / GB-month | $5.00 |
 | **Standalone EC2 Tier** | **Standalone EC2 Instances (AMI Staging & Baking)**<br><br>• 3x Standalone EC2 Instances (one per ASG group: Frontend, Backend, AI Tier) connected directly to RDS, S3, or EFS to ensure 1:1 environment parity.<br><br>• Sized as 3x `t4g.micro` (1 vCPU, 1GB RAM each)<br><br>• 3x 15GB gp3 EBS Root Volumes (45GB total) | $0.0084 / hr / inst<br><br>$0.08 / GB-month | $18.39<br><br>$3.60 |
 | **Data Transfer** | Outbound Internet Data Transfer<br><br>• ~100 GB Outbound (First 100GB Free/mo) | Free Tier | $0.00 |
-| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$416.81 USD** / month |
+| **Route 53 Domain** | Amazon Route 53 Custom Domain Routing<br><br>• 1 Public Hosted Zone<br><br>• Estimated ~2 Million standard queries | $0.50 / zone / mo<br><br>$0.40 / M-req | $0.50<br><br>$0.80 |
+| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$418.11 USD** / month |
 
-* **Local Currency Equivalent (MYR):** **~RM 1,876 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
+* **Local Currency Equivalent (MYR):** **~RM 1,881 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
 
 ---
 
@@ -60,9 +61,10 @@ This configuration scales up computing instances to precisely match the develope
 | **Disaster Recovery** | **AWS Backup**<br><br>• Centralized backup for RDS, EFS, and ASG EBS volumes (~150 GB) | $0.05 / GB-month | $7.50 |
 | **Standalone EC2 Tier** | **Standalone EC2 Instances (AMI Staging & Baking)**<br><br>• 3x Standalone EC2 Instances (one per ASG group: Frontend, Backend, AI Tier) connected directly to RDS, S3, or EFS to ensure 1:1 environment parity.<br><br>• 1x Frontend: `t4g.medium` (2 vCPU, 4GB RAM) + 30GB gp3<br><br>• 1x Backend: `t4g.xlarge` (4 vCPU, 16GB RAM) + 30GB gp3<br><br>• 1x AI Tier: `t4g.xlarge` (4 vCPU, 16GB RAM) + 50GB gp3 (110GB gp3 total) | Frontend: $0.0336 / hr<br>Backend/AI: $0.1344 / hr<br>Storage: $0.08 / GB-mo | $24.53<br>$196.22<br>$8.80 |
 | **Data Transfer** | Outbound Internet Data Transfer<br><br>• ~100 GB Outbound (First 100GB Free/mo) | Free Tier | $0.00 |
-| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$1,062.11 USD** / month |
+| **Route 53 Domain** | Amazon Route 53 Custom Domain Routing<br><br>• 1 Public Hosted Zone<br><br>• Estimated ~2 Million standard queries | $0.50 / zone / mo<br><br>$0.40 / M-req | $0.50<br><br>$0.80 |
+| **TOTAL ESTIMATED MONTHLY COST** |  |  | **~$1,063.41 USD** / month |
 
-* **Local Currency Equivalent (MYR):** **~RM 4,780 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
+* **Local Currency Equivalent (MYR):** **~RM 4,785 MYR / month** *(calculated at an exchange rate baseline of 1 USD ≈ 4.50 MYR)*.
 
 ---
 
@@ -102,6 +104,9 @@ A comparison with real-world billings from a highly similar production deploymen
 │ AWS WAF                         │ $14.06                      │ Aligns perfectly with our Regional Web ACL baseline    │
 │                                 │                             │ ($5.00/mo) + 3 Rules ($3.00/mo) + request volume.      │
 ├─────────────────────────────────┼─────────────────────────────┼────────────────────────────────────────────────────────┤
+│ Route 53                        │ $1.30                       │ 1 Hosted Zone ($0.50) and ~2M queries ($0.80) to route │
+│                                 │                             │ custom domain traffic to ALB dynamically.              │
+├─────────────────────────────────┼─────────────────────────────┼────────────────────────────────────────────────────────┤
 │ Elastic File System             │ $0.54                       │ Confirms EFS usage is minimal (configuration/caches).   │
 │                                 │                             │ We spec EFS at $3.00 (10GB) and $15.00 (50GB) to support│
 │                                 │                             │ RAGFlow pre-trained AI model caching across the ASG.    │
@@ -111,8 +116,8 @@ A comparison with real-world billings from a highly similar production deploymen
 │                                 │                             │ at a realistic $7.30 - $14.50 combined to prevent bill │
 │                                 │                             │ surprises in production.                               │
 ├─────────────────────────────────┼─────────────────────────────┼────────────────────────────────────────────────────────┤
-│ TOTAL MONTHLY COST              │ $659.10                     │ Calibration proves our updated models ($416.81 and      │
-│                                 │                             │ $1,062.11) are exceptionally robust and production-true.│
+│ TOTAL MONTHLY COST              │ $659.10                     │ Calibration proves our updated models ($418.11 and      │
+│                                 │                             │ $1,063.41) are exceptionally robust and production-true.│
 └─────────────────────────────────┴─────────────────────────────┴────────────────────────────────────────────────────────┘
 ```
 
@@ -136,9 +141,11 @@ A comparison with real-world billings from a highly similar production deploymen
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
 │ Standalone EC2 (AMI Baking)     │ 3x `t4g.micro`          │ 1x `t4g.med`, 2x `xlrg` │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
-│ Monthly Estimate (USD)          │ ~$416.81 USD            │ ~$1,062.11 USD          │
+│ Route 53 Domain Setup           │ 1 Hosted Zone + ~2M req │ 1 Hosted Zone + ~2M req │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
-│ Monthly Estimate (MYR)          │ ~RM 1,876 MYR           │ ~RM 4,780 MYR           │
+│ Monthly Estimate (USD)          │ ~$418.11 USD            │ ~$1,063.41 USD          │
+├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
+│ Monthly Estimate (MYR)          │ ~RM 1,881 MYR           │ ~RM 4,785 MYR           │
 └─────────────────────────────────┴─────────────────────────┴─────────────────────────┘
 ```
 

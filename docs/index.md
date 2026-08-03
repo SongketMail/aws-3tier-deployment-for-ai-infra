@@ -32,6 +32,7 @@ Explore different sections of our infrastructure documentation:
 4. **[Root OpenTofu/Terraform Files](root-files.html):** Overview of the root configuration entries (`main.tf`, `variables.tf`, `outputs.tf`, `providers.tf`).
 5. **[OpenTofu Migration Guide](opentofu-migration.html):** Detailed compatibility research and transition path for deploying using OpenTofu on AWS.
 6. **[AMI Design & Hardening Guide](ami-design.html):** Architectural guide outlining the pre-baked AMI strategy, Packer/Ansible pipeline, and ASIMP compliance integration.
+7. **[Route 53 & DNS Troubleshooting](route53.html):** Deep dive into custom domain integration, ACM SSL/TLS setup, and extensive research on resolving ASG private subnet DNS resolution failures.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
