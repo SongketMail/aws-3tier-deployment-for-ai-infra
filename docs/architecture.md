@@ -7,13 +7,13 @@ title: "System Architecture"
 
 This document describes the high-availability 3-tier network topology, AWS component layouts, and routing architectures deployed by this project, fully aligned with our **[Estimated Costing](costing.html)** model.
 
-Additionally, this architecture is fully customized to map and host the **Developer's First Design (RAGFlow + LangFuse AI stack)** in a secure, highly-available, and resilient manner.
+Additionally, this architecture is fully customized to map and host the **Developer's First Design (RAGFlow + LangFuse AI stack)** in a secure, highly-available, and resilient manner, built using hardened **Ubuntu 26.04 LTS** nodes.
 
 ---
 
 ## Developer's First Design vs. AWS Production Architecture
 
-In the developer's initial design (documented in the printscreen `image.png`), the application was structured across four separate standalone virtual machine servers running on **Ubuntu Server 22.04 LTS**:
+In the developer's initial design (documented in the printscreen `image.png`), the application was structured across four separate standalone virtual machine servers running on **Ubuntu Server 26.04 LTS**:
 - **Server 01 (Frontend - Web Tier):** Nginx Web Server / Reverse Proxy (2 vCPU, 4GB RAM)
 - **Server 02 (Backend - App Tier):** Backend + DMS + MCP (4 vCPU, 16GB RAM)
 - **Server 03 (AI Tier):** RAGFlow + LangFuse (4 vCPU, 8GB RAM)
@@ -27,16 +27,24 @@ To make this suitable for enterprise AWS deployment **without changing the AWS r
 
 | Developer's Original Server | Original Spec | AWS Production-Ready Component | AWS Architectural Benefits |
 | :--- | :--- | :--- | :--- |
-| **Server 01: Frontend** | 2 vCPU, 4GB RAM, Ubuntu | **AWS WAFv2 + Application Load Balancer (ALB) + Private Nginx ASG** | **No Public IPs:** Traffic enters via a secure, highly-available ALB with AWS WAFv2 Layer-7 protection (OWASP Top 10 + Rate Limiting). The actual Nginx reverse-proxies run on EC2 instances inside private subnets, hidden from the internet. |
-| **Server 02: Backend** | 4 vCPU, 16GB RAM, Ubuntu | **Multi-AZ Auto Scaling Group (ASG) EC2 Instances** | **High Availability & Auto-Scaling:** Spans multiple Availability Zones. Scales compute nodes dynamically on demand. Sized using high-performance Graviton (`t4g.xlarge` / `m6g.xlarge`) running secure **Amazon Linux 2023** (or enterprise Ubuntu). Outbound traffic is securely routed via **NAT Gateways**. |
-| **Server 03: AI Tier** | 4 vCPU, 8GB RAM, Ubuntu | **Private ASG / Secure Compute Instances** | **Isolation:** Securely hosted in Private App Subnets, completely isolated from direct public internet access. Communicates securely with the backend via private, internal network paths. Sized as Graviton (`c6g.xlarge` / `t4g.xlarge`). |
+| **Server 01: Frontend** | 2 vCPU, 4GB RAM, Ubuntu | **AWS WAFv2 + Application Load Balancer (ALB) + Private Nginx ASG** | **No Public IPs:** Traffic enters via a secure, highly-available ALB with AWS WAFv2 Layer-7 protection (OWASP Top 10 + Rate Limiting). The actual Nginx reverse-proxies run on EC2 instances inside private subnets, hidden from the internet. Hardened via **ASIMP**. |
+| **Server 02: Backend** | 4 vCPU, 16GB RAM, Ubuntu | **Multi-AZ Auto Scaling Group (ASG) EC2 Instances** | **High Availability & Auto-Scaling:** Spans multiple Availability Zones. Scales compute nodes dynamically on demand. Sized using high-performance Graviton (`t4g.xlarge` / `m6g.xlarge`) running secure **Ubuntu 26.04 LTS** (or enterprise Amazon Linux 2023). Hardened via **ASIMP**. Outbound traffic is securely routed via **NAT Gateways**. |
+| **Server 03: AI Tier** | 4 vCPU, 8GB RAM, Ubuntu | **Private ASG / Secure Compute Instances** | **Isolation:** Securely hosted in Private App Subnets, completely isolated from direct public internet access. Communicates securely with the backend via private, internal network paths. Sized as Graviton (`c6g.xlarge` / `t4g.xlarge`) and running hardened **Ubuntu 26.04 LTS**. |
 | **Server 04: Database** | 4 vCPU, 16GB RAM, Ubuntu | **AWS RDS PostgreSQL (Multi-AZ)** | **Managed Resiliency:** Replaced self-managed SQL database with a fully managed Multi-AZ PostgreSQL database (`db.m6g.xlarge`). Synchronous replication, automated snapshots/failover, zero direct public route, and ingress restricted solely to private compute instances. |
+
+---
+
+## Standalone EC2 Instances for Dedicated Requirements
+
+To supplement our high-availability Auto Scaling Groups, this project also provisions secure **Standalone EC2 Instances** (running **Ubuntu 26.04 LTS** and hardened via **ASIMP**).
+
+These standalone instances are deployed directly inside the **VPC Private Application Subnets** and are designed specifically to support developer sandboxes, application build-ups, one-off testing nodes, or specific application tools (like MCP, DMS staging, and AI tool experimentation) that are not ready or suited for horizontal auto-scaling fleets. They retain absolute network isolation, are integrated with AWS Systems Manager (SSM) for passwordless, secure SSH, and inherit zero direct internet ingress.
 
 ---
 
 ## Architectural Schematic
 
-The modified network topology below outlines how the developer's AI and web application servers sit and interact within our AWS secure environment:
+The modified network topology below outlines how the developer's AI and web application servers sit and interact within our AWS secure environment, including the newly added standalone development instances:
 
 ```
                                             [ INTERNET ] (Web Client)
@@ -69,7 +77,15 @@ The modified network topology below outlines how the developer's AI and web appl
          │  │   └─────────────────┬─────────────────┘   └─────────────────┬─────────────────┘   │  │
          │  └─────────────────────┼───────────────────────────────────────┼─────────────────┘  │
          │                        │                                       │                    │
-         │                        └───────────────────┬───────────────────┘                    │
+         │                        │   ┌───────────────────────────────┐   │                    │
+         │                        │   │   STANDALONE EC2 INSTANCES    │   │                    │
+         │                        │   │    (Ubuntu 26.04 Hardened)    │   │                    │
+         │                        │   │                               │   │                    │
+         │                        │   │  • Staging DMS / Sandbox App  │   │                    │
+         │                        │   │  • Sizing: t4g.micro/medium   │   │                    │
+         │                        │   └───────────────┬───────────────┘   │                    │
+         │                        │                   │                   │                    │
+         │                        └───────────────────┼───────────────────┘                    │
          │                                            │                                        │
          │                                            ▼ (Secure Outbound Updates / APIs)        │
          │                                    [ NAT Gateways ]                                 │
@@ -108,7 +124,8 @@ The modified network topology below outlines how the developer's AI and web appl
 - **Subnets:** `10.0.10.0/24` (AZ `ap-southeast-5a`) and `10.0.11.0/24` (AZ `ap-southeast-5b`).
 - **Description:** Holds business and compute logic. Instances have no public IP addresses and cannot be accessed directly from the internet.
 - **Resources:**
-  - **Auto Scaling Group (ASG) EC2 Instances:** Hosts the application code (Nginx web service). Features **t4g.xlarge** or **m6g.xlarge** EC2 Instances (ARM Graviton, 4 vCPU, 16GB RAM each) equipped with **gp3 EBS Root Volumes**. They handle Server 02 (Backend + DMS + MCP) and Server 03 (RAGFlow + LangFuse) workloads securely.
+  - **Auto Scaling Group (ASG) EC2 Instances:** Hosts the application code (Nginx web service). Features **t4g.xlarge** or **m6g.xlarge** EC2 Instances (ARM Graviton, 4 vCPU, 16GB RAM each) equipped with **gp3 EBS Root Volumes**. They handle Server 02 (Backend + DMS + MCP) and Server 03 (RAGFlow + LangFuse) workloads securely on hardened Ubuntu 26.04 LTS.
+  - **Standalone EC2 Instances:** Configured for isolated application development, testing, and requirements staging. Runs Ubuntu 26.04 LTS hardened via ASIMP, with outbound internet routing secured strictly via NAT Gateway.
 
 ### 3. Database Layer (Isolated Private Subnets)
 - **Subnets:** `10.0.20.0/24` (AZ `ap-southeast-5a`) and `10.0.21.0/24` (AZ `ap-southeast-5b`).

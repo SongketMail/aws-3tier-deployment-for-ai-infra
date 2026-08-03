@@ -35,3 +35,10 @@ db_password       = "YOUR_SECURE_PASSWORD_HERE" # Change this!
 
 # WAF configurations
 waf_rate_limit = 2000
+
+# Standalone EC2 configurations for developer/application requirements
+enable_standalone_ec2             = true
+standalone_ec2_instance_type      = "t4g.micro"
+standalone_ec2_count              = 1
+standalone_ec2_ami_id             = ""
+standalone_ubuntu_ami_filter_name = "ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-*-server-*"

@@ -31,6 +31,7 @@ Explore different sections of our infrastructure documentation:
 3. **[ASGs & Separation of Concerns Guide](asg-separation-of-concern.html):** Best practice guide detailing auto-scaling with distinct ASGs, stateless principles, and the role of Amazon S3, EFS, or both.
 4. **[Root OpenTofu/Terraform Files](root-files.html):** Overview of the root configuration entries (`main.tf`, `variables.tf`, `outputs.tf`, `providers.tf`).
 5. **[OpenTofu Migration Guide](opentofu-migration.html):** Detailed compatibility research and transition path for deploying using OpenTofu on AWS.
+6. **[AMI Design & Hardening Guide](ami-design.html):** Architectural guide outlining the pre-baked AMI strategy, Packer/Ansible pipeline, and ASIMP compliance integration.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
@@ -39,6 +40,7 @@ Explore different sections of our infrastructure documentation:
 - **[ALB Module](modules/alb.html):** Application Load Balancer and health-check configurations.
 - **[ASG Module](modules/asg.html):** Auto Scaling Group, Launch Templates, and dynamic Graviton auto-detection.
 - **[RDS Module](modules/rds.html):** Multi-AZ PostgreSQL configuration and parameter group tuning.
+- **[Standalone EC2 Module](modules/standalone_ec2.html):** Secure standalone Ubuntu 26.04 LTS development and application environments.
 
 ### Deployment & CI/CD
 - **[Automation Scripts](scripts.html):** Details about CLI helpers (`deploy.sh`, `destroy.sh`, `user_data.sh`).
