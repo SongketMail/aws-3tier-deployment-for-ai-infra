@@ -51,6 +51,8 @@ module "asg" {
   min_size               = var.min_size
   max_size               = var.max_size
   desired_capacity       = var.desired_capacity
+  instance_type          = var.instance_type
+  ami_id                 = var.ami_id
 }
 
 # Relational Database Service (RDS) Setup

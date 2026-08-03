@@ -1,0 +1,18 @@
+title: "AWS Secure 3-Tier Architecture Docs"
+description: "Comprehensive technical documentation for deploying a secure, resilient, Multi-AZ 3-Tier Web Architecture on AWS with WAFv2 and Graviton instances."
+theme: jekyll-theme-cayman
+show_downloads: false
+google_analytics:
+
+# Navigation settings
+navbar:
+  - title: "Home"
+    url: "/"
+  - title: "Architecture"
+    url: "/architecture.html"
+  - title: "Root Files"
+    url: "/root-files.html"
+  - title: "Scripts"
+    url: "/scripts.html"
+  - title: "CI/CD Pipeline"
+    url: "/cicd.html"

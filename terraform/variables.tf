@@ -1,13 +1,13 @@
 variable "aws_region" {
   description = "AWS region where resources will be deployed"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-southeast-5"
 }
 
 variable "environment" {
   description = "Environment name (e.g., dev, staging, prod)"
   type        = string
-  default     = "dev"
+  default     = "production"
 }
 
 variable "vpc_cidr" {
@@ -25,19 +25,19 @@ variable "public_subnet_cidrs" {
 variable "private_app_subnet_cidrs" {
   description = "List of CIDR blocks for private app subnets"
   type        = list(string)
-  default     = ["10.0.11.0/24", "10.0.12.0/24"]
+  default     = ["10.0.10.0/24", "10.0.11.0/24"]
 }
 
 variable "private_db_subnet_cidrs" {
   description = "List of CIDR blocks for private database subnets"
   type        = list(string)
-  default     = ["10.0.21.0/24", "10.0.22.0/24"]
+  default     = ["10.0.20.0/24", "10.0.21.0/24"]
 }
 
 variable "availability_zones" {
   description = "Availability Zones to deploy subnets"
   type        = list(string)
-  default     = ["us-east-1a", "us-east-1b"]
+  default     = ["ap-southeast-5a", "ap-southeast-5b"]
 }
 
 variable "http_port" {
@@ -49,31 +49,31 @@ variable "http_port" {
 variable "db_port" {
   description = "Port to connect to the database"
   type        = number
-  default     = 3306
+  default     = 5432
 }
 
 variable "db_engine" {
   description = "RDS engine (e.g., mysql, postgres)"
   type        = string
-  default     = "mysql"
+  default     = "postgres"
 }
 
 variable "db_engine_version" {
   description = "RDS engine version"
   type        = string
-  default     = "8.0.35"
+  default     = "16"
 }
 
 variable "db_instance_class" {
   description = "RDS instance size"
   type        = string
-  default     = "db.t3.micro"
+  default     = "db.t4g.micro"
 }
 
 variable "db_name" {
   description = "The database name"
   type        = string
-  default     = "mydb"
+  default     = "appdb"
 }
 
 variable "db_username" {
@@ -88,6 +88,18 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "instance_type" {
+  description = "Instance type for ASG instances"
+  type        = string
+  default     = "t4g.micro"
+}
+
+variable "ami_id" {
+  description = "AMI ID to use for the launch template in ap-southeast-5"
+  type        = string
+  default     = ""
+}
+
 variable "min_size" {
   description = "Minimum size of the ASG"
   type        = number
@@ -97,7 +109,7 @@ variable "min_size" {
 variable "max_size" {
   description = "Maximum size of the ASG"
   type        = number
-  default     = 5
+  default     = 6
 }
 
 variable "desired_capacity" {
