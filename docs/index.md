@@ -36,6 +36,7 @@ Explore different sections of our infrastructure documentation:
 8. **[Secure Developer Access Guide](jumphost.html):** Comprehensive guide on using our secure SSH Jumphost (Bastion) to access private and standalone nodes from Cyberjaya, with Windows/macOS/Linux client setups and private key security guidelines.
 9. **[Hybrid Cloud Integration Guide](hybrid-onprem.html):** Comprehensive evaluation of secure, cost-optimized API and MCP connections alongside official AWS hybrid network solutions (VPN, Direct Connect, Transit Gateway) with granular MYR/USD costing models for ap-southeast-5.
 10. **[Disaster Recovery Options & National Sovereignty Guide](dr-options.html):** Production-ready playbook covering the 4 standard AWS cloud DR options aligned with our Multi-AZ architecture, detailed local sovereignty/PDPA/CBPDT compliance reviews, and granular USD/MYR costing comparisons.
+11. **[RDS PostgreSQL 17 vs. Percona Server for PostgreSQL 17 Guide](postgresql-comparison.html):** Comprehensive technical comparison of performance, telemetry, observability (PMM vs CloudWatch/Performance Insights), architectural designs, and costs in USD/MYR for ap-southeast-5.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
