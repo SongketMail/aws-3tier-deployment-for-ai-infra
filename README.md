@@ -1,136 +1,168 @@
-# AWS 3-tier Deployment for AI & Web Infra (with OpenTofu)
+# AWS 3-Tier Deployment for AI & Web Infra (with OpenTofu)
 
-A complete, production-ready OpenTofu project and CI/CD workflow to deploy a highly-available, secure **3-Tier Architecture** on AWS, fully integrated with **AWS WAFv2** for protection against malicious requests and DDoS attacks.
+Welcome to the **AWS 3-Tier Deployment for AI & Web Infra** repository. This is an enterprise-grade, highly available, secure, and cost-optimized infrastructure project. It is natively deployed using **OpenTofu** and targeted at the **AWS Asia Pacific (Malaysia) region (`ap-southeast-5`)** with full support for Graviton (ARM64) compute, automated pre-baked AMIs, strict security architectures, Valkey-based session stores, and custom regional compliance solutions.
 
----
-
-## Architecture Overview
-
-This project implements a secure and robust three-tier layout separated logically and physically across multiple Availability Zones (AZs) for high availability:
-
-```
-                      [ INTERNET ]
-                           │
-                           ▼
-                     [ AWS WAFv2 ]   <-- (OWASP Top 10 + IP Rate Limiting)
-                           │
-                           ▼
-             [ Application Load Balancer ]  <-- (Public Subnets)
-                           │
-             ┌─────────────┴─────────────┐
-             ▼                           ▼
-      [ ASG EC2 Instance ]       [ ASG EC2 Instance ]  <-- (Private App Subnets)
-             │                           │
-             └─────────────┬─────────────┘
-                           ▼
-                 [ Multi-AZ RDS DB ]        <-- (Private Database Subnets)
-```
-
-1. **Presentation/Web Tier (Public Subnets):**
-   - **Application Load Balancer (ALB):** Distributes incoming traffic to the application tier.
-   - **AWS WAFv2:** Protects the ALB by applying Core/Common Rule Sets, SQL Injection (SQLi) Protection, and Rate Limiting.
-2. **Application Tier (Private Subnets):**
-   - **Auto Scaling Group (ASG):** Spans across multiple Availability Zones to scale ec2 instances dynamically based on CPU usage. It has no public IP addresses. Outbound connections are routed securely via **NAT Gateways**.
-3. **Database Tier (Private Subnets):**
-   - **Multi-AZ RDS (MySQL/PostgreSQL):** Only accepts connections from the application tier instances security group. Completely isolated from the internet.
+This file serves as a **comprehensive developer portal**, providing absolute alignment with our **GitHub Pages documentation site** and a complete index to our extensive technical guides, submodules, scripts, and deployment mechanisms.
 
 ---
 
-## Directory Structure
+## Technical Architecture Overview
 
-This repository follows industry-standard conventions suitable for GitHub integration and infrastructure-as-code team projects.
+Our design is built on the **Zero-Trust Network Principle**, dividing components into distinct physical and logical layers:
+
+```
+                                [ INTERNET ]
+                                     │
+                                     ▼
+                               [ AWS WAFv2 ]   <-- (OWASP Top 10 + IP Rate Limiting)
+                                     │
+                                     ▼
+                       [ Application Load Balancer ]  <-- (Public Subnets)
+                                     │
+                       ┌─────────────┴─────────────┐
+                       ▼                           ▼
+                [ Frontend Nginx ]          [ Frontend Nginx ]  <-- (ASG EC2 Private Subnets)
+                       │                           │
+                       └─────────────┬─────────────┘
+                                     ▼
+                            [ ElasticCache Valkey ]     <-- (Session Caching Layer)
+                                     │
+                                     ▼
+                            [ Multi-AZ RDS PG ]         <-- (Isolated Database Subnets)
+```
+
+1. **Presentation / Web Tier (Public Subnets):**
+   - **Application Load Balancer (ALB):** Restricts incoming requests strictly to HTTP/HTTPS.
+   - **AWS WAFv2:** Filters regional requests, blocking OWASP Top-10 vulnerabilities, SQL injection attempts, and implementing active IP rate limits.
+2. **Application / Compute Tier (Private Subnets):**
+   - **Auto Scaling Groups (ASG):** Secure, isolated EC2 instances running hardened **Ubuntu 26.04 LTS** (Graviton ARM64 architecture). Direct SSH is disabled; systems are managed passwordlessly using **AWS Systems Manager (SSM)**.
+   - **Amazon ElastiCache for Valkey:** High-performance, secure, and license-compliant key-value cache layer configured for fast query/session operations.
+3. **Database Tier (Isolated Subnets):**
+   - **Multi-AZ RDS PostgreSQL:** Isolate data across multiple availability zones. Ingress is restricted exclusively to port 5432 originating from the compute tier.
+
+---
+
+## Repository Structure
 
 ```
 .
 ├── .github/
 │   └── workflows/
-│       └── terraform.yml       # GitHub Actions pipeline for format, validate, and apply
-├── scripts/
-│   ├── deploy.sh               # CLI helper to format, validate, plan, and deploy
-│   ├── destroy.sh              # CLI helper to tear down the entire infrastructure
-│   └── user_data.sh            # Bootstrapping script for EC2 instances
-├── terraform/
-│   ├── modules/
-│   │   ├── vpc/                # Modules for VPC, Subnets, Internet & NAT Gateways
-│   │   ├── security_groups/    # Strict Security Group Rules separating layers
-│   │   ├── alb/                # Application Load Balancer and target groups
-│   │   ├── waf/                # AWS WAFv2 Web ACL configuration and association
-│   │   ├── asg/                # Auto Scaling Group, Launch Templates, and scaling policies
-│   │   └── rds/                # Multi-AZ RDS Database configuration
-│   ├── main.tf                 # Root Terraform configuration calling modules
-│   ├── variables.tf            # Variables definition
-│   ├── outputs.tf              # Architecture deployment outputs (endpoints, IPs, etc.)
-│   ├── providers.tf            # Terraform and AWS provider definitions
-│   └── terraform.tfvars.example# Template for environment configuration
-├── .gitignore                  # Ignoring tfstate, lock files, and local logs
-└── LICENSE
+│       ├── jekyll-gh-pages.yml   # Automates python document processing & Jekyll deploy
+│       └── opentofu.yml          # Format, lint, OIDC-based validation & deploy
+├── docs/                         # Jekyll Document System (Source of GitHub Pages Portal)
+│   ├── _layouts/                 # Jekyll theme responsive layouts
+│   ├── assets/                   # Centralized stylesheets (global.css)
+│   ├── modules/                  # Technical sub-specifications for every component
+│   └── *.md                      # Extensive engineering guide files
+├── scripts/                      # Operation and deployment utility scripts
+│   ├── deploy.sh                 # Coordinates OpenTofu linting, format, validate, and plans
+│   ├── destroy.sh                # Graceful deletion coordinator for provisioning
+│   ├── prepare_docs.py           # Pre-build Python processor prepending front-matter
+│   └── user_data.sh              # Cloud-init bootstrapping script
+├── terraform/                    # Modularized Infrastructure as Code (IaC) configuration
+│   ├── modules/                  # Submodules encapsulating AWS resources
+│   │   ├── alb/                  # Load balancer target definitions
+│   │   ├── asg/                  # Launch templates & dynamic scaling rules
+│   │   ├── elasticache/          # Valkey cluster configuration
+│   │   ├── jumphost/             # Cyberjaya whitelisted SSH Bastion setup
+│   │   ├── rds/                  # Highly available Postgres instance configuration
+│   │   ├── route53/              # Dynamic records mapping DNS values
+│   │   ├── security_groups/      # Strict port security definitions
+│   │   ├── standalone_ec2/       # Pre-bake AMI dev / test environments
+│   │   └── vpc/                  # Multi-AZ subnet allocation structures
+│   ├── main.tf                   # Core OpenTofu file mapping variables and submodules
+│   ├── outputs.tf                # Global stack endpoints outputs
+│   ├── providers.tf              # Declarative block specifying AWS, TLS, Random, etc.
+│   ├── variables.tf              # Fully typed input variables
+│   └── terraform.tfvars.example  # Production template environment configurations
+├── README.md                     # Central documentation index portal (this file)
+├── AGENTS.md                     # Guide and context guidelines for AI Agents (including Google Jules)
+├── llms.txt                      # AI-optimized plain text directory pointing to resources
+├── HISTORY.md                    # Rich project narrative detailing the timeline from Day 0
+└── CHANGELOG.md                  # Semantic version history detailing milestones to v1.0.0
 ```
 
 ---
 
-## Prerequisites
+## Documentation Portal Index
 
-- [OpenTofu](https://opentofu.org/downloads.html) >= 1.6.0
-- [AWS CLI](https://aws.amazon.com/cli/) configured with administrative credentials
-- Git (for tracking changes)
+Our comprehensive documentation is compiled, auto-formatted, and deployed directly via **GitHub Pages**. Use the catalog below to navigate to specific sections:
+
+### 1. Conceptual Alignment & Architecture
+* **[Developer Design Alignment](docs/developer-design-mapping.md):** Architectural breakdown mapping fragile legacy single-VM developer architectures into enterprise-level highly available managed services.
+* **[Separation of Concerns](docs/asg-separation-of-concern.md):** Guidelines for implementing stateless ASG layers, session persistence, and comparative analysis of S3 vs. Amazon EFS.
+* **[System Architecture Details](docs/architecture.md):** Comprehensive breakdown of VPC subnetting, route tables, and Multi-AZ network architecture configurations.
+* **[OpenTofu Migration Guide](docs/opentofu-migration.md):** Migration patterns, state management comparisons, and CLI syntax transitions between legacy Terraform and OpenTofu.
+
+### 2. Infrastructure Submodules
+* **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.
+* **[Security Groups Firewall](docs/modules/security_groups.md):** Zero-Trust ingress/egress rules and port-level component isolation.
+* **[WAF Protection](docs/modules/waf.md):** Layer-7 Web Application Firewall settings, custom rulesets, and IP rate limits.
+* **[ALB Target Routing](docs/modules/alb.md):** Target groups routing rules, SSL termination, and endpoint configurations.
+* **[ASG Compute Clusters](docs/asg-separation-of-concern.md):** Launch templates, scaling definitions, and automatic ARM64 Graviton architecture detection.
+* **[RDS Multi-AZ PostgreSQL](docs/modules/rds.md):** Database clustering, parameter group optimization, and storage encryption details.
+* **[ElastiCache Valkey](docs/modules/elasticache.md):** Ultra-fast caching cluster parameters and cost considerations.
+* **[Jumphost (SSH Bastion)](docs/modules/jumphost.md):** Secured entrypoints mapping whitelisted Cyberjaya developer offices to downstream resources.
+* **[Standalone EC2 Environments](docs/modules/standalone_ec2.md):** Dedicated testing/development servers mimicking identical RDS/S3 linkages.
+
+### 3. Advanced Operational Guides
+* **[Disaster Recovery & Sovereignty](docs/dr-options.md):** High-availability failover guidelines, AWS Elastic Disaster Recovery (AWS DRS) Strategy modeling, and Malaysian PDPA compliance pathways.
+* **[PostgreSQL Database Comparison](docs/postgresql-comparison.md):** Managed RDS PostgreSQL 17 Multi-AZ vs. self-installed Percona PostgreSQL 17 on EC2 (comparing Patroni/PgBouncer, telemetry, and local costs).
+* **[Secure Bastion & Jumphost Operations](docs/jumphost.md):** Manual detailing secure client key configurations, Windows/macOS connection commands, and ASIMP-hardened operating parameters.
+* **[Hybrid Cloud Connections](docs/hybrid-onprem.md):** Evaluation comparing high-cost VPN/Direct Connect with modern cost-optimized API-driven and MCP-proxy integration styles.
+* **[AMI Hardening Compliance](docs/ami-design.md):** Pre-baked Ubuntu 26.04 LTS AMIs using Packer, Ansible, and the ASIMP security hardening framework.
+* **[GitLab CI/CD & Persistent EFS Storage](docs/gitlab-efs-cicd.md):** GitLab pipeline automation mounting EFS, tuning performance with `open_file_cache`, and managing dynamic Nginx paths.
+* **[Route 53 & Dynamic DNS Troubleshooting](docs/route53.md):** Domain names matching, certificate auto-validation, and extensive research on ASG dynamic resolver cache issues.
+
+### 4. Financial Cost Estimations
+* **[Cost Analysis Guide](docs/costing.md):** Comprehensive price modeling in USD and MYR tailored for the `ap-southeast-5` (Malaysia) region. Includes:
+  - **Baseline Cost-Optimized Plan (~$426.75 USD/mo):** Budget-oriented layout leveraging shared instances, Valkey caching, and single NAT routing.
+  - **High-Performance Enterprise Plan (~$1,064.46 USD/mo):** High-availability layout leveraging multi-NAT, large compute families, and extensive backup limits.
 
 ---
 
-## Getting Started & Deployment
+## Getting Started
 
-### Local CLI Deployment
+### Prerequisites
+* [OpenTofu](https://opentofu.org/downloads.html) >= 1.6.0 installed on your local control node.
+* [AWS CLI](https://aws.amazon.com/cli/) configured with administrative rights targeted to `ap-southeast-5`.
+* Python >= 3.10 (to run build/prepare automation).
 
-1. **Clone the repository:**
+### Local Execution Pipeline
+1. **Initialize & Sync Repository:**
    ```bash
    git clone https://github.com/your-username/aws-3tier-deployment-for-ai-infra.git
    cd aws-3tier-deployment-for-ai-infra
    ```
-
-2. **Configure Variables:**
-   Create your custom `terraform.tfvars` configuration file:
+2. **Setup Environment Variables:**
    ```bash
    cp terraform/terraform.tfvars.example terraform/terraform.tfvars
    ```
-   Open `terraform/terraform.tfvars` in your preferred editor and set your sensitive database password and environment preferences.
-
-3. **Deploy with helper script:**
-   The `scripts/deploy.sh` script automates initialization, validation, and planning, ensuring that you review the infrastructure before applying.
+   *Edit the tfvars configuration with your target PostgreSQL credentials and office IP ranges.*
+3. **Execute Automated Deployment Script:**
+   The `scripts/deploy.sh` handles linting, auto-formatting, syntax validation, and displays the proposed modifications:
    ```bash
    ./scripts/deploy.sh
    ```
-
-4. **Tear down with helper script:**
-   When you no longer need the resources, use the destruction script to cleanly remove all AWS services:
+4. **Teardown Clean-up:**
+   To safely remove and de-provision resources:
    ```bash
    ./scripts/destroy.sh
    ```
 
 ---
 
-## CI/CD Pipeline (GitHub Actions)
+## CI/CD Deployment with GitHub Actions
 
-This repository includes a complete GitHub Actions workflow configured in `.github/workflows/opentofu.yml`. It is fully prepared to use **OIDC (OpenID Connect)** to authenticate with AWS securely without hardcoding secret access keys.
+The repository integrates a secure deployment pipeline in `.github/workflows/opentofu.yml` utilizing **AWS OIDC (OpenID Connect)**.
 
-### CI/CD Steps
-1. **Pull Requests:** When a PR is created to `main`, the workflow executes `tofu fmt`, `tofu init -backend=false`, `tofu validate`, and displays a `tofu plan`.
-2. **Merge/Push to Main:** When changes are merged or pushed directly to the `main` branch, the pipeline deploys the infrastructure dynamically to AWS using `tofu apply -auto-approve`.
-
-### Required GitHub Secrets
-Configure the following secrets under your GitHub repository **Settings -> Secrets and variables -> Actions**:
-- `AWS_ROLE_TO_ASSUME`: The ARN of the IAM Role for OIDC connection.
-- `AWS_REGION`: The target AWS region (e.g., `us-east-1`).
+### Pipeline Features
+* **Conditional Triggers:** OpenTofu plan/apply executions are dynamically bypassed in fork pull-requests where AWS secrets are restricted. This avoids standard deployment failures while maintaining full local verification.
+* **Jekyll Compilation Pages:** The `.github/workflows/jekyll-gh-pages.yml` automatically executes the `scripts/prepare_docs.py` before building and publishing our responsive documentation portal.
 
 ---
 
-## Security Best Practices Built-In
+## Contact & Maintenance
 
-- **Zero Direct Public DB Access:** Database instances are stored in deep private subnets with ingress strictly limited to the ASG security group.
-- **WAF Layer-7 Rules:** Out-of-the-box rule sets prevent standard attacks such as SQL injection, cross-site scripting (XSS), and automated scraping/flooding via IP Rate Limiting.
-- **Storage Encryption:** AWS RDS is deployed with storage volume encryption enabled (`storage_encrypted = true`).
-- **No Hardcoded Credentials:** The setup includes templates/examples and utilizes instance profiles for EC2 instead of raw IAM Access Keys.
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+For questions regarding development parameters, AMI baking steps, or local security policies, consult [AGENTS.md](AGENTS.md) or open an issue on the centralized repository.
