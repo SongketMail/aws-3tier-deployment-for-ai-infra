@@ -306,6 +306,11 @@ tr:nth-child(even) {
     --lab-code-text: #0f172a !important;
   }
 
+  html, body {
+    height: auto !important;
+    min-height: auto !important;
+  }
+
   body {
     background-color: #ffffff !important;
     color: #1e293b !important;
@@ -323,6 +328,8 @@ tr:nth-child(even) {
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    height: auto !important;
+    min-height: auto !important;
   }
 
   #content {
