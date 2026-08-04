@@ -282,3 +282,85 @@ tr:nth-child(even) {
     padding: 20px;
   }
 }
+
+/* Print optimizations */
+@media print {
+  /* Force white background and dark text for print ("day background") */
+  :root, .theme-dark, :root.theme-dark, .theme-light, :root.theme-light {
+    --lab-bg: #ffffff !important;
+    --lab-surface: #ffffff !important;
+    --lab-text: #1e293b !important;
+    --lab-muted: #64748b !important;
+    --lab-border: #e2e8f0 !important;
+    --lab-primary: #0f172a !important;
+    --lab-purple: #8e44ad !important;
+    --lab-heading: #0f172a !important;
+    --lab-section-bg: #ffffff !important;
+    --lab-box-bg: #f9f9f9 !important;
+    --lab-alert-bg: #e6f7ff !important;
+    --lab-warning-bg: #fff3cd !important;
+    --lab-vulnerable-bg: #ffffff !important;
+    --lab-secure-bg: #ffffff !important;
+    --lab-cta-bg: #fffbeb !important;
+    --lab-code-bg: #f8fafc !important;
+    --lab-code-text: #0f172a !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+  }
+
+  /* Hide navigation, sidebars, header, footer, buttons and search widgets */
+  #left, #right, #top, #footer, .btn, button, .theme-switcher-container, .print-btn {
+    display: none !important;
+  }
+
+  /* Expand content to fit full width of the A4 page */
+  #container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #content {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: #ffffff !important;
+  }
+
+  .content-body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Page setup for A4 */
+  @page {
+    size: A4;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+
+  /* Avoid breaking elements awkwardly across pages */
+  pre, code, tr, img, table, blockquote {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  a {
+    color: var(--lab-purple) !important;
+    text-decoration: underline !important;
+  }
+}
