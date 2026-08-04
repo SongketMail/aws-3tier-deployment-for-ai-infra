@@ -58,15 +58,17 @@ When designing DR topologies for applications processing citizen data in Malaysi
 
 ## 3. Disaster Recovery Spectrum Analysis
 
-We analyze the four standard AWS Disaster Recovery options. Each strategy presents a distinct balance of Recovery Point Objective (RPO), Recovery Time Objective (RTO), implementation complexity, and ongoing operating cost.
+We analyze the four standard AWS Disaster Recovery options, alongside AWS Elastic Disaster Recovery (AWS DRS) as a modern, cost-optimized, and near-zero RPO hybrid strategy. Each strategy presents a distinct balance of Recovery Point Objective (RPO), Recovery Time Objective (RTO), implementation complexity, and ongoing operating cost.
 
 ```
-     Low Cost                                                                       High Cost
-     High RPO/RTO                                                                   Near-Zero RPO/RTO
-     ┌──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┐
-     │  Backup & Restore    │     Pilot Light      │     Warm Standby     │  Multi-Site Active-  │
-     │                      │                      │                      │        Active        │
-     └──────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┘
+     Low Cost                                                                                                         High Cost
+     High RPO/RTO                                                                                                     Near-Zero RPO/RTO
+     ┌──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┐
+     │                      │                      │                      │                      │  AWS Elastic DR      │
+     │   Backup & Restore   │     Pilot Light      │     Warm Standby     │  Multi-Site Active-  │      (AWS DRS)       │
+     │                      │                      │                      │        Active        │ (Highly cost-eff.    │
+     │                      │                      │                      │                      │   Sub-Minute RPO)    │
+     └──────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┘
 ```
 
 ---
@@ -194,6 +196,40 @@ Traffic is split dynamically across two identical, full-scale production environ
 
 ---
 
+### Strategy E: AWS Elastic Disaster Recovery (AWS DRS)
+
+AWS Elastic Disaster Recovery (AWS DRS) minimizes downtime and data loss with fast, reliable recovery of on-premises and cloud-based applications using affordable storage, minimal compute, and point-in-time recovery. It provides sub-minute RPO and minutes-level RTO.
+
+```
+[ On-Premises or Remote Cloud Source Servers ]            [ Target Staging Area (ap-southeast-5) ]
+   ├── AWS DRS Replication Agent                          ├── Continuous Block-Level Replication (TCP 1500)
+   ├── Source Disks (EBS/On-Prem Storage)  ══════════════►├── Lightweight EC2 Replication Servers (t3.small)
+   └── Operating System State                             └── Low-Cost EBS Staging Volumes (gp3/sc1)
+                                                                        │
+                                                                        ▼ (In the Event of Disaster/Drill)
+                                                          [ Target Recovery Area (ap-southeast-5) ]
+                                                          └── Launches fully-provisioned target instances
+```
+
+#### 1. Architectural Setup & Component Layout
+* **Source Servers:** Install the AWS Elastic Disaster Recovery Replication Agent on target source servers (on-premises or remote cloud nodes) to initiate secure, block-level data replication.
+* **Staging Area Subnet:** Data is continuously replicated to a dedicated, low-cost staging area subnet in the designated AWS account and Region (e.g., `ap-southeast-5`).
+* **Compute & Storage Optimization:** Staging costs are highly minimized. Lightweight, automatically managed EC2 replication instances (e.g., `t3.small` nodes) handle incoming blocks, while affordable EBS volumes (gp3 or low-cost sc1) act as the replication target disks.
+* **Non-Disruptive Testing:** Allows running seamless, non-disruptive disaster recovery drills and tests at any time without impacting active replication or source servers.
+* **Drill/Recovery Launches:** When a failover or drill is initiated, AWS DRS automatically launches target EC2 instances based on the most up-to-date server state or a specified historical point-in-time state.
+* **Failback Replication:** After the primary site issue is resolved, data replication is initiated in reverse back to the primary site, ensuring seamless failback.
+
+#### 2. Recovery Objectives
+* **Recovery Point Objective (RPO):** **Seconds to Sub-Minute** (continuous, real-time block-level asynchronous replication).
+* **Recovery Time Objective (RTO):** **Minutes** (automated launch, conversion, and orchestration of recovery instances).
+
+#### 3. Trade-offs & Analysis
+* **Cost:** Highly Cost-Effective. Replicating servers cost only a nominal hourly software license fee ($0.028 per server per hour) plus low-cost staging compute (`t3.small`) and staging EBS volumes, instead of running full warm standby or active-active duplicate environments.
+* **Complexity:** Medium. Requires installing replication agents on source servers and configuring launch templates, but failover and failback orchestration are highly automated.
+* **Sovereignty:** 100% Sovereign when staging and recovery are targeted inside the **AWS Malaysia Region (`ap-southeast-5`)**. Because the continuous block replication targets local sovereign physical boundaries, it completely satisfies PDPA and 2025 CBPDT requirements for localized residency, avoiding complex cross-border Transfer Impact Assessments (TIAs).
+
+---
+
 ## 4. Comprehensive Cost Estimation Model (USD & MYR)
 
 To provide clear financial visibility, we present granular monthly costs for all four DR strategies, comparing:
@@ -206,21 +242,22 @@ All prices are calibrated for On-Demand rates (~730 hours/month) for our **High-
 
 ### 4.1 Granular Monthly DR Cost Matrix (USD / Month)
 
-| Component | Strategy A: Backup & Restore | Strategy B: Pilot Light | Strategy C: Warm Standby | Strategy D: Active-Active |
-| :--- | :--- | :--- | :--- | :--- |
-| **Networking & NAT** | $0.00 | $0.00 (No outbound needed) | $32.85 (1x NAT Gateway) | $32.85 (1x NAT Gateway) |
-| **Public IPv4 Addr** | $0.00 | $0.00 | $7.30 (1x NAT IP, 1x ALB IP) | $10.95 (1x NAT, 2x ALB IPs) |
-| **ALB & WAFv2** | $0.00 | $0.00 | $25.03 (ALB + WAF ACL) | $41.46 (ALB + WAF + Rules) |
-| **Compute (ASG)** | $0.00 (Desired = 0) | $0.00 (Desired = 0) | $49.06 (1x `t4g.medium` warm) | $196.22 (2x `t4g.xlarge` active) |
-| **Database (RDS)** | $0.00 | $221.92 (1x `db.m6g.large` replica) | $443.84 (Multi-AZ replica) | $443.84 (Multi-AZ active) |
-| **Valkey Cache** | $0.00 | $0.00 | $9.34 (`cache.t4g.micro`) | $39.71 (`cache.t4g.medium`) |
-| **Storage (EFS)** | $0.00 | $15.00 (50GB replica) | $15.00 (50GB replica) | $15.00 (50GB active) |
-| **Storage (S3)** | $2.30 (100GB backup) | $2.30 (100GB backup) | $2.30 (100GB backup) | $2.30 (100GB active) |
-| **Data Replication** | $5.00 (AWS Backup fees) | $15.00 (RDS & EFS sync) | $30.00 (Live RDS & EFS sync)| $120.00 (High bi-dir sync) |
-| **TOTAL (In-Region)** | **$7.30 USD** | **$254.22 USD** | **$614.42 USD** | **$902.33 USD** |
-| **TOTAL (Cross-Region)**| **$11.50 USD** | **$289.50 USD** | **$664.80 USD** | **$982.50 USD** |
+| Component | Strategy A: Backup & Restore | Strategy B: Pilot Light | Strategy C: Warm Standby | Strategy D: Active-Active | Strategy E: AWS DRS (3 Node Baseline) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Networking & NAT** | $0.00 | $0.00 (No outbound needed) | $32.85 (1x NAT Gateway) | $32.85 (1x NAT Gateway) | $0.00 (Staging in existing private subnet) |
+| **Public IPv4 Addr** | $0.00 | $0.00 | $7.30 (1x NAT IP, 1x ALB IP) | $10.95 (1x NAT, 2x ALB IPs) | $0.00 |
+| **ALB & WAFv2** | $0.00 | $0.00 | $25.03 (ALB + WAF ACL) | $41.46 (ALB + WAF + Rules) | $0.00 (Cold; deployed during failover) |
+| **Compute (ASG)** | $0.00 (Desired = 0) | $0.00 (Desired = 0) | $49.06 (1x `t4g.medium` warm) | $196.22 (2x `t4g.xlarge` active) | $15.18 (1x shared `t3.small` replication node) |
+| **Database (RDS)** | $0.00 | $221.92 (1x `db.m6g.large` replica) | $443.84 (Multi-AZ replica) | $443.84 (Multi-AZ active) | $0.00 (Replicated at volume block layer) |
+| **Valkey Cache** | $0.00 | $0.00 | $9.34 (`cache.t4g.micro`) | $39.71 (`cache.t4g.medium`) | $0.00 (Unprovisioned in staging) |
+| **Storage (EFS)** | $0.00 | $15.00 (50GB replica) | $15.00 (50GB replica) | $15.00 (50GB active) | $15.00 (50GB replica) |
+| **Storage (S3)** | $2.30 (100GB backup) | $2.30 (100GB backup) | $2.30 (100GB backup) | $2.30 (100GB active) | $2.30 (100GB backup/snapshots) |
+| **DRS Service Fee** | $0.00 | $0.00 | $0.00 | $0.00 | $61.32 (3 servers * $0.028/hr * 730 hrs) |
+| **Data Replication** | $5.00 (AWS Backup fees) | $15.00 (RDS & EFS sync) | $30.00 (Live RDS & EFS sync)| $120.00 (High bi-dir sync) | $18.50 (Block staging volumes & snap sync)|
+| **TOTAL (In-Region)** | **$7.30 USD** | **$254.22 USD** | **$614.42 USD** | **$902.33 USD** | **$112.30 USD** |
+| **TOTAL (Cross-Region)**| **$11.50 USD** | **$289.50 USD** | **$664.80 USD** | **$982.50 USD** | **$135.50 USD** |
 
-*Note: Cross-Region costs are slightly higher due to AWS Cross-Region Data Transfer Egress fees ($0.09/GB from ap-southeast-5) and marginally higher base pricing in ap-southeast-1.*
+*Note: Cross-Region costs are slightly higher due to AWS Cross-Region Data Transfer Egress fees ($0.09/GB from ap-southeast-5) and marginally higher base pricing in ap-southeast-1. AWS DRS cost modeling assumes replicating 3 active EC2 compute nodes (Frontend, Backend, AI Tier) into a secure staging subnet.*
 
 ---
 
@@ -234,12 +271,14 @@ Using the exchange baseline of **1 USD ≈ 4.50 MYR**, the monthly DR infrastruc
 │                                                                        │
 │ In-Region (ap-southeast-5)                                             │
 │  ├── Backup & Restore ═► RM 32.85                                      │
+│  ├── AWS DRS          ═► RM 505.35     (Highly Recommended)            │
 │  ├── Pilot Light     ═► RM 1,143.99                                    │
 │  ├── Warm Standby    ═► RM 2,764.89                                    │
 │  └── Active-Active   ═► RM 4,060.49                                    │
 │                                                                        │
 │ Cross-Region (Singapore/Jakarta)                                       │
 │  ├── Backup & Restore ═► RM 51.75                                      │
+│  ├── AWS DRS          ═► RM 609.75                                      │
 │  ├── Pilot Light     ═► RM 1,302.75                                    │
 │  ├── Warm Standby    ═► RM 2,991.60                                    │
 │  └── Active-Active   ═► RM 4,421.25                                    │
@@ -252,15 +291,15 @@ Using the exchange baseline of **1 USD ≈ 4.50 MYR**, the monthly DR infrastruc
 
 To guide executive management through the selection process, we present a technical evaluation matrix:
 
-| Evaluation Dimension | Strategy A: Backup & Restore | Strategy B: Pilot Light | Strategy C: Warm Standby | Strategy D: Active-Active |
-| :--- | :--- | :--- | :--- | :--- |
-| **Target RPO** | 24 Hours | < 5 Minutes | < 1 Minute | Near Real-time |
-| **Target RTO** | 4 to 8 Hours | 30 to 45 Minutes | 5 to 10 Minutes | Near Zero |
-| **Relative Cost** | Extremely Low (1x) | Moderate (35x) | High (85x) | Very High (120x) |
-| **Engineering Overhead** | Low (Standard backups) | Medium (Failover scripts) | High (Automated Route 53) | Extremely High |
-| **Regulatory Risk** | Minimal | Medium (Replica active) | High (Continuous Sync) | Extremely High |
-| **PDPA Compliance Path** | Simple | Requires TIA & Consent | Requires TIA & Consent | Requires Full Audit |
-| **Sovereignty Standing** | **100% Secure (In-Region)**| **100% Secure (In-Region)**| **100% Secure (In-Region)**| **100% Secure (In-Region)**|
+| Evaluation Dimension | Strategy A: Backup & Restore | Strategy B: Pilot Light | Strategy C: Warm Standby | Strategy D: Active-Active | Strategy E: AWS DRS (Elastic DR) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Target RPO** | 24 Hours | < 5 Minutes | < 1 Minute | Near Real-time | **Seconds to Sub-Minute** |
+| **Target RTO** | 4 to 8 Hours | 30 to 45 Minutes | 5 to 10 Minutes | Near Zero | **Minutes** |
+| **Relative Cost** | Extremely Low (1x) | Moderate (35x) | High (85x) | Very High (120x) | **Low-to-Moderate (15x)** |
+| **Engineering Overhead** | Low (Standard backups) | Medium (Failover scripts) | High (Automated Route 53) | Extremely High | Medium (Agent setup) |
+| **Regulatory Risk** | Minimal | Medium (Replica active) | High (Continuous Sync) | Extremely High | Minimal (Sovereign staging) |
+| **PDPA Compliance Path** | Simple | Requires TIA & Consent | Requires TIA & Consent | Requires Full Audit | Simple (100% In-Region) |
+| **Sovereignty Standing** | **100% Secure (In-Region)**| **100% Secure (In-Region)**| **100% Secure (In-Region)**| **100% Secure (In-Region)**| **100% Secure (In-Region)**|
 
 ---
 
@@ -269,24 +308,35 @@ To guide executive management through the selection process, we present a techni
 To balance **business continuity**, **cost-efficiency**, and **strict compliance with Malaysia National Sovereignty (PDPA)**, the following phased roadmap is recommended:
 
 ```
-               [ Start: Launch Infrastructure ]
-                              │
-                              ▼
-               ┌──────────────────────────────┐
-               │ sovereign backup & restore   │ <-- Phase 1: Immediate Deployment
-               │ (100% in ap-southeast-5)     │     Est. Cost: ~$7.30 / mo (RM 32.85)
-               └──────────────┬───────────────┘
-                              │
-              Has the business RTO objective
-              shrunk to under 1 hour?
-                              │
-               ┌──────────────┴──────────────┐
-               │ YES                         │ NO (Remain on Phase 1)
-               ▼                             ▼
-               ┌──────────────────────────────┐
-               │ sovereign pilot light        │ <-- Phase 2: Scale Resiliency
-               │ (100% in ap-southeast-5)     │     Est. Cost: ~$254.22 / mo (RM 1,143.99)
-               └──────────────────────────────┘
+                     [ Start: Launch Infrastructure ]
+                                    │
+                                    ▼
+                     ┌──────────────────────────────┐
+                     │ sovereign backup & restore   │ <-- Phase 1: Immediate Deployment
+                     │ (100% in ap-southeast-5)     │     Est. Cost: ~$7.30 / mo (RM 32.85)
+                     └──────────────┬───────────────┘
+                                    │
+                    Has the business RTO objective
+                    shrunk to under 1 hour?
+                                    │
+                     ┌──────────────┴──────────────┐
+                     │ YES                         │ NO (Remain on Phase 1)
+                     ▼                             ▼
+                     ┌──────────────────────────────┐
+                     │ AWS Elastic DR (AWS DRS)     │ <-- Phase 2: Highly Cost-Effective Near-Zero RPO
+                     │ (100% in ap-southeast-5)     │     Est. Cost: ~$112.30 / mo (RM 505.35)
+                     └──────────────┬───────────────┘
+                                    │
+                    Does the database require active
+                    hot SQL query read-replicas?
+                                    │
+                     ┌──────────────┴──────────────┐
+                     │ YES                         │ NO (Remain on Phase 2)
+                     ▼                             ▼
+                     ┌──────────────────────────────┐
+                     │ sovereign pilot light        │ <-- Phase 3: Scale Resiliency with Hot DBs
+                     │ (100% in ap-southeast-5)     │     Est. Cost: ~$254.22 / mo (RM 1,143.99)
+                     └──────────────────────────────┘
 ```
 
 ### Phase 1: Deploy Sovereign In-Region Backup & Restore (Default Baseline)
@@ -294,7 +344,12 @@ To balance **business continuity**, **cost-efficiency**, and **strict compliance
 * **Sovereignty Advantage:** 100% compliant with the Malaysian PDPA. Zero data crosses national borders, completely bypassing Section 129 regulatory hurdles, saving legal/DPO consultation fees.
 * **Cost Impact:** Negligible baseline charge (~$7.30 USD / RM 32.85 per month).
 
-### Phase 2: Transition to Sovereign In-Region Pilot Light (As RTO Requirements Tighten)
-* **Action:** If the application scales and business RTO demands a failover under 45 minutes, deploy a single-AZ RDS PostgreSQL Read Replica in a separate VPC/subnet configuration within the **Malaysia region (`ap-southeast-5`)**, keeping the ASG desired capacity at 0.
+### Phase 2: Implement AWS Elastic Disaster Recovery (AWS DRS) (Near-Zero RPO / RTO)
+* **Action:** Install the AWS DRS Replication Agent on active servers to continuously replicate block-level changes asynchronously into a dedicated staging area subnet inside `ap-southeast-5`. Configure DRS launch templates to spin up fully-provisioned target instances upon a drill or failover event.
+* **Sovereignty Advantage:** Keeps staging and target areas completely localized within the AWS Malaysia region. Absolute data sovereignty is maintained, satisfying the 2025 CBPDT Guidelines natively while achieving sub-minute RPO.
+* **Cost Impact:** Exceptionally cost-effective (~$112.30 USD / RM 505.35 per month), avoiding active duplicate server overhead until disaster declaration.
+
+### Phase 3: Transition to Sovereign In-Region Pilot Light (As Real-Time Hot Read Needs Arise)
+* **Action:** If the application scales further and business workflows require an active, continuously queryable read-replica for real-time reads/BI reports in addition to DR, deploy an RDS PostgreSQL Read Replica in a separate VPC/subnet configuration within the **Malaysia region (`ap-southeast-5`)**, keeping the ASG desired capacity at 0.
 * **Sovereignty Advantage:** Maintains absolute local residency. Enables fast database promotion and compute failover without violating data sovereignty policies.
 * **Cost Impact:** Highly cost-optimized (~$254.22 USD / RM 1,143.99 per month), representing a fraction of the cost of running a full Warm Standby or Cross-Region Active-Active cluster.
