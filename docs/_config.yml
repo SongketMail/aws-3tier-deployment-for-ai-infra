@@ -23,3 +23,5 @@ navbar:
     url: "/jumphost.html"
   - title: "GitLab EFS CI/CD"
     url: "/gitlab-efs-cicd.html"
+  - title: "Disaster Recovery"
+    url: "/dr-options.html"
