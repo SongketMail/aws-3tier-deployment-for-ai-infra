@@ -23,6 +23,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 - [Hybrid Cloud Connectivity](docs/hybrid-onprem.md) : Hybrid on-premises networking (VPN, Direct Connect, Transit Gateway) cost comparisons vs. modern cost-optimized API-based and MCP-proxy integration.
 - [Disaster Recovery & Sovereignty](docs/dr-options.md) : Multi-AZ high availability strategies, AWS DRS (Strategy E), local compliance reviews under Malaysian PDPA (2010 & 2025 CBPDT Guidelines), and detailed USD/MYR pricing.
 - [PostgreSQL Engine Comparison](docs/postgresql-comparison.md) : RDS PostgreSQL 17 Multi-AZ vs. Percona Server on EC2, covering Patroni, PgBouncer, telemetry, extension availability, and total cost of ownership.
+- [RAGFlow + Langfuse GPU Guide](docs/ragflow-langfuse.md) : Comprehensive architectural and economic analysis of RAGFlow and Langfuse, including critical GPU workloads, AWS-native vs. On-Premises deployments, and API/MCP hybrid connectivity.
 
 ## Root Infrastructure Configurations
 
