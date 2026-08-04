@@ -127,11 +127,12 @@
           <h1 style="border-bottom: 4px solid var(--lab-purple); padding-bottom: 10px; margin-bottom: 10px;">
             {{ page.title | default: site.title }}
           </h1>
-          <div class="runtime-status" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px;">
+          <div class="runtime-status" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; align-items: center;">
             <span class="badge" style="background: #e67e22; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">Terraform >= 1.5.0</span>
             <span class="badge" style="background: #2ecc71; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">AWS: ap-southeast-5</span>
             <span class="badge" style="background: #3498db; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">WAFv2: Enabled</span>
             <span class="badge" style="background: #9b59b6; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold;">Graviton: ARM64</span>
+            <button class="print-btn" onclick="window.print()" style="margin-left: auto; background: var(--lab-purple); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-family: var(--f-mono); font-size: 11px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 4px;">🖨️ PRINT PDF</button>
           </div>
         </header>
 
