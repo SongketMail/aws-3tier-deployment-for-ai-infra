@@ -1,0 +1,56 @@
+# AWS 3-Tier Deployment for AI & Web Infra (with OpenTofu)
+
+> A complete, production-ready infrastructure project and documentation repository for deploying a highly-available, secure, cost-optimized 3-Tier Architecture on AWS in the `ap-southeast-5` (Malaysia) region, fully integrated with AWS WAFv2, OpenTofu, and modern best practices.
+
+This index is curated specifically for AI agents, Large Language Models (LLMs), and automated assistants to easily navigate and ingest the extensive system architecture, costing, disaster recovery, and integration documentation compiled in this repository.
+
+## Project Resources
+
+- [README.md](README.md) : The central portal and entrypoint for developers, showcasing the architecture, repository layout, local execution, and deployment steps.
+- [AGENTS.md](AGENTS.md) : Standard operation guidelines, instructions, and context for AI agents (including Google Jules) interacting with this codebase.
+- [HISTORY.md](HISTORY.md) : Detailed background narrative on the project's inception, engineering decisions, and architecture evolution from Day 0.
+- [CHANGELOG.md](CHANGELOG.md) : Structured record of all major version milestones, changes, features, and fixes from inception to v1.0.0.
+
+## Core Architectural Documentation
+
+- [System Architecture](docs/architecture.md) : Physical VPC layouts, routing tables, and the Multi-AZ subnet topology designed for ap-southeast-5.
+- [Developer Design Mapping](docs/developer-design-mapping.md) : Deep technical alignment of legacy single-VM deployment architectures to highly-available AWS-native managed services.
+- [Separation of Concerns](docs/asg-separation-of-concern.md) : Guidelines on designing stateless ASGs, managing persistent session/media state, and selecting S3 vs. Amazon EFS.
+- [OpenTofu Migration](docs/opentofu-migration.md) : Deep dive comparison, CLI syntax mapping, state-locking configurations, and compatibility guides between Terraform and OpenTofu.
+- [AMI Baking and Compliance](docs/ami-design.md) : Custom pre-baked AMI strategy on Ubuntu 26.04 LTS using HashiCorp Packer, Ansible, and the ASIMP security hardening framework.
+- [Route 53 & DNS Troubleshooting](docs/route53.md) : Domain mapping, ACM SSL/TLS certificates, and diagnostic guides for private-subnet DNS resolution failures.
+- [Secure Jumphost Hardening](docs/jumphost.md) : Operational manual for connecting via SSH Bastion, whitelisting Cyberjaya developer IP subnets, client setups, and key security.
+- [Hybrid Cloud Connectivity](docs/hybrid-onprem.md) : Hybrid on-premises networking (VPN, Direct Connect, Transit Gateway) cost comparisons vs. modern cost-optimized API-based and MCP-proxy integration.
+- [Disaster Recovery & Sovereignty](docs/dr-options.md) : Multi-AZ high availability strategies, AWS DRS (Strategy E), local compliance reviews under Malaysian PDPA (2010 & 2025 CBPDT Guidelines), and detailed USD/MYR pricing.
+- [PostgreSQL Engine Comparison](docs/postgresql-comparison.md) : RDS PostgreSQL 17 Multi-AZ vs. Percona Server on EC2, covering Patroni, PgBouncer, telemetry, extension availability, and total cost of ownership.
+
+## Root Infrastructure Configurations
+
+- [Root Configurations Portal](docs/root-files.md) : Detailed summary of root-level files including variables, outputs, and providers.
+- [Root main.tf](terraform/main.tf) : Main OpenTofu file calling network, database, compute, cache, security, and WAF submodules.
+- [Root variables.tf](terraform/variables.tf) : Centralized parameters declaring regions, CIDR ranges, instance families, and boolean toggles.
+- [Root outputs.tf](terraform/outputs.tf) : Infrastructure endpoints, DNS values, subnets, and load balancer targets.
+- [Root providers.tf](terraform/providers.tf) : Configures providers like AWS, HashiCorp Random, TLS, and OpenTofu local backend requirements.
+
+## Infrastructure Submodules
+
+- [VPC Module](docs/modules/vpc.md) : Subnetting logic, NAT Gateways, Internet Gateways, and Route Table setups.
+- [Security Groups Module](docs/modules/security_groups.md) : Zero-Trust network rulesets establishing secure ingress/egress boundaries.
+- [WAF Module](docs/modules/waf.md) : Layer-7 WAFv2 Web ACL configuration including rate limits and OWASP rulesets protecting the ALB.
+- [ALB Module](docs/modules/alb.md) : Application Load Balancer target routing, listeners, and health check patterns.
+- [ASG Module](docs/modules/asg.md) : Launch templates, dynamic ARM64/x86_64 family detection, and auto-scaling rules.
+- [RDS Module](docs/modules/rds.md) : PostgreSQL parameter group tuning, Multi-AZ high availability, and storage configurations.
+- [Standalone EC2 Module](docs/modules/standalone_ec2.md) : Standalone staging/development Ubuntu 26.04 LTS servers for pre-baking AMIs.
+- [ElastiCache Valkey Module](docs/modules/elasticache.md) : Secure Valkey caching nodes with transit/at-rest encryption.
+- [Jumphost Module](docs/modules/jumphost.md) : SSH Bastion deployment whitelisting Cyberjaya CIDRs and injecting downstream compute ingress rules.
+
+## Deployment, Automation, and Costing
+
+- [Costing Guide](docs/costing.md) : Granular USD and MYR billing comparisons for Baseline Cost-Optimized ($426.75 USD) and High-Performance ($1,064.46 USD) setups.
+- [Automation Scripts Portal](docs/scripts.md) : Functional descriptions of scripts for deployment, teardown, and initialization.
+- [deploy.sh](scripts/deploy.sh) : Shell script coordinating formatting, linting, validation, and planning for OpenTofu deployments.
+- [destroy.sh](scripts/destroy.sh) : Safe teardown script for clearing all provisioned resources.
+- [user_data.sh](scripts/user_data.sh) : Cloud-init shell bootstrapping for instance initialization.
+- [prepare_docs.py](scripts/prepare_docs.py) : Python utility enforcing Jekyll metadata prepending across documentation files.
+- [CI/CD Workflow](docs/cicd.md) : Overview of the OIDC-based GitHub Actions workflow.
+- [GitLab EFS CI/CD Integration](docs/gitlab-efs-cicd.md) : Advanced pipelines mapping NFS mounts, Nginx custom paths, dynamic storage, and secure scaling.
