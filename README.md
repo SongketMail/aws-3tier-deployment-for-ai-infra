@@ -94,6 +94,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[Separation of Concerns](docs/asg-separation-of-concern.md):** Guidelines for implementing stateless ASG layers, session persistence, and comparative analysis of S3 vs. Amazon EFS.
 * **[System Architecture Details](docs/architecture.md):** Comprehensive breakdown of VPC subnetting, route tables, and Multi-AZ network architecture configurations.
 * **[OpenTofu Migration Guide](docs/opentofu-migration.md):** Migration patterns, state management comparisons, and CLI syntax transitions between legacy Terraform and OpenTofu.
+* **[Google Antigravity Skills Guide](docs/antigravity-skills.md):** Unified standard outlining how to deploy workspace-specific skills and bridge the knowledge-bases of Google Jules and Google Antigravity.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.

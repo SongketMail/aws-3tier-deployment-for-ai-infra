@@ -24,6 +24,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 - [Disaster Recovery & Sovereignty](docs/dr-options.md) : Multi-AZ high availability strategies, AWS DRS (Strategy E), local compliance reviews under Malaysian PDPA (2010 & 2025 CBPDT Guidelines), and detailed USD/MYR pricing.
 - [PostgreSQL Engine Comparison](docs/postgresql-comparison.md) : RDS PostgreSQL 17 Multi-AZ vs. Percona Server on EC2, covering Patroni, PgBouncer, telemetry, extension availability, and total cost of ownership.
 - [RAGFlow + Langfuse GPU Guide](docs/ragflow-langfuse.md) : Comprehensive architectural and economic analysis of RAGFlow and Langfuse, including critical GPU workloads, AWS-native vs. On-Premises deployments, and API/MCP hybrid connectivity.
+- [Google Antigravity Skills Guide](docs/antigravity-skills.md) : Comprehensive developer guide outlining the Agent Skills ecosystem standard, directory scopes, and how Google Jules shares the jules-knowledge skill with Google Antigravity.
 
 ## Root Infrastructure Configurations
 
