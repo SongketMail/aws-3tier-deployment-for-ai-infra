@@ -42,6 +42,7 @@ Explore different sections of our infrastructure documentation:
 11. **[RDS PostgreSQL 17 vs. Percona Server for PostgreSQL 17 Guide](postgresql-comparison.html):** Comprehensive technical comparison of performance, telemetry, observability (PMM vs CloudWatch/Performance Insights), architectural designs, and costs in USD/MYR for ap-southeast-5.
 12. **[RAGFlow + Langfuse GPU Guide](ragflow-langfuse.html):** Architectural and economic analysis of RAGFlow and Langfuse, detailing critical GPU utilization, AWS vs. On-Premises deployment models, and secure API/MCP hybrid connections.
 13. **[Google Antigravity Skills Guide](antigravity-skills.html):** Comprehensive integration guide outlining how to share and deploy agent knowledge bases and skills between Google Jules and Google Antigravity.
+14. **[SOP: Knowledge-First Discovery](SOP-KNOWLEDGE-FIRST-DISCOVERY.html):** Standard Operating Procedure outlining how AI agents perform local documentation search before probing remote targets.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
