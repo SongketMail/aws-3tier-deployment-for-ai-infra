@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
+title: "AWS VPC Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "readme", "vpc", "asg", "rds", "dns", "disaster-recovery"]
+---
 # AWS VPC Module
 
 This module deploys a highly available, multi-AZ virtual network infrastructure adhering to AWS security best practices. It divides the VPC into public subnets, private application subnets, and isolated private database subnets across specified availability zones (defaulting to the AWS Malaysia region `ap-southeast-5`).

@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
+title: "AWS Relational Database Service (RDS) Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "readme", "rds", "ssl", "postgresql"]
+---
 # AWS Relational Database Service (RDS) Module
 
 This module deploys a secure, fully-managed RDS Database instance running in Multi-AZ configuration to ensure maximum availability and seamless automatic failover in the event of an availability zone outage.

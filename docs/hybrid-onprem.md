@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Hybrid Cloud Integration & Costing Guide"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "waf", "disaster-recovery", "postgresql", "costing"]
 ---
-
 # Hybrid Cloud Integration Guide: AWS & On-Premises
 
 ## 1. Executive Summary & Context

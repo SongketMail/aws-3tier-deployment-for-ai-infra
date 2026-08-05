@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "OpenTofu Migration & AWS Support Research Guide"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "bastion", "ssl", "disaster-recovery"]
 ---
-
 # OpenTofu Migration & AWS Support Research Guide
 
 This document presents a comprehensive feasibility study, architectural research, and practical migration path for transitioning our AWS 3-Tier Infrastructure configuration from **HashiCorp Terraform** to **OpenTofu**.

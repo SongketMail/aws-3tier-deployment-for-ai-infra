@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
+title: "AWS Security Groups Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "readme", "vpc", "alb", "asg", "rds", "postgresql"]
+---
 # AWS Security Groups Module
 
 This module implements the **Zero-Trust Network Principle** across the 3-Tier topology, strictly defining ingress and egress boundaries for each architectural layer (Presentation/ALB, Application/EC2, and Database/RDS).

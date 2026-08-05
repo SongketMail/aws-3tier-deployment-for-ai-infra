@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
 title: "ElastiCache Valkey Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "asg", "elasticache", "valkey", "disaster-recovery"]
 ---
-
 # ElastiCache Valkey Module
 
 The ElastiCache Valkey Module deploys a secure, fully-managed **Amazon ElastiCache for Valkey** cache cluster inside the private database subnets of your VPC.

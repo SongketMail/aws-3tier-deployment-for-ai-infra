@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "CI/CD Pipeline Documentation"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "rds"]
 ---
-
 # CI/CD Pipeline Documentation
 
 This project includes a fully automated CI/CD pipeline configured via GitHub Actions in `.github/workflows/opentofu.yml`. It ensures that every code submission is vetted for quality, syntax correctness, and security boundaries.

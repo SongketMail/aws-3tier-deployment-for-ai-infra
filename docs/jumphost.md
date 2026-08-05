@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Secure Developer Access Guide"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "asg", "jumphost", "bastion", "disaster-recovery", "compliance", "costing"]
 ---
-
 # Secure Developer AWS Access Guide (SSH Jumphost)
 
 This guide provides technical research, architectural specifications, and step-by-step instructions for developers based in our **Cyberjaya, Selangor, Malaysia** office to securely access private AWS resources (private ASG compute servers, database systems, and standalone staging instances) using a highly secure, cost-optimized SSH Jumphost (Bastion).

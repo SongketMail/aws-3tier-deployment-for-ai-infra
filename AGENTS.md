@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Agent Operating Instructions"
+title: "Agent Operating Instructions & Guidelines (AGENTS.md)"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "agents", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "disaster-recovery", "postgresql", "sovereignty", "compliance"]
+---
 # Agent Operating Instructions & Guidelines (AGENTS.md)
 
 Welcome, AI Agent! This document outlines standard operating procedures, architectural contexts, tooling guidelines, and style requirements for agents—specifically **Google Jules** and other advanced LLM-based entities—collaborating on the **AWS 3-Tier Deployment for AI & Web Infra** codebase.
@@ -120,6 +128,28 @@ To test your work and maintain compliance, use these built-in scripts:
    ./scripts/deploy.sh
    ```
    *Runs syntax formatting checks (`tofu fmt`), verifies module linkages (`tofu validate`), and outlines intended resources (`tofu plan`).*
+
+---
+
+## 7. Open Knowledge Format (OKF) Compliance
+
+To support seamless knowledge discovery and agent-friendly consumption, this repository enforces the **Open Knowledge Format (OKF) v0.1** standard across all Markdown documentation and logs.
+
+### A. Core OKF v0.1 Frontmatter Requirements
+Every `.md` file must start with a YAML frontmatter block containing the following five required OKF v0.1 keys:
+1. `okf_version`: Strictly set to `"0.1"` for v0.1 compliance.
+2. `type`: Categorical label representing the document kind (e.g., `"Guide"`, `"Module Documentation"`, `"Agent Operating Instructions"`, `"Portal"`, `"Changelog"`, `"History"`, `"Skill"`).
+3. `title`: Human-readable display name.
+4. `timestamp`: ISO 8601 formatted datetime string representing the file's last modified time in UTC (e.g., `"2026-08-05T21:48:38Z"`).
+5. `topics`: A JSON-style YAML array of string keywords/topics summarizing the file's thematic elements (e.g., `["aws", "cloud", "security"]`).
+
+### B. Maintaining Compliance
+* **Automation:** Never manually compose or guess OKF metadata. Always run the workspace's pre-build documentation formatter:
+  ```bash
+  python scripts/prepare_docs.py
+  ```
+  This python script recursively scans the root directory, `.agents/`, and `docs/`, automatically extracting titles, identifying correct file types, establishing stable UTC timestamps, compiling relevant topics, and prepending/updating OKF v0.1 frontmatter while cleanly preserving layout configurations for our Jekyll GitHub Pages deployment.
+* **Review:** When editing or adding files, verify that the OKF metadata was applied correctly by running a dry-run of Jekyll readiness.
 
 ---
 

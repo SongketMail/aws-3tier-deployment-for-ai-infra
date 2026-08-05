@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
 title: "Standalone EC2 Instance Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "bastion", "disaster-recovery"]
 ---
-
 # Standalone EC2 Instance Module
 
 This module provisions secure Standalone EC2 Instances running **Ubuntu 26.04 LTS** (Noble Numbat successor) to support custom application build-ups, staging tools, developer sandboxes, or other application resources that are not ready or suited for Auto Scaling Group deployment.

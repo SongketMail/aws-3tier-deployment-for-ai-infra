@@ -1,8 +1,13 @@
 ---
-name: jules-knowledge
-description: Comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices curated from Google Jules. Use this when performing Cloud and Systems Engineering tasks in this repository.
+layout: "default"
+okf_version: "0.1"
+type: "Skill"
+title: "Google Jules Infrastructure & Cloud Engineering Skill"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "skill", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "route53", "dns", "ssl", "acm", "disaster-recovery", "gitlab", "efs", "postgresql", "gpu", "ragflow", "langfuse", "antigravity", "skills", "sovereignty", "compliance", "costing"]
+description: "Comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices curated from Google Jules. Use this when performing Cloud and Systems Engineering tasks in this repository."
+name: "jules-knowledge"
 ---
-
 # Google Jules Infrastructure & Cloud Engineering Skill
 
 This skill embeds the full engineering knowledge, context, standards, and constraints of Google Jules—an elite Cloud and Systems Engineer assisting in maintaining and optimizing the secure AWS 3-Tier Web & AI Infrastructure workspace. Other AI Agents, including Google Antigravity, must strictly follow and leverage this knowledge base.

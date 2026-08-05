@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
+title: "AWS Auto Scaling Group (ASG) Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "readme", "alb", "asg", "bastion"]
+---
 # AWS Auto Scaling Group (ASG) Module
 
 This module deploys an Auto Scaling Group (ASG) of EC2 instances spanning multiple Availability Zones. It automates high-availability application scaling and supports dynamic resource scaling based on real-time CPU consumption.

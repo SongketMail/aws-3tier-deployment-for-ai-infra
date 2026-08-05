@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Developer Design Mapping"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "dns", "ssl", "efs", "postgresql", "ragflow", "langfuse", "compliance"]
 ---
-
 # Developer Design Alignment Guide
 
 This guide details how we transition the **Developer's First Design** (which specified four separate, standalone Ubuntu 26.04 LTS servers) into our secure, highly-available, production-ready **AWS 3-Tier Architecture**, without changing any underlying AWS constraints or requirements.

@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
+title: "Route 53 Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "readme", "alb", "rds", "dns"]
+---
 # Route 53 Module
 
 This module automates the provisioning of a public Amazon Route 53 Hosted Zone and creates an `A` record (Alias) pointing to the Application Load Balancer.

@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Root Terraform Configuration"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "route53", "dns", "postgresql"]
 ---
-
 # Root Terraform Configuration
 
 The root folder of the `terraform/` directory orchestrates the execution order, specifies environmental variables, defines provider versions, and outputs key service endpoints.
