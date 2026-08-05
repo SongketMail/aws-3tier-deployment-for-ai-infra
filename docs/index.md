@@ -7,7 +7,7 @@ title: "AWS Secure 3-Tier Architecture Documentation"
 
 Welcome to the official technical documentation for our **AWS 3-Tier Deployment for AI & Web Infra** project. This project is optimized for deployment in the **AWS Asia Pacific (Malaysia) region (`ap-southeast-5`)** utilizing AWS Graviton (ARM64) instances, Multi-AZ RDS Postgres, and AWS WAFv2 regional protection.
 
-This deployment is structured natively in Terraform, adhering to strict modular boundaries, security best practices, and the **Zero-Trust Network Principle**.
+This deployment is structured natively in OpenTofu, adhering to strict modular boundaries, security best practices, and the **Zero-Trust Network Principle**.
 
 ---
 
@@ -62,6 +62,6 @@ Explore different sections of our infrastructure documentation:
 
 Before deploying the infrastructure, ensure you have the following tools installed and configured:
 
-- **[Terraform](https://www.terraform.io/downloads.html) >= 1.5.0**
+- **[OpenTofu](https://opentofu.org/) >= 1.6.0** (Recommended) or **Terraform >= 1.5.0**
 - **[AWS CLI](https://aws.amazon.com/cli/)** configured with admin-level credentials for `ap-southeast-5`
 - **Git** for repository and revision tracking
