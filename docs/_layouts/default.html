@@ -157,6 +157,13 @@
   <script>
     // Theme toggle logic
     document.addEventListener('DOMContentLoaded', () => {
+      // Automatic diagram block wrapping prevention
+      document.querySelectorAll('pre').forEach(pre => {
+        if (/[┌┐└┘├┤┬┴┼─│═║╔╗╚╝╠╣╦╩╬▲▼◀▶◄►]/.test(pre.textContent)) {
+          pre.classList.add('no-wrap');
+        }
+      });
+
       const btnLight = document.getElementById('theme-btn-light');
       const btnDark = document.getElementById('theme-btn-dark');
       const btnAuto = document.getElementById('theme-btn-auto');
