@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Changelog"
+title: "Changelog"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "changelog", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "dns", "disaster-recovery", "gitlab", "efs", "postgresql", "sovereignty", "compliance"]
+---
 # Changelog
 
 All notable changes to the **AWS 3-Tier Deployment for AI & Web Infra** project will be documented in this file.

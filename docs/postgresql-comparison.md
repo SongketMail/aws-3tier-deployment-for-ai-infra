@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "RDS PostgreSQL 17 vs. Percona Server for PostgreSQL 17"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "rds", "dns", "disaster-recovery", "postgresql", "compliance"]
 ---
-
 # Deep Technical Comparison: AWS RDS PostgreSQL 17 vs. Self-Installed Percona Server for PostgreSQL 17
 
 Evaluating database platforms for a highly secure, high-performance 3-tier architecture in the **AWS Asia Pacific (Malaysia) region (`ap-southeast-5`)** requires a careful analysis of managed service convenience versus raw open-source control.

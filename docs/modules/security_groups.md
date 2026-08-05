@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
 title: "Security Groups Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "alb", "asg", "rds", "disaster-recovery", "postgresql"]
 ---
-
 # Security Groups Module
 
 This module defines stateful firewall rules (Security Groups) that isolate each layer of the 3-Tier topology, strictly adhering to the **Zero-Trust Network Principle**.

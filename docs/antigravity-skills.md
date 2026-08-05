@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Google Antigravity Skills Integration Guide"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "rds", "elasticache", "valkey", "disaster-recovery", "antigravity", "skills"]
 ---
-
 # Google Antigravity Skills Integration Guide
 
 Welcome to the **Google Antigravity Skills Integration Guide** for the AWS Secure 3-Tier Web & AI Infrastructure project. This document outlines how to integrate and share agent knowledge, capabilities, and workflows between different AI assistants—specifically **Google Jules** and **Google Antigravity**—using the open **Agent Skills** ecosystem standard.

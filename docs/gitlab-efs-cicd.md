@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "GitLab CI/CD & AWS EFS Code Deployment"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "bastion", "dns", "disaster-recovery", "gitlab", "efs"]
 ---
-
 # GitLab CI/CD & AWS EFS Code Deployment Architecture
 
 This guide provides a comprehensive design and deployment blueprint for automating application delivery. It outlines a secure, scalable workflow where developers use **GitLab** for source control, triggering automated **GitLab CI/CD pipelines** that deploy code directly onto an **Amazon Elastic File System (EFS)**.

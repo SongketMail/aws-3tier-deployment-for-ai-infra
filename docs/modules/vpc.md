@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
 title: "VPC Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "dns", "disaster-recovery"]
 ---
-
 # VPC Module
 
 The VPC Module deploys the foundational multi-AZ networking infrastructure for the 3-tier layout. It partitions the network into public subnets, private application subnets, and isolated private database subnets, ensuring high availability and physical logical boundaries.

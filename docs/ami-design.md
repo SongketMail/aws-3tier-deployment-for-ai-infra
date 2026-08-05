@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Amazon Machine Images (AMI) Design Guide"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "efs", "postgresql", "ragflow", "langfuse", "compliance"]
 ---
-
 # Amazon Machine Images (AMI) Design & Hardening Guide
 
 This document describes the **Amazon Machine Images (AMI)** strategy for our Auto Scaling Groups (ASGs). It outlines why custom, pre-baked AMIs are essential for stateless, rapid autoscaling, how to automate AMI construction using HashiCorp Packer and Ansible, and how the **ASIMP** auditing and hardening framework is integrated into the baking pipeline.

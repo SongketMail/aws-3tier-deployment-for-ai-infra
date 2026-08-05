@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Disaster Recovery Options & Sovereignty Guide"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "dns", "disaster-recovery", "efs", "postgresql", "sovereignty", "compliance"]
 ---
-
 # Disaster Recovery (DR) Options & National Sovereignty Guide
 
 ## 1. Executive Summary & Context

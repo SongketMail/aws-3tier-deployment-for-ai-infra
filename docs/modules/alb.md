@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
 title: "Application Load Balancer (ALB) Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "alb"]
 ---
-
 # Application Load Balancer (ALB) Module
 
 This module deploys a highly available, public-facing Application Load Balancer (ALB) that acts as the entry point for all incoming HTTP web traffic. It handles request distribution and active health checking.

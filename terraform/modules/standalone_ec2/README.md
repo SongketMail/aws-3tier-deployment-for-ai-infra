@@ -1,3 +1,11 @@
+---
+layout: "default"
+okf_version: "0.1"
+type: "Module Documentation"
+title: "AWS Standalone EC2 Instance Module"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "readme", "vpc", "alb", "bastion", "disaster-recovery"]
+---
 # AWS Standalone EC2 Instance Module
 
 This module provisions secure Standalone EC2 Instances running **Ubuntu 26.04 LTS** (or other target releases) to support application build-up requirements, development sandboxes, staging tools, or other application resources that are not suited for Auto Scaling Group deployment.

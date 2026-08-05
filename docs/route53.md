@@ -1,8 +1,11 @@
 ---
-layout: default
+layout: "default"
+okf_version: "0.1"
+type: "Guide"
 title: "Route 53 & DNS Troubleshooting"
+timestamp: 2026-08-05T21:48:38Z
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "route53", "dns", "ssl", "acm", "disaster-recovery", "postgresql"]
 ---
-
 # Amazon Route 53 Custom Domains & DNS Resolution
 
 This document details how **Amazon Route 53** is integrated into our secure 3-Tier AWS Architecture for domain routing and SSL/TLS certificate registration. It also provides an in-depth research analysis of common **DNS resolution failures inside Auto Scaling Groups (ASGs)** (especially in private subnets) and step-by-step guidance to prevent and troubleshoot them.
