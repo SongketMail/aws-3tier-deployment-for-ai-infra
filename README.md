@@ -84,8 +84,14 @@ Our design is built on the **Zero-Trust Network Principle**, dividing components
 │   ├── providers.tf              # Declarative block specifying AWS, TLS, Random, etc.
 │   ├── variables.tf              # Fully typed input variables
 │   └── terraform.tfvars.example  # Production template environment configurations
+├── .agents/                      # AI Agent Operating Laws and Spatial Memory
+│   ├── brain/                    # Persistent Agent Spatial Memory
+│   │   └── active_context_manifest.md # Active session checkpoint summaries
+│   ├── skills/                   # Specific procedurial skills
+│   │   └── jules-knowledge/SKILL.md # Compiled Google Jules engineering skill
+│   └── AGENTS.md                 # Sovereign Constitution & Agent Rulebook (Rule 29)
 ├── README.md                     # Central documentation index portal (this file)
-├── AGENTS.md                     # Guide and context guidelines for AI Agents (including Google Jules)
+├── AGENTS.md                     # Root Gateway file redirecting to .agents/AGENTS.md
 ├── llms.txt                      # AI-optimized plain text directory pointing to resources
 ├── HISTORY.md                    # Rich project narrative detailing the timeline from Day 0
 └── CHANGELOG.md                  # Semantic version history detailing milestones to v1.0.0
@@ -103,6 +109,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[System Architecture Details](docs/architecture.md):** Comprehensive breakdown of VPC subnetting, route tables, and Multi-AZ network architecture configurations.
 * **[OpenTofu Migration Guide](docs/opentofu-migration.md):** Migration patterns, state management comparisons, and CLI syntax transitions between legacy Terraform and OpenTofu.
 * **[Google Antigravity Skills Guide](docs/antigravity-skills.md):** Unified standard outlining how to deploy workspace-specific skills and bridge the knowledge-bases of Google Jules and Google Antigravity.
+* **[SOP: Knowledge-First Discovery](docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md):** Standard Operating Procedure outlining how AI agents perform local documentation search before probing remote targets.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.

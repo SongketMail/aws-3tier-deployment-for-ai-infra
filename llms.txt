@@ -7,7 +7,9 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 ## Project Resources
 
 - [README.md](README.md) : The central portal and entrypoint for developers, showcasing the architecture, repository layout, local execution, and deployment steps.
-- [AGENTS.md](AGENTS.md) : Standard operation guidelines, instructions, and context for AI agents (including Google Jules) interacting with this codebase.
+- [AGENTS.md](AGENTS.md) : Root gateway file for AI agents (specifically Google Jules & Antigravity), redirecting to the Sovereign Constitution.
+- [.agents/AGENTS.md](.agents/AGENTS.md) : Sovereign Constitution & Agent Rulebook detailing Rule 29 and local knowledge-first constraints.
+- [.agents/brain/active_context_manifest.md](.agents/brain/active_context_manifest.md) : Persistent spatial memory manifest mapping active conversation threads and checkpoints.
 - [HISTORY.md](HISTORY.md) : Detailed background narrative on the project's inception, engineering decisions, and architecture evolution from Day 0.
 - [CHANGELOG.md](CHANGELOG.md) : Structured record of all major version milestones, changes, features, and fixes from inception to v1.0.0.
 
@@ -25,6 +27,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 - [PostgreSQL Engine Comparison](docs/postgresql-comparison.md) : RDS PostgreSQL 17 Multi-AZ vs. Percona Server on EC2, covering Patroni, PgBouncer, telemetry, extension availability, and total cost of ownership.
 - [RAGFlow + Langfuse GPU Guide](docs/ragflow-langfuse.md) : Comprehensive architectural and economic analysis of RAGFlow and Langfuse, including critical GPU workloads, AWS-native vs. On-Premises deployments, and API/MCP hybrid connectivity.
 - [Google Antigravity Skills Guide](docs/antigravity-skills.md) : Comprehensive developer guide outlining the Agent Skills ecosystem standard, directory scopes, and how Google Jules shares the jules-knowledge skill with Google Antigravity.
+- [SOP: Knowledge-First Discovery](docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md) : Standard Operating Procedure outlining how AI agents perform local documentation search before probing remote targets.
 
 ## Root Infrastructure Configurations
 
