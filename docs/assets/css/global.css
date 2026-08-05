@@ -96,9 +96,9 @@ body {
 #container {
   gap: var(--gap);
   grid-template:
-    "header header header"
-    "left main right" 1fr
-    "footer footer footer" / 240px 1fr 240px;
+    "header header"
+    "left main" 1fr
+    "footer footer" / 240px 1fr;
   width: 98%;
   max-width: 1400px;
   min-height: 100vh;
@@ -119,17 +119,14 @@ body {
 #left {
   grid-area: left;
 }
-#right {
-  grid-area: right;
-}
-#left, #right {
+#left {
   background: var(--lab-surface);
   border: 1px solid var(--lab-border);
   border-radius: var(--radius);
   padding: 15px;
   font-size: .9rem;
 }
-#left h3, #right h3 {
+#left h3 {
   font-family: var(--f-mono);
   text-transform: uppercase;
   color: var(--lab-muted);
@@ -140,7 +137,7 @@ body {
   padding-bottom: 5px;
   font-size: .7rem;
 }
-#left a, #right a {
+#left a {
   color: var(--lab-text);
   border-bottom: 1px dashed var(--lab-border);
   padding: 8px 0;
@@ -148,7 +145,7 @@ body {
   transition: all .2s;
   display: block;
 }
-#left a:hover, #right a:hover {
+#left a:hover {
   color: var(--lab-purple);
   background-color: var(--lab-bg);
   border-bottom-style: solid;
@@ -294,13 +291,12 @@ tr:nth-child(even) {
       "header"
       "main"
       "left"
-      "right"
       "footer";
     gap: 0;
     width: 100%;
     padding: 0;
   }
-  #top, #content, #left, #right {
+  #top, #content, #left {
     border: none;
     border-bottom: 1px solid var(--lab-border);
     border-radius: 0;
@@ -344,7 +340,7 @@ tr:nth-child(even) {
   }
 
   /* Hide navigation, sidebars, header, footer, buttons and search widgets */
-  #left, #right, #top, #footer, .btn, button, .theme-switcher-container, .print-btn {
+  #left, #top, #footer, .btn, button, .theme-switcher-container, .print-btn {
     display: none !important;
   }
 
