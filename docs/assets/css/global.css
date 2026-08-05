@@ -218,6 +218,27 @@ body {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+#content pre.no-wrap, #content pre.no-wrap code {
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  overflow-x: auto !important;
+}
+/* Scrollbar styling for diagram and code blocks */
+#content pre::-webkit-scrollbar {
+  height: 8px;
+}
+#content pre::-webkit-scrollbar-track {
+  background: var(--lab-bg);
+  border-radius: 4px;
+}
+#content pre::-webkit-scrollbar-thumb {
+  background: var(--lab-border);
+  border-radius: 4px;
+}
+#content pre::-webkit-scrollbar-thumb:hover {
+  background: var(--lab-muted);
+}
 #content code {
   padding: 2px 4px;
   font-size: 0.9em;
@@ -371,6 +392,12 @@ tr:nth-child(even) {
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
+  }
+
+  pre.no-wrap, pre.no-wrap code {
+    white-space: pre !important;
+    word-wrap: normal !important;
+    overflow-wrap: normal !important;
   }
 
   h1, h2, h3, h4, h5, h6 {
