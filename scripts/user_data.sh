@@ -31,7 +31,7 @@ echo "<html>
             <li><strong>Instance ID:</strong> $INSTANCE_ID</li>
             <li><strong>Availability Zone:</strong> $AZ</li>
         </ul>
-        <div class='footer'>Deploy managed with Terraform.</div>
+        <div class='footer'>Deploy managed with OpenTofu.</div>
     </div>
 </body>
 </html>" > /var/www/html/index.html

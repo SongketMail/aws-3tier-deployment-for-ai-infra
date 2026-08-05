@@ -127,7 +127,7 @@ variable "waf_rate_limit" {
 # --- Standalone EC2 Instance Variables ---
 variable "enable_standalone_ec2" {
   description = "Whether to enable the standalone EC2 instances for development/application requirements"
-  type        = boolean
+  type        = bool
   default     = true
 }
 
