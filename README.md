@@ -130,6 +130,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[AMI Hardening Compliance](docs/ami-design.md):** Pre-baked Ubuntu 26.04 LTS AMIs using Packer, Ansible, and the ASIMP security hardening framework.
 * **[GitLab CI/CD & Persistent EFS Storage](docs/gitlab-efs-cicd.md):** GitLab pipeline automation mounting EFS, tuning performance with `open_file_cache`, and managing dynamic Nginx paths.
 * **[Route 53 & Dynamic DNS Troubleshooting](docs/route53.md):** Domain names matching, certificate auto-validation, and extensive research on ASG dynamic resolver cache issues.
+* **[Wazuh Standalone Cloud Installation & Costing](docs/wazuh.md):** Architectural guide outlining the cheapest standalone Wazuh cloud deployment strategies, security whitelisting, and isolated USD/MYR costing plans.
 
 ### 4. Financial Cost Estimations
 * **[Cost Analysis Guide](docs/costing.md):** Comprehensive price modeling in USD and MYR tailored for the `ap-southeast-5` (Malaysia) region. Includes:
