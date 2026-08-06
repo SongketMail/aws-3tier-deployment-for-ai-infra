@@ -3,8 +3,8 @@ layout: "default"
 okf_version: "0.1"
 type: "Agent Operating Instructions"
 title: "The Sovereign Constitution & Agent Rulebook (.agents/AGENTS.md)"
-timestamp: 2026-08-05T21:50:00Z
-topics: ["aws", "cloud", "architecture", "agents", "constitution", "rules", "discovery", "okf", "sovereignty", "compliance"]
+timestamp: 2026-08-05T22:05:00Z
+topics: ["aws", "cloud", "architecture", "agents", "constitution", "rules", "discovery", "okf", "sovereignty", "compliance", "skills"]
 ---
 # The Sovereign Constitution & Agent Rulebook (.agents/AGENTS.md)
 
@@ -26,6 +26,11 @@ Welcome, AI Agent. This document is the Sovereign Constitution and cognitive rul
 Before executing any exploratory CLI commands, probing live AWS infrastructure, query tools, or calling external search engines, you **MUST FIRST** search local project documentation within `.agents/brain/` and `docs/` using `grep_search` or `view_file` to understand the configuration topology, IP ranges, volume mounts, security groups, and operational constraints.
 - The local workspace is the **Single Source of Truth (SSOT)** for configuration intent.
 - Do not make assumptions or probe the environment until you have fully absorbed the local context.
+
+### Rule 30: Google Antigravity Agent Skills Enforcement
+All AI models (including Google Jules and Google Antigravity) operating in this workspace must natively recognize, use, and update the comprehensive suite of 11 Agent Skills stored under `.agents/skills/`.
+- Prioritize activating and referencing the instructions of specific skills when working on the respective domains (e.g., activate `rds-postgresql-valkey-cache` when working with database or cache configuration).
+- All created or modified skills must follow the Agent Skills standard with combined OKF metadata, name, description, and conclude with the standard Deep State of Mind (DSOM) AI Protocol footer.
 
 ### Rule 6: Open Knowledge Format (OKF) Compliance
 Every Markdown file in this repository must begin on line 1 with standard `---` YAML frontmatter complying with the **OKF v0.1 specification**. It must contain the following required keys:
