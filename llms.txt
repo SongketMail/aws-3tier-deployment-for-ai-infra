@@ -28,6 +28,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 - [RAGFlow + Langfuse GPU Guide](docs/ragflow-langfuse.md) : Comprehensive architectural and economic analysis of RAGFlow and Langfuse, including critical GPU workloads, AWS-native vs. On-Premises deployments, and API/MCP hybrid connectivity.
 - [Google Antigravity Skills Guide](docs/antigravity-skills.md) : Comprehensive developer guide outlining the Agent Skills ecosystem standard, directory scopes, and how Google Jules shares the jules-knowledge skill with Google Antigravity.
 - [SOP: Knowledge-First Discovery](docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md) : Standard Operating Procedure outlining how AI agents perform local documentation search before probing remote targets.
+- [Technology Stack Comparison](docs/tech-stack-comparison.md) : Comprehensive architectural mapping of containerized technologies (Java/Spring, React, Postgres, Valkey) and AWS-native options for third-party platforms (Twilio, Meta, OpenAI).
 - [Wazuh Standalone Installation & Costing](docs/wazuh.md) : Comprehensive guide detailing the best and cheapest cloud deployment strategy for standalone Wazuh in the cloud (AWS Marketplace AMI and Graviton Ubuntu modes), with separated USD/MYR costing models for budget isolation.
 
 ## Root Infrastructure Configurations

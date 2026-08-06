@@ -44,6 +44,7 @@ Explore different sections of our infrastructure documentation:
 13. **[Google Antigravity Skills Guide](antigravity-skills.html):** Comprehensive integration guide outlining how to share and deploy agent knowledge bases and skills between Google Jules and Google Antigravity.
 14. **[SOP: Knowledge-First Discovery](SOP-KNOWLEDGE-FIRST-DISCOVERY.html):** Standard Operating Procedure outlining how AI agents perform local documentation search before probing remote targets.
 15. **[Wazuh Standalone Cloud Installation & Costing Guide](wazuh.html):** Detailed installation steps for standalone Wazuh in the cloud (AWS Marketplace AMI and Graviton assistant modes), with independent USD/MYR costing tables for isolated financial tracking.
+16. **[Technology Stack Comparison Guide](tech-stack-comparison.html):** Complete architectural mapping and AWS alternatives comparison for the developer's containerized and external integrations (LangChain4j, Spring Boot, React, Twilio, Meta, Postgres, Valkey).
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.

@@ -4,7 +4,7 @@ okf_version: "0.1"
 type: "Guide"
 title: "Costing Estimate"
 timestamp: 2026-08-05T21:48:38Z
-topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "disaster-recovery", "efs", "postgresql", "ragflow", "langfuse", "costing"]
+topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "disaster-recovery", "efs", "postgresql", "ragflow", "langfuse", "costing", "bedrock", "cognito", "lambda", "apigateway"]
 ---
 # Estimated Costing
 
@@ -14,6 +14,8 @@ We provide two distinct monthly cost estimates for the 3-Tier AWS Architecture i
 2. **High-Performance Developer-Aligned Plan:** Spec'd specifically to fulfill the resource requirements of the **Developer's First Design (Nginx, Backend, RAGFlow, LangFuse)** with production-grade performance.
 
 Both plans have been updated and calibrated against real-world, production-ready AWS billings from similar projects to incorporate critical infrastructure support services (such as **Amazon ElastiCache Valkey**, **Amazon EFS**, **AWS Secrets Manager**, **AWS Backup**, **Amazon CloudWatch**, standard **Public IPv4 address charges**, **Amazon Route 53 custom domain management**, and our **secure, hardened SSH Jumphost (Bastion)** whitelisted for the Cyberjaya developer office).
+
+Additionally, this guide includes detailed cost models for **AWS-Native Alternatives** to external "extra" integrations (such as Amazon Bedrock instead of OpenAI, Amazon Cognito instead of self-hosted/SaaS Auth, AWS End User Messaging for WhatsApp, and serverless API Gateway/Lambda webhook routing) so that stakeholders have a complete financial blueprint of a 100% cloud-native architecture.
 
 ---
 
@@ -131,12 +133,12 @@ A comparison with real-world billings from a highly similar production deploymen
 
 ---
 
-## Plan Comparison Summary
+## 4. Plan Comparison Summary
 
 ```
 ┌─────────────────────────────────┬─────────────────────────┬─────────────────────────┐
 │ Metric                          │ Baseline Plan           │ High-Performance Plan   │
-├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
+├─────────────────────────────────┼─────────────────────────┼─────────────────────────┘
 │ Target Environment              │ Staging, Dev, Testing   │ Production AI Workloads │
 ├─────────────────────────────────┼─────────────────────────┼─────────────────────────┤
 │ Compute Spec (per node)         │ 2 vCPU, 4GB RAM         │ 4 vCPU, 16GB RAM        │
@@ -161,10 +163,35 @@ A comparison with real-world billings from a highly similar production deploymen
 
 ---
 
-## Optional Cost Optimization Pathways (Day 2 Operations)
+## 5. Optional Cost Optimization Pathways (Day 2 Operations)
 
 * **RDS Savings Plans / Reserved Instances (1-Yr / 3-Yr):** Committing to the primary PostgreSQL instance can reduce DB compute costs by **30%–35%**, cutting monthly spend by **~$70 - $150 USD** depending on the plan.
 * **EC2 Compute Savings Plans:** Committing to baseline `t4g` usage via Savings Plans reduces application compute charges by up to **20%–25%**.
 * **ElastiCache Valkey Reserved Nodes:** Committing to caching nodes can shave up to **35%** off Valkey Cache costs (saving up to **~$13.90 USD / month** on `cache.t4g.medium`).
 * **VPC S3 Gateway Endpoint:** S3 traffic routed through a free VPC Gateway Endpoint eliminates NAT Gateway data processing fees ($0.045/GB) for media uploads.
 * **EFS Lifecycle Management:** Transitioning EFS data to Infrequent Access (IA) or Archive tier after 14/30 days reduces the EFS storage unit cost from **$0.30/GB** to **$0.013/GB**, saving up to 90% of EFS cost for older model files.
+
+---
+
+## 6. Optional Enterprise Integration Add-ons (AWS Alternatives)
+
+The developer's technology stack includes "extra" third-party SaaS integrations (such as Twilio for WhatsApp, Meta Graph APIs, and OpenAI models) which are not part of the core infrastructure costing listed above.
+
+To achieve maximum network security, data sovereignty, and consolidated billing, we estimate the cost of migrating these external integrations to **high-fidelity AWS-native alternatives** in `ap-southeast-5` (assuming 1 USD = 4.50 MYR).
+
+### Granular Cost Estimations for AWS Alternatives
+
+| AWS Alternative Service | Sizing & Active Monthly Volume | Hourly/Unit Rate | Est. Monthly Cost (USD) | Est. Monthly Cost (MYR) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Amazon Bedrock** *(Alternative to OpenAI API)* | • **Claude 3.5 Sonnet** (Chat & Reasoning)<br> - 1 Million Input Tokens / mo<br> - 500,000 Output Tokens / mo<br><br>• **Cohere Embed Multilingual**<br> - 5 Million embedding tokens / mo | Input: $0.003 / 1k tokens<br>Output: $0.015 / 1k tokens<br><br>Embed: $0.0001 / 1k tokens | **$11.00**<br><br>• Claude Input: $3.00<br>• Claude Output: $7.50<br>• Cohere Embed: $0.50 | **~RM 49.50** |
+| **Amazon Cognito User Pools** *(Alternative to Auth0 / Self-Hosted Auth)* | • **15,000 Monthly Active Users (MAUs)**<br><br>• First 10,000 MAUs: **Free**<br><br>• Standard User Pools active traffic | $0.00 (First 10k MAUs)<br><br>$0.0055 / MAU (Next 5k MAUs) | **$27.50** | **~RM 123.75** |
+| **AWS End User Messaging** *(Alternative to Twilio for WhatsApp)* | • **WhatsApp Social Channel**<br><br>• 2,000 Active Conversations / mo<br><br>• First 1,000 Conversations: **Free**<br><br>• Standard service conversations in Malaysia | $0.00 (First 1k convos)<br><br>$0.0246 / service conversation (Next 1k convos) | **$24.60** | **~RM 110.70** |
+| **API Gateway & AWS Lambda** *(Alternative to Java Webhook Receivers)* | • **Serverless Webhook Routing**<br><br>• 1 Million API webhook triggers / mo<br><br>• **API Gateway REST API**<br><br>• **AWS Lambda** (512MB RAM, 200ms)<br> - 1 Million executions / mo (Free Tier) | $3.50 / M-requests<br><br>$0.20 / M-invocations (plus free tier allowance) | **$3.70**<br><br>• API Gateway: $3.50<br>• Lambda requests: $0.20<br>• Lambda compute: $0.00 | **~RM 16.65** |
+| **ADD-ON COMBINED MONTHLY TOTAL** | **100% cloud-native SaaS mapping** | | **$66.80** / month | **~RM 300.60** / month |
+
+### Why the AWS Alternatives Save on Operating Costs (OpEx)
+
+1. **Elimination of Twilio Markup Fees:** Twilio charges an average platform markup of **$0.005 per message** on top of Meta's base carrier conversation fees. By deploying **AWS End User Messaging (Social Channels)**, developers connect directly to the Meta API, saving approx. **$10 to $30 USD / month** in markup fees for every 10,000 sent messages.
+2. **Serverless Scaling to Zero (Webhooks):** Placing webhook receivers directly in Spring Boot (on dedicated virtual machines or ASGs) requires continuous provisioning of compute memory to avoid thread starvation during bursty Meta communication events. An **API Gateway + AWS Lambda** webhook layer costs **$0.00** when inactive and automatically scales up to absorb millions of requests, preventing costly ASG scaling triggers.
+3. **Cognito Free Tier Advantage:** Third-party identity providers (such as Auth0 or Okta) charge steep monthly premiums (starting at $120+ USD/mo) once custom database connections are integrated. Amazon Cognito provides a robust, enterprise-grade directory with **10,000 MAUs entirely free every month**, lowering authentication costs significantly.
+4. **Data Sovereignty Compliance:** By keeping AI model queries and document embeddings within **Amazon Bedrock**, companies avoid transferring sensitive corporate PDFs and customer PII across third-party OpenAI endpoints over the public internet. This simplifies **Transfer Impact Assessments (TIAs)** and aligns seamlessly with local compliance standards under the **Malaysian PDPA (Personal Data Protection Act) 2010**.
