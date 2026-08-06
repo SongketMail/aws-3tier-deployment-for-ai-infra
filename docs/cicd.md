@@ -22,7 +22,7 @@ The pipeline is triggered automatically on:
 
 ## Job Definitions
 
-The workflow consists of three major jobs designed with security and safety gates:
+The workflow consists of four major jobs designed with security and safety gates:
 
 ### 1. OpenTofu Format and Validate (`opentofu-lint-and-validate`)
 - **Environment:** `ubuntu-latest`
@@ -33,16 +33,22 @@ The workflow consists of three major jobs designed with security and safety gate
   - **Initialize:** Runs `tofu init -backend=false` to configure modules locally.
   - **Validate:** Evaluates configurations for semantic validity via `tofu validate`.
 
-### 2. OpenTofu Planning (`opentofu-plan`)
+### 2. Check Secrets Availability (`check-secrets`)
+- **Environment:** `ubuntu-latest`
+- **Purpose:** Checks whether the sensitive OIDC IAM Role `AWS_ROLE_TO_ASSUME` secret is populated without causing parser failures.
+- **Steps:**
+  - **Evaluate Secret Presence:** Evaluates `secrets.AWS_ROLE_TO_ASSUME` on the runner at step-level, dynamically exporting a boolean output variable `has-aws-role` (set to `true` if populated, or `false` if empty, such as in fork pull requests). This avoids static workflow validation errors.
+
+### 3. OpenTofu Planning (`opentofu-plan`)
 - **Trigger:** Runs only on **Pull Request** events.
-- **Dependency:** Requires the `opentofu-lint-and-validate` job to pass.
+- **Dependency:** Requires both `opentofu-lint-and-validate` and `check-secrets` jobs to pass, with `check-secrets.outputs.has-aws-role == 'true'`.
 - **Steps:**
   - **Configure AWS OIDC Credentials:** Authenticates securely with AWS using OpenID Connect (OIDC) through `aws-actions/configure-aws-credentials@v4` with `secrets.AWS_ROLE_TO_ASSUME` and `secrets.AWS_REGION`.
-  - **OpenTofu Init & Plan:** Performs complete backend initialization and generates an execution plan showing what changes will be applied.
+  - **OpenTofu Init & Plan:** Performs complete backend initialisation and generates an execution plan showing what changes will be applied.
 
-### 3. OpenTofu Deployment (`opentofu-apply`)
+### 4. OpenTofu Deployment (`opentofu-apply`)
 - **Trigger:** Runs only on **Pushes** or Merges to the `main` branch.
-- **Dependency:** Requires the `opentofu-lint-and-validate` job to pass.
+- **Dependency:** Requires both `opentofu-lint-and-validate` and `check-secrets` jobs to pass, with `check-secrets.outputs.has-aws-role == 'true'`.
 - **Steps:**
   - **Configure AWS OIDC Credentials:** Authenticates securely with AWS using OIDC.
   - **OpenTofu Init & Apply:** Runs `tofu apply -auto-approve` to deploy the target infrastructure.
