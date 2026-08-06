@@ -32,15 +32,28 @@ All AI models (including Google Jules and Google Antigravity) operating in this 
 - Prioritize activating and referencing the instructions of specific skills when working on the respective domains (e.g., activate `rds-postgresql-valkey-cache` when working with database or cache configuration).
 - All created or modified skills must follow the Agent Skills standard with combined OKF metadata, name, description, and conclude with the standard Deep State of Mind (DSOM) AI Protocol footer.
 
-### Rule 6: Open Knowledge Format (OKF) Compliance
-Every Markdown file in this repository must begin on line 1 with standard `---` YAML frontmatter complying with the **OKF v0.1 specification**. It must contain the following required keys:
-1. `okf_version`: `"0.1"`
-2. `type`: Categorical label (e.g., `"Guide"`, `"Portal"`, `"Skill"`, `"Changelog"`, `"History"`, `"SOP"`)
-3. `title`: Human-readable title
-4. `timestamp`: ISO 8601 UTC timestamp
-5. `topics`: A list of thematic keywords/topics
+### Rule 6: Open Knowledge Format (OKF) Compliance & Front Matter Formatting Rules
+Every Markdown file in this repository must begin on line 1, column 1 with a standard `---` YAML front matter block complying with the **OKF v0.1/v0.2 specification**. The block must end cleanly with a closing `---` line. The YAML front matter block must be followed immediately by the Markdown body content.
 
-*Always run `python scripts/prepare_docs.py` to auto-validate and inject/update these headers after creating or editing Markdown files.*
+To ensure perfect compatibility and prevent broken YAML front matter parsing in the GitHub web view or other compliant parsers, you must adhere strictly to these formatting standards:
+1. **Line 1 Alignment:** The opening `---` of the front matter block must start exactly on line 1, column 1 of the document. No leading whitespace or empty lines are permitted before it.
+2. **Double Quote String Values with Special Characters:** Wrap all string values containing emojis, colons, brackets, parentheses, curly braces, ampersands, or other special characters in double quotes. E.g.:
+   - `title: "🧠 Deep State of Mind (DSOM)"`
+   - `title: "SOP: Knowledge-First Discovery & Context Preservation Protocol"`
+   - `layout: "default"`
+3. **Escaping Inside Strings:** If a double-quoted string contains double quotes inside it, escape them with a backslash (e.g. `title: "A \"Cool\" Title"`).
+4. **Preserve Array Formats & Timestamps Intact:**
+   - **Arrays:** Store lists (such as `topics`) in inline JSON-style array format. E.g., `topics: ["aws", "cloud", "architecture"]`.
+   - **Timestamps:** Keep ISO 8601 UTC timestamps intact and unquoted to parse natively as YAML datetimes. E.g., `timestamp: 2026-08-05T22:04:00Z`.
+5. **OKF v0.1 Core Front Matter Structure:**
+   - `layout`: `"default"` (Required for Jekyll layouts)
+   - `okf_version`: `"0.1"` (Specifies OKF version)
+   - `type`: Categorical label (e.g., `"Guide"`, `"Portal"`, `"Skill"`, `"Changelog"`, `"History"`, `"SOP"`)
+   - `title`: Human-readable title (Must be wrapped in double quotes if it contains any special characters)
+   - `timestamp`: UTC ISO 8601 timestamp (Unquoted, e.g., `2026-08-05T22:04:00Z`)
+   - `topics`: List of keywords in `["a", "b"]` format.
+
+*Always run `python scripts/prepare_docs.py` to auto-validate, reformat, and update these headers after creating or editing Markdown files. The script is designed to ensure strict compliance with these rules.*
 
 ### Rule 10: Token Context & Read Efficiency
 Avoid loading entire massive documents into your context window if only a subset is required. Use targeted file-viewing boundaries to keep your context window lean, reducing latency and preserving the accuracy of your reasoning engine.

@@ -13,7 +13,13 @@ def parse_yaml(front_matter_str):
 
         # Check for list items
         if line.strip().startswith('-') and current_key:
-            val = line.strip()[1:].strip().strip('"\'')
+            val = line.strip()[1:].strip()
+            if val.startswith('"') and val.endswith('"'):
+                val = val[1:-1].replace('\\"', '"').replace('\\\\', '\\')
+            elif val.startswith("'") and val.endswith("'"):
+                val = val[1:-1].replace("\\'", "'").replace('\\\\', '\\')
+            else:
+                val = val.strip('"\'')
             if isinstance(data[current_key], list):
                 data[current_key].append(val)
             else:
@@ -27,15 +33,48 @@ def parse_yaml(front_matter_str):
             current_key = key
             # Check if it's an inline list like [a, b, c]
             if val.startswith('[') and val.endswith(']'):
-                items = [i.strip().strip('"\'') for i in val[1:-1].split(',') if i.strip()]
+                items = []
+                for i in val[1:-1].split(','):
+                    i = i.strip()
+                    if not i:
+                        continue
+                    if i.startswith('"') and i.endswith('"'):
+                        i = i[1:-1].replace('\\"', '"').replace('\\\\', '\\')
+                    elif i.startswith("'") and i.endswith("'"):
+                        i = i[1:-1].replace("\\'", "'").replace('\\\\', '\\')
+                    else:
+                        i = i.strip('"\'')
+                    items.append(i)
                 data[key] = items
             elif val.startswith('{') and val.endswith('}'):
                 data[key] = val
             elif val == '':
                 data[key] = []
             else:
-                data[key] = val.strip('"\'')
+                parsed_val = val
+                if parsed_val.startswith('"') and parsed_val.endswith('"'):
+                    parsed_val = parsed_val[1:-1]
+                    parsed_val = parsed_val.replace('\\"', '"').replace('\\\\', '\\')
+                elif parsed_val.startswith("'") and parsed_val.endswith("'"):
+                    parsed_val = parsed_val[1:-1]
+                    parsed_val = parsed_val.replace("\\'", "'").replace('\\\\', '\\')
+                data[key] = parsed_val
     return data
+
+def format_yaml_value(key, val):
+    if isinstance(val, list):
+        list_str = ", ".join([f'"{x.replace("\\\\", "\\").replace("\\", "\\\\").replace("\"", "\\\"")}"' for x in val])
+        return f'[{list_str}]'
+    elif isinstance(val, str):
+        if val.startswith('{') and val.endswith('}'):
+            return val
+        if key == 'timestamp' or re.match(r'^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?$', val):
+            return val
+        # Escape backslashes and double quotes
+        escaped_val = val.replace('\\', '\\\\').replace('"', '\\"')
+        return f'"{escaped_val}"'
+    else:
+        return str(val)
 
 def serialize_yaml(data):
     lines = []
@@ -43,26 +82,11 @@ def serialize_yaml(data):
     keys_order = ['layout', 'okf_version', 'type', 'title', 'timestamp', 'topics']
     for k in keys_order:
         if k in data:
-            val = data[k]
-            if isinstance(val, list):
-                list_str = ", ".join([f'"{x}"' for x in val])
-                lines.append(f'{k}: [{list_str}]')
-            else:
-                if isinstance(val, str) and (':' in val or '#' in val or val.startswith('"') or val.startswith('{')):
-                    lines.append(f'{k}: {val}')
-                else:
-                    lines.append(f'{k}: "{val}"')
+            lines.append(f'{k}: {format_yaml_value(k, data[k])}')
 
     for k, val in sorted(data.items()):
         if k not in keys_order:
-            if isinstance(val, list):
-                list_str = ", ".join([f'"{x}"' for x in val])
-                lines.append(f'{k}: [{list_str}]')
-            else:
-                if isinstance(val, str) and (':' in val or '#' in val or val.startswith('"') or val.startswith('{')):
-                    lines.append(f'{k}: {val}')
-                else:
-                    lines.append(f'{k}: "{val}"')
+            lines.append(f'{k}: {format_yaml_value(k, val)}')
     return "\n".join(lines)
 
 def process_markdown_file(filepath, workspace_root):
