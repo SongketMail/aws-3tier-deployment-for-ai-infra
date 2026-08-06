@@ -2,7 +2,7 @@
 layout: "default"
 okf_version: "0.1"
 type: "Guide"
-title: RAGFlow + Langfuse: AWS vs. On-Premises GPU Integration Guide
+title: "RAGFlow + Langfuse: AWS vs. On-Premises GPU Integration Guide"
 timestamp: 2026-08-05T21:48:38Z
 topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "ssl", "disaster-recovery", "postgresql", "gpu", "ragflow", "langfuse", "sovereignty", "compliance"]
 ---

@@ -2,7 +2,7 @@
 layout: "default"
 okf_version: "0.1"
 type: "History"
-title: Project History: AWS 3-Tier Deployment for AI & Web Infra
+title: "Project History: AWS 3-Tier Deployment for AI & Web Infra"
 timestamp: 2026-08-05T21:48:38Z
 topics: ["aws", "cloud", "architecture", "history", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "route53", "dns", "ssl", "disaster-recovery", "postgresql", "sovereignty", "compliance", "costing"]
 ---

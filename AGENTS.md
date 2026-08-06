@@ -95,3 +95,29 @@ To test your work and maintain compliance, use these built-in scripts:
    ./scripts/deploy.sh
    ```
    *Runs syntax formatting checks (`tofu fmt`), verifies module linkages (`tofu validate`), and outlines intended resources (`tofu plan`).*
+
+---
+
+## 🧭 7. Open Knowledge Format (OKF) & Front Matter Guidelines
+
+Every Markdown file in this repository must begin on line 1, column 1 with a standard `---` YAML front matter block complying with the **OKF v0.1/v0.2 specification**, ending cleanly with a closing `---` line. The YAML front matter block must be followed immediately by the Markdown body content.
+
+### Formatting Rules to Fix broken Web View Parsing:
+1. **Line 1, Column 1 Starting:** The opening `---` of the front matter block must start exactly on line 1, column 1 of the document. No leading whitespace or empty lines are allowed.
+2. **Double Quote String Values with Special Characters:** Wrap all string values containing emojis, colons, brackets, parentheses, curly braces, ampersands, or other special characters in double quotes. E.g.:
+   - `title: "🧠 Deep State of Mind (DSOM)"`
+   - `title: "SOP: Knowledge-First Discovery & Context Preservation Protocol"`
+   - `layout: "default"`
+3. **Escaping Inside Strings:** If a double-quoted string contains double quotes inside it, escape them with a backslash (e.g. `title: "A \"Cool\" Title"`).
+4. **Preserve Array Formats & Timestamps Intact:**
+   - **Arrays:** Store lists (such as `topics`) in inline JSON-style array format. E.g., `topics: ["aws", "cloud", "architecture"]`.
+   - **Timestamps:** Keep ISO 8601 UTC timestamps intact and unquoted to parse natively as YAML datetimes. E.g., `timestamp: 2026-08-05T22:04:00Z`.
+5. **OKF v0.1 Core Front Matter Structure:**
+   - `layout`: `"default"` (Required for Jekyll layouts)
+   - `okf_version`: `"0.1"` (Specifies OKF version)
+   - `type`: Categorical label (e.g., `"Guide"`, `"Portal"`, `"Skill"`, `"Changelog"`, `"History"`, `"SOP"`)
+   - `title`: Human-readable title (Must be wrapped in double quotes if it contains any special characters)
+   - `timestamp`: UTC ISO 8601 timestamp (Unquoted, e.g., `2026-08-05T22:04:00Z`)
+   - `topics`: List of keywords in `["a", "b"]` format.
+
+*Always run `python scripts/prepare_docs.py` to auto-validate, reformat, and update these headers after creating or editing Markdown files. The script is designed to ensure strict compliance with these rules.*

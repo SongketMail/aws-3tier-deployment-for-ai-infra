@@ -2,7 +2,7 @@
 layout: "default"
 okf_version: "0.1"
 type: "SOP"
-title: SOP: Knowledge-First Discovery & Context Preservation Protocol
+title: "SOP: Knowledge-First Discovery & Context Preservation Protocol"
 timestamp: 2026-08-05T21:51:00Z
 topics: ["okf", "discovery", "context-management", "brain", "dsom", "SOP", "aws", "cloud"]
 ---
