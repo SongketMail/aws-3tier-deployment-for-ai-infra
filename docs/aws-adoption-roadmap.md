@@ -8,7 +8,7 @@ topics: ["aws", "cloud", "architecture", "costing", "roadmap", "lifecycle", "com
 ---
 # AWS Phased Adoption Roadmap & Costing Guide
 
-This guide outlines the step-by-step AWS cloud adoption roadmap, designed to align with our project timeline spanning **2 years of development and 12 months of active support and maintenance (36 months total)**. Over this 36-month period, the **total overall AWS infrastructure cost** is projected at **$47,709.78 USD** (≈ **RM 212,308.88 MYR**). To provide a comprehensive financial blueprint for the entire lifecycle, we estimate **other non-AWS operational costs**—including Cyberjaya developer personnel, physical equipment, local office overheads, external third-party security auditing, and software licensing compliance—to be approximately **$248,056.18 USD** (≈ **RM 1,103,850.00 MYR**). This results in a combined 36-month project operating budget of **$295,765.96 USD** (≈ **RM 1,316,158.88 MYR**).
+This guide outlines the step-by-step AWS cloud adoption roadmap, designed to align with our project timeline spanning **2 years of development and 12 months of active support and maintenance (36 months total)**. Over this 36-month period, the **total overall AWS infrastructure cost** is projected at **$47,709.78 USD** (≈ **RM 212,308.88 MYR**). To provide a comprehensive financial blueprint for the entire lifecycle, we estimate **other non-AWS operational costs**—comprising software subscriptions, software licensing compliance, yearly Security Posture Assessments (SPA), load testing (first year only), and 3rd party on-call support for AWS—to be **$44,800.00 USD** (≈ **RM 199,360.00 MYR**). This results in a combined 36-month project operating budget of **$92,509.78 USD** (≈ **RM 411,668.88 MYR**).
 
 ### Combined 36-Month Financial Projection (AWS vs. Non-AWS)
 
@@ -16,66 +16,74 @@ The table below provides a year-to-year financial breakdown comparing our cloud 
 
 | Financial Period | AWS Cloud Cost (USD) | AWS Cloud Cost (MYR) | Estimated Non-AWS Cost (USD) | Estimated Non-AWS Cost (MYR) | Total Combined Cost (USD) | Total Combined Cost (MYR) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Year 1 (Months 1–12)** | $13,023.16 | RM 57,953.18 | $99,696.63 | RM 443,650.00 | $112,719.79 | RM 501,603.18 |
-| **Year 2 (Months 13–24)** | $23,343.02 | RM 103,876.62 | $114,633.93 | RM 510,121.00 | $137,976.95 | RM 613,997.62 |
-| **Year 3 (Months 25–36)** | $11,343.60 | RM 50,479.08 | $33,725.62 | RM 150,079.00 | $45,069.22 | RM 200,558.08 |
-| **Grand Total** | **$47,709.78** | **RM 212,308.88** | **$248,056.18** | **RM 1,103,850.00** | **$295,765.96** | **RM 1,316,158.88** |
+| **Year 1 (Months 1–12)** | $13,023.16 | RM 57,953.18 | $16,600.00 | RM 73,870.00 | $29,623.16 | RM 131,823.18 |
+| **Year 2 (Months 13–24)** | $23,343.02 | RM 103,876.62 | $14,100.00 | RM 62,745.00 | $37,443.02 | RM 166,621.62 |
+| **Year 3 (Months 25–36)** | $11,343.60 | RM 50,479.08 | $14,100.00 | RM 62,745.00 | $25,443.60 | RM 113,224.08 |
+| **Grand Total** | **$47,709.78** | **RM 212,308.88** | **$44,800.00** | **RM 199,360.00** | **$92,509.78** | **RM 411,668.88** |
 
 *Note: All local currency conversions are calculated at a baseline exchange rate of 1 USD ≈ 4.45 MYR.*
 
-To ensure complete privacy and confidentiality, all technical activities are described using generalised enterprise-grade classifications while remaining directly traceable to our core project deliverables. All original Malay terms from the project Gantt chart have been fully translated into **UK English** (e.g., *optimise*, *analysing*, *organise*).
+### Non-AWS Operational Costs Breakdown
+
+The estimated other non-AWS operational costs cover the following strategic categories:
+
+1. **Software Subscriptions ($200.00 USD/mo):** $2,400.00 USD per year (≈ RM 10,680.00 MYR/year) for development collaboration and utility software.
+2. **Software Licensing Compliance:** $1,200.00 USD per year (≈ RM 5,340.00 MYR/year) for security scans and automated compliance auditing.
+3. **Security Posture Assessment (SPA):** $4,500.00 USD per year (≈ RM 20,025.00 MYR/year) for professional penetration testing and security audits.
+4. **Load Testing (First Year):** $2,500.00 USD (≈ RM 11,125.00 MYR) in Year 1 to validate multi-tier system scalability under high concurrency.
+5. **3rd Party On-Call AWS Support ($500.00 USD/mo):** $6,000.00 USD per year (≈ RM 26,700.00 MYR/year) for active SLA and on-call engineering coverage.
 
 This roadmap illustrates how our AWS infrastructure scales incrementally week-by-week and month-by-month, starting from a absolute minimum cost, single-Availability Zone developer sandbox footprint and evolving into a fully-redundant, highly-available, secure, and compliant multi-AZ enterprise production architecture in the **AWS Asia Pacific (Malaysia) region (`ap-southeast-5`)**.
 
 ---
 
-## Gantt Chart Activity Translation Matrix
+## Gantt Chart Activity Mapping
 
-Below is the definitive translation matrix mapping the original Malay Gantt chart activities to our generalised UK English enterprise delivery lifecycle terms:
+Below is the definitive mapping of the project Gantt chart activities to our generalised enterprise delivery lifecycle terms:
 
-| Original Malay Activity | UK English Enterprise Translation | Generalised Project Scope Mapping |
-| :--- | :--- | :--- |
-| **Mesyuarat Kick Off** | Project Kick-off Meeting | Administrative launch and project alignment |
-| **Pengurusan Projek** | Project Management | Continuous delivery, monitoring, and compliance |
-| **Fasa 1: Pembangunan Chatbot AI** | **Phase 1: AI Chatbot Engine Development** | Base chat routing and Core AI engine implementation |
-| &nbsp;&nbsp;• Kajian Keperluan | &nbsp;&nbsp;• Requirements Analysis & Study | Specifying API payloads and database schema |
-| &nbsp;&nbsp;• Rekabentuk dan pembangunan | &nbsp;&nbsp;• Architecture Design & Development | Backend coding and vector database layout design |
-| &nbsp;&nbsp;• Membekal, memasang, konfigurasi | &nbsp;&nbsp;• Supply, Installation & Configuration | Provisioning sandbox environment & base infrastructure |
-| &nbsp;&nbsp;• Integrasi dengan sistem dalaman | &nbsp;&nbsp;• Integration with Internal Systems | Bridging enterprise core APIs to the AI engine |
-| &nbsp;&nbsp;• Pengujian | &nbsp;&nbsp;• System & Integration Testing | End-to-end payload audits and validation |
-| &nbsp;&nbsp;• Go Live | &nbsp;&nbsp;• Live Deployment & Go-Live | Provisioning highly-available public-facing load balancers |
-| &nbsp;&nbsp;• Latihan | &nbsp;&nbsp;• Technical & Administrator Training | Handover of deployment runbooks to operations teams |
-| &nbsp;&nbsp;• Manages Cloud Services | &nbsp;&nbsp;• Managed Cloud Services & Operations | Ongoing cloud optimization, monitoring, and scaling |
-| **Fasa 2: Pembangunan WhatsApp Business API** | **Phase 2: Omnichannel Messaging Integration** | WhatsApp API integration & chat webhook flow |
-| &nbsp;&nbsp;• Membekal, memasang, konfigurasi | &nbsp;&nbsp;• Supply, Installation & Configuration | Provisioning API webhooks and secure NAT gateways |
-| &nbsp;&nbsp;• Integrasi dengan AI Chatbot | &nbsp;&nbsp;• Integration with Core AI Chatbot | Connecting message handlers to the Phase 1 engine |
-| &nbsp;&nbsp;• Pengujian | &nbsp;&nbsp;• System & Integration Testing | Auditing high-throughput messaging workloads |
-| &nbsp;&nbsp;• Go Live | &nbsp;&nbsp;• Live Deployment & Go-Live | Enabling production webhook receiving channels |
-| &nbsp;&nbsp;• Pemantauan interaksi pengguna | &nbsp;&nbsp;• User Interaction & Telemetry Monitoring | Tracing chat payloads via Langfuse observability |
-| &nbsp;&nbsp;• Latihan | &nbsp;&nbsp;• Technical & Administrator Training | Operations team training on API token rotations |
-| **Fasa 3: Pembangunan CRM** | **Phase 3: Customer Relationship Management (CRM)** | Customer database, task tracking & ticket management |
-| &nbsp;&nbsp;• Kajian keperluan | &nbsp;&nbsp;• Requirements Analysis & Study | CRM database schema design and integration scoping |
-| &nbsp;&nbsp;• Rekabentuk dan pembangunan | &nbsp;&nbsp;• Architecture Design & Development | Backend UI views and multi-tenant schema coding |
-| &nbsp;&nbsp;• Membekal, memasang, konfigurasi | &nbsp;&nbsp;• Supply, Installation & Configuration | Scaling private compute ASG and Multi-AZ RDS |
-| &nbsp;&nbsp;• Integrasi dengan sistem dalaman | &nbsp;&nbsp;• Integration with Internal Systems | Direct linking of CRM fields to internal databases |
-| &nbsp;&nbsp;• Pengujian | &nbsp;&nbsp;• System & Integration Testing | Auditing CRM security parameters and transaction locks |
-| &nbsp;&nbsp;• Go Live / Pelancaran | &nbsp;&nbsp;• Live Deployment, Launch & Go-Live | High-performance public launch of the CRM system |
-| &nbsp;&nbsp;• Latihan | &nbsp;&nbsp;• Technical & Administrator Training | Staff onboarding, user manuals, and training sessions |
-| &nbsp;&nbsp;• Managed Cloud Services | &nbsp;&nbsp;• Managed Cloud Services & Operations | CRM SLA monitoring and DB read-replica tuning |
-| **Fasa 4: Pembangunan Super Mobile App** | **Phase 4: Omnichannel Mobile Application** | Hybrid React Native mobile app development |
-| &nbsp;&nbsp;• Kajian keperluan | &nbsp;&nbsp;• Requirements Analysis & Study | Mobile API endpoint definition and push notification plan |
-| &nbsp;&nbsp;• Membekal, memasang, konfigurasi | &nbsp;&nbsp;• Supply, Installation & Configuration | Launching secure edge caching (CloudFront + S3) |
-| &nbsp;&nbsp;• Rekabentuk dan pembangunan | &nbsp;&nbsp;• Architecture Design & Development | Mobile coding, UI layouts, and local storage tuning |
-| &nbsp;&nbsp;• Integrasi dengan sistem dalaman | &nbsp;&nbsp;• Integration with Internal Systems | Bridging push services, mobile SSO, and data syncing |
-| &nbsp;&nbsp;• Pengujian | &nbsp;&nbsp;• System & Integration Testing | Beta testing, user acceptance, and load verification |
-| &nbsp;&nbsp;• Go Live | &nbsp;&nbsp;• Live Deployment & Go-Live | App store submission and high-throughput production API launch |
-| &nbsp;&nbsp;• Ujian keselamatan | &nbsp;&nbsp;• Security Vulnerability & Pen Testing | Rigorous penetration tests, OWASP checks, and WAF tuning |
-| &nbsp;&nbsp;• Latihan | &nbsp;&nbsp;• Technical & Administrator Training | Administrative portal onboarding |
-| &nbsp;&nbsp;• Managed Cloud Services | &nbsp;&nbsp;• Managed Cloud Services & Operations | Global mobile API latency optimization |
-| **Final Acceptance Test** | **Final Acceptance Test (FAT)** | Formal client verification of all consolidated tiers |
-| **Project Go Live** | **Official Unified Project Go-Live** | Hard cutover to enterprise-scale production |
-| **Documentation & Handover** | **Documentation & Operational Handover** | Delivery of final system runbooks and OpenTofu IaC |
-| **Support & Maintenance Period** | **Support, Maintenance & OpEx Optimisation** | 12-month post-launch support and Savings Plan lock-in |
+| Activity | Generalised Project Scope Mapping |
+| :--- | :--- |
+| **Project Kick-off Meeting** | Administrative launch and project alignment |
+| **Project Management** | Continuous delivery, monitoring, and compliance |
+| **Phase 1: AI Chatbot Engine Development** | Base chat routing and Core AI engine implementation |
+| &nbsp;&nbsp;• Requirements Analysis & Study | Specifying API payloads and database schema |
+| &nbsp;&nbsp;• Architecture Design & Development | Backend coding and vector database layout design |
+| &nbsp;&nbsp;• Supply, Installation & Configuration | Provisioning sandbox environment & base infrastructure |
+| &nbsp;&nbsp;• Integration with Internal Systems | Bridging enterprise core APIs to the AI engine |
+| &nbsp;&nbsp;• System & Integration Testing | End-to-end payload audits and validation |
+| &nbsp;&nbsp;• Live Deployment & Go-Live | Provisioning highly-available public-facing load balancers |
+| &nbsp;&nbsp;• Technical & Administrator Training | Handover of deployment runbooks to operations teams |
+| &nbsp;&nbsp;• Managed Cloud Services & Operations | Ongoing cloud optimization, monitoring, and scaling |
+| **Phase 2: Omnichannel Messaging Integration** | WhatsApp API integration & chat webhook flow |
+| &nbsp;&nbsp;• Supply, Installation & Configuration | Provisioning API webhooks and secure NAT gateways |
+| &nbsp;&nbsp;• Integration with Core AI Chatbot | Connecting message handlers to the Phase 1 engine |
+| &nbsp;&nbsp;• System & Integration Testing | Auditing high-throughput messaging workloads |
+| &nbsp;&nbsp;• Live Deployment & Go-Live | Enabling production webhook receiving channels |
+| &nbsp;&nbsp;• User Interaction & Telemetry Monitoring | Tracing chat payloads via Langfuse observability |
+| &nbsp;&nbsp;• Technical & Administrator Training | Operations team training on API token rotations |
+| **Phase 3: Customer Relationship Management (CRM)** | Customer database, task tracking & ticket management |
+| &nbsp;&nbsp;• Requirements Analysis & Study | CRM database schema design and integration scoping |
+| &nbsp;&nbsp;• Architecture Design & Development | Backend UI views and multi-tenant schema coding |
+| &nbsp;&nbsp;• Supply, Installation & Configuration | Scaling private compute ASG and Multi-AZ RDS |
+| &nbsp;&nbsp;• Integration with Internal Systems | Direct linking of CRM fields to internal databases |
+| &nbsp;&nbsp;• System & Integration Testing | Auditing CRM security parameters and transaction locks |
+| &nbsp;&nbsp;• Live Deployment, Launch & Go-Live | High-performance public launch of the CRM system |
+| &nbsp;&nbsp;• Technical & Administrator Training | Staff onboarding, user manuals, and training sessions |
+| &nbsp;&nbsp;• Managed Cloud Services & Operations | CRM SLA monitoring and DB read-replica tuning |
+| **Phase 4: Omnichannel Mobile Application** | Hybrid React Native mobile app development |
+| &nbsp;&nbsp;• Requirements Analysis & Study | Mobile API endpoint definition and push notification plan |
+| &nbsp;&nbsp;• Supply, Installation & Configuration | Launching secure edge caching (CloudFront + S3) |
+| &nbsp;&nbsp;• Architecture Design & Development | Mobile coding, UI layouts, and local storage tuning |
+| &nbsp;&nbsp;• Integration with Internal Systems | Bridging push services, mobile SSO, and data syncing |
+| &nbsp;&nbsp;• System & Integration Testing | Beta testing, user acceptance, and load verification |
+| &nbsp;&nbsp;• Live Deployment & Go-Live | App store submission and high-throughput production API launch |
+| &nbsp;&nbsp;• Security Vulnerability & Pen Testing | Rigorous penetration tests, OWASP checks, and WAF tuning |
+| &nbsp;&nbsp;• Technical & Administrator Training | Administrative portal onboarding |
+| &nbsp;&nbsp;• Managed Cloud Services & Operations | Global mobile API latency optimization |
+| **Final Acceptance Test (FAT)** | Formal client verification of all consolidated tiers |
+| **Official Unified Project Go-Live** | Hard cutover to enterprise-scale production |
+| **Documentation & Operational Handover** | Delivery of final system runbooks and OpenTofu IaC |
+| **Support, Maintenance & OpEx Optimisation** | 12-month post-launch support and Savings Plan lock-in |
 
 ---
 
