@@ -45,6 +45,7 @@ Explore different sections of our infrastructure documentation:
 14. **[SOP: Knowledge-First Discovery](SOP-KNOWLEDGE-FIRST-DISCOVERY.html):** Standard Operating Procedure outlining how AI agents perform local documentation search before probing remote targets.
 15. **[Wazuh Standalone Cloud Installation & Costing Guide](wazuh.html):** Detailed installation steps for standalone Wazuh in the cloud (AWS Marketplace AMI and Graviton assistant modes), with independent USD/MYR costing tables for isolated financial tracking.
 16. **[Technology Stack Comparison Guide](tech-stack-comparison.html):** Complete architectural mapping and AWS alternatives comparison for the developer's containerized and external integrations (LangChain4j, Spring Boot, React, Twilio, Meta, Postgres, Valkey).
+17. **[Software Licensing & Technology Risk Register (TS/MC Series)](licensing-risks.html):** Complete software licensing compliance framework, technology risk registry, and mitigation plans (TS/MC Series) covering LangChain4j, self-hosted operations, Bedrock with Qwen3 models, and standalone Wazuh SIEM.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
