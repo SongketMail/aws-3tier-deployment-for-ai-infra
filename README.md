@@ -110,6 +110,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[OpenTofu Migration Guide](docs/opentofu-migration.md):** Migration patterns, state management comparisons, and CLI syntax transitions between legacy Terraform and OpenTofu.
 * **[Google Antigravity Skills Guide](docs/antigravity-skills.md):** Unified standard outlining how to deploy workspace-specific skills and bridge the knowledge-bases of Google Jules and Google Antigravity.
 * **[SOP: Knowledge-First Discovery](docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md):** Standard Operating Procedure outlining how AI agents perform local documentation search before probing remote targets.
+* **[Technology Stack Comparison](docs/tech-stack-comparison.md):** Architectural mapping and AWS-native options guide for the developer's containerized and external system dependencies.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.
