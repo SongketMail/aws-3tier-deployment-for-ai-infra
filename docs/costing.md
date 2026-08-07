@@ -202,7 +202,7 @@ To achieve maximum network security, data sovereignty, and consolidated billing,
 
 ### Target Region: AWS Malaysia (ap-southeast-5 - Kuala Lumpur)
 ### Workload Type: Enterprise RAG & AI Infrastructure (RAGFlow, Langfuse, Valkey, PostgreSQL + pgvector)
-### Currency: USD ($) / MYR (RM) — Estimated Exchange Rate: $1.00 = \text{MYR } 4.45$
+### Currency: USD ($) / MYR (RM) — Estimated Exchange Rate: $1.00 = MYR 4.45$
 
 ### 1. Executive Summary
 This report presents a thorough counter-check and financial verification of the AWS 3-Tier Deployment Architecture for AI Infrastructure. The proposed architecture supports containerized enterprise AI workloads (such as RAGFlow, Langfuse, and vector processing microservices) utilizing high-efficiency AWS Graviton3/Graviton4 compute instances, managed relational databases (Amazon RDS PostgreSQL with pgvector), high-speed caching (Amazon ElastiCache Valkey/Redis), and multi-AZ network isolation.
@@ -210,16 +210,16 @@ This report presents a thorough counter-check and financial verification of the 
 #### Key Audit Findings
 * **Baseline Accuracy:** The core compute and database pricing aligns with AWS Malaysia (ap-southeast-5) regional standards, showing a ~10-15% cost efficiency advantage when utilizing ARM-based Graviton instances (t4g, c7g, m7g, r7g) compared to x86 equivalents.
 * **Hidden Cost Traps Identified:** Standard cloud estimates often omit non-compute operational fees. Crucial hidden cost drivers identified during this audit include:
-  * **AWS Public IPv4 Address Surcharge:** $\$0.005/\text{hour}$ ($\approx \$3.65/\text{month}$ per public IPv4 assigned to ALBs, NAT Gateways, and Jumphosts).
-  * **NAT Gateway Processing Surcharge:** Hourly gateway charges ($\$0.045-\$0.05/\text{hour}$ per AZ) plus data processing costs ($\$0.045/\text{GB}$).
+  * **AWS Public IPv4 Address Surcharge:** $0.005 / hour (≈ $3.65 / month per public IPv4 assigned to ALBs, NAT Gateways, and Jumphosts).
+  * **NAT Gateway Processing Surcharge:** Hourly gateway charges ($0.045 - $0.05/hour per AZ) plus data processing costs ($0.045 / GB).
   * **Application Load Balancer (ALB) Capacity Units (LCUs):** Base hourly rate plus rule/new-connection LCU scaling under LLM streaming payloads.
-  * **Cross-AZ Data Transfer:** Inter-AZ compute-to-database and compute-to-cache data transfer ($\$0.01/\text{GB}$ each direction).
+  * **Cross-AZ Data Transfer:** Inter-AZ compute-to-database and compute-to-cache data transfer ($0.01 / GB each direction).
 
 #### Financial Impact Summary
-* **Dev / POC Tier:** $\approx \$138.50 / \text{month}$ ($\text{MYR } 616.33 / \text{month}$)
-* **Staging Tier:** $\approx \$482.10 / \text{month}$ ($\text{MYR } 2,145.35 / \text{month}$)
-* **Enterprise Production (Multi-AZ):** $\approx \$1,285.80 / \text{month}$ ($\text{MYR } 5,721.81 / \text{month}$)
-* **Optimized Prod (1-Year Savings Plan):** $\approx \$945.30 / \text{month}$ ($\text{MYR } 4,206.59 / \text{month}$) — $26.5\%$ cost reduction.
+* **Dev / POC Tier:** ≈ $138.50 / month (MYR 616.33 / month)
+* **Staging Tier:** ≈ $482.10 / month (MYR 2,145.35 / month)
+* **Enterprise Production (Multi-AZ):** ≈ $1,285.80 / month (MYR 5,721.81 / month)
+* **Optimized Prod (1-Year Savings Plan):** ≈ $945.30 / month (MYR 4,206.59 / month) — 26.5% cost reduction.
 
 ---
 
@@ -254,16 +254,16 @@ Designed for low-cost verification, initial RAG model testing, and pipeline inte
 
 | Component | Resource Specification | Qty / Usage | Unit Cost (USD) | Monthly Cost (USD) | Monthly Cost (MYR) |
 | --- | --- | --- | --- | --- | --- |
-| **Compute (App)** | EC2 t4g.medium (2 vCPU, 4GB RAM) | 1 instance (730h) | $\$0.0336 / \text{hr}$ | $\$24.53$ | $\text{MYR } 109.16$ |
-| **Jumphost** | EC2 t4g.micro (Burstable) | 1 instance (730h) | $\$0.0084 / \text{hr}$ | $\$6.13$ | $\text{MYR } 27.28$ |
-| **Storage (EBS)** | gp3 Volume (App + Jumphost) | 50 GB Total | $\$0.08 / \text{GB-mo}$ | $\$4.00$ | $\text{MYR } 17.80$ |
-| **Database** | RDS PostgreSQL db.t4g.medium (Single-AZ) | 1 instance (730h) | $\$0.065 / \text{hr}$ | $\$47.45$ | $\text{MYR } 211.15$ |
-| **RDS Storage** | gp3 Storage (Database) | 30 GB | $\$0.115 / \text{GB-mo}$ | $\$3.45$ | $\text{MYR } 15.35$ |
-| **Cache** | ElastiCache Valkey/Redis cache.t4g.micro | 1 node (730h) | $\$0.016 / \text{hr}$ | $\$11.68$ | $\text{MYR } 51.98$ |
-| **Networking** | Single NAT Gateway (Shared Dev) | 1 NAT (730h) | $\$0.045 / \text{hr}$ | $\$32.85$ | $\text{MYR } 146.18$ |
-| **Public IPv4** | Public IP Fees (Jumphost + NAT) | 2 Public IPs | $\$0.005 / \text{IP-hr}$ | $\$7.30$ | $\text{MYR } 32.49$ |
-| **Data Processing** | NAT Gateway Data Processed | 25 GB / mo | $\$0.045 / \text{GB}$ | $\$1.11$ | $\text{MYR } 4.94$ |
-| **TOTAL (Dev)** | | | | **$\$138.50$** | **$\text{MYR } 616.33$** |
+| **Compute (App)** | EC2 t4g.medium (2 vCPU, 4GB RAM) | 1 instance (730h) | $0.0336 / hr | $24.53 | MYR 109.16 |
+| **Jumphost** | EC2 t4g.micro (Burstable) | 1 instance (730h) | $0.0084 / hr | $6.13 | MYR 27.28 |
+| **Storage (EBS)** | gp3 Volume (App + Jumphost) | 50 GB Total | $0.08 / GB-mo | $4.00 | MYR 17.80 |
+| **Database** | RDS PostgreSQL db.t4g.medium (Single-AZ) | 1 instance (730h) | $0.065 / hr | $47.45 | MYR 211.15 |
+| **RDS Storage** | gp3 Storage (Database) | 30 GB | $0.115 / GB-mo | $3.45 | MYR 15.35 |
+| **Cache** | ElastiCache Valkey/Redis cache.t4g.micro | 1 node (730h) | $0.016 / hr | $11.68 | MYR 51.98 |
+| **Networking** | Single NAT Gateway (Shared Dev) | 1 NAT (730h) | $0.045 / hr | $32.85 | MYR 146.18 |
+| **Public IPv4** | Public IP Fees (Jumphost + NAT) | 2 Public IPs | $0.005 / IP-hr | $7.30 | MYR 32.49 |
+| **Data Processing** | NAT Gateway Data Processed | 25 GB / mo | $0.045 / GB | $1.11 | MYR 4.94 |
+| **TOTAL (Dev)** | | | | **$138.50** | **MYR 616.33** |
 
 ---
 
@@ -272,19 +272,19 @@ Mirrors production topology with reduced instance scaling to validate multi-AZ f
 
 | Component | Resource Specification | Qty / Usage | Unit Cost (USD) | Monthly Cost (USD) | Monthly Cost (MYR) |
 | --- | --- | --- | --- | --- | --- |
-| **Ingress Load Balancer** | Application Load Balancer (ALB) | 1 ALB (730h) | $\$0.0225 / \text{hr}$ | $\$16.43$ | $\text{MYR } 73.11$ |
-| **ALB LCU Usage** | Load Balancer Capacity Units | 2 LCUs average | $\$0.008 / \text{LCU-hr}$ | $\$11.68$ | $\text{MYR } 51.98$ |
-| **WAF Protection** | AWS WAF WebACL + 2 Core Rulesets | 1 WebACL | $\$5.00 + \$2.00$ rules | $\$7.00$ | $\text{MYR } 31.15$ |
-| **Compute Tier** | EC2 c7g.xlarge (4 vCPU, 8GB RAM) | 2 instances (ASG) | $\$0.145 / \text{hr}$ | $\$211.70$ | $\text{MYR } 942.07$ |
-| **Jumphost** | EC2 t4g.small (Session Manager) | 1 instance (730h) | $\$0.0168 / \text{hr}$ | $\$12.26$ | $\text{MYR } 54.56$ |
-| **Database Tier** | RDS PostgreSQL db.t4g.large (Multi-AZ) | Multi-AZ (730h) | $\$0.258 / \text{hr}$ | $\$188.34$ | $\text{MYR } 838.11$ |
-| **RDS Storage** | gp3 Storage (Multi-AZ) | 100 GB | $\$0.23 / \text{GB-mo}$ | $\$23.00$ | $\text{MYR } 102.35$ |
-| **Cache Tier** | ElastiCache cache.t4g.medium (Dual Node) | 2 nodes (Multi-AZ) | $\$0.065 / \text{hr}$ | $\$94.90$ | $\text{MYR } 422.31$ |
-| **Shared Storage** | AWS EFS (General Purpose - Standard) | 20 GB storage | $\$0.30 / \text{GB-mo}$ | $\$6.00$ | $\text{MYR } 26.70$ |
-| **Networking** | Dual-AZ NAT Gateways | 2 NATs (730h) | $\$0.045 / \text{hr}$ | $\$65.70$ | $\text{MYR } 292.37$ |
-| **Public IPv4** | Public IPs (ALB + NAT + Jumphost) | 4 Public IPs | $\$0.005 / \text{IP-hr}$ | $\$14.60$ | $\text{MYR } 64.97$ |
-| **Data Processing** | NAT + Inter-AZ Traffic Transfer | 300 GB | Mixed rates | $\$16.50$ | $\text{MYR } 73.43$ |
-| **TOTAL (Staging)** | | | | **$\$668.11$** | **$\text{MYR } 2,973.11$** |
+| **Ingress Load Balancer** | Application Load Balancer (ALB) | 1 ALB (730h) | $0.0225 / hr | $16.43 | MYR 73.11 |
+| **ALB LCU Usage** | Load Balancer Capacity Units | 2 LCUs average | $0.008 / LCU-hr | $11.68 | MYR 51.98 |
+| **WAF Protection** | AWS WAF WebACL + 2 Core Rulesets | 1 WebACL | $5.00 + $2.00 rules | $7.00 | MYR 31.15 |
+| **Compute Tier** | EC2 c7g.xlarge (4 vCPU, 8GB RAM) | 2 instances (ASG) | $0.145 / hr | $211.70 | MYR 942.07 |
+| **Jumphost** | EC2 t4g.small (Session Manager) | 1 instance (730h) | $0.0168 / hr | $12.26 | MYR 54.56 |
+| **Database Tier** | RDS PostgreSQL db.t4g.large (Multi-AZ) | Multi-AZ (730h) | $0.258 / hr | $188.34 | MYR 838.11 |
+| **RDS Storage** | gp3 Storage (Multi-AZ) | 100 GB | $0.23 / GB-mo | $23.00 | MYR 102.35 |
+| **Cache Tier** | ElastiCache cache.t4g.medium (Dual Node) | 2 nodes (Multi-AZ) | $0.065 / hr | $94.90 | MYR 422.31 |
+| **Shared Storage** | AWS EFS (General Purpose - Standard) | 20 GB storage | $0.30 / GB-mo | $6.00 | MYR 26.70 |
+| **Networking** | Dual-AZ NAT Gateways | 2 NATs (730h) | $0.045 / hr | $65.70 | MYR 292.37 |
+| **Public IPv4** | Public IPs (ALB + NAT + Jumphost) | 4 Public IPs | $0.005 / IP-hr | $14.60 | MYR 64.97 |
+| **Data Processing** | NAT + Inter-AZ Traffic Transfer | 300 GB | Mixed rates | $16.50 | MYR 73.43 |
+| **TOTAL (Staging)** | | | | **$668.11** | **MYR 2,973.11** |
 
 ---
 
@@ -293,19 +293,19 @@ Engineered for high-throughput RAG document parsing, vector indexing, Langfuse t
 
 | Component | Resource Specification | Qty / Usage | Unit Cost (USD) | Monthly Cost (USD) | Monthly Cost (MYR) |
 | --- | --- | --- | --- | --- | --- |
-| **Ingress Load Balancer** | ALB (Multi-AZ Ingress) | 1 ALB (730h) | $\$0.0225 / \text{hr}$ | $\$16.43$ | $\text{MYR } 73.11$ |
-| **ALB LCU Scaling** | Streaming / High Request LCUs | 5 LCUs average | $\$0.008 / \text{LCU-hr}$ | $\$29.20$ | $\text{MYR } 129.94$ |
-| **AWS WAF** | WAF WebACL + Managed Rules + Requests | 5M requests/mo | Managed baseline | $\$22.50$ | $\text{MYR } 100.13$ |
-| **Compute (ASG)** | EC2 c7g.2xlarge (8 vCPU, 16GB RAM) | 3 instances (Min 3) | $\$0.290 / \text{hr}$ | $\$635.10$ | $\text{MYR } 2,826.20$ |
-| **Database Tier** | RDS PostgreSQL db.m7g.xlarge (Multi-AZ) | 4 vCPU, 16GB RAM | $\$0.674 / \text{hr}$ | $\$492.02$ | $\text{MYR } 2,189.49$ |
-| **RDS Storage** | Provisioned IOPS gp3 (3,000 IOPS / 125 MB/s) | 250 GB Storage | Multi-AZ Storage rate | $\$57.50$ | $\text{MYR } 255.88$ |
-| **Cache Tier** | ElastiCache Valkey cache.r7g.large (Multi-AZ) | 2 nodes + Failover | $\$0.136 / \text{hr}$ | $\$198.56$ | $\text{MYR } 883.59$ |
-| **Shared Storage** | Amazon EFS (RAG Artifacts / Models) | 100 GB Storage | $\$0.30 / \text{GB-mo}$ | $\$30.00$ | $\text{MYR } 133.50$ |
-| **Networking** | Triple-AZ NAT Gateways (High HA) | 3 NATs (730h) | $\$0.045 / \text{hr}$ | $\$98.55$ | $\text{MYR } 438.55$ |
-| **Public IPv4** | Public IPs (ALB, 3 NATs) | 5 Public IPs | $\$0.005 / \text{IP-hr}$ | $\$18.25$ | $\text{MYR } 81.21$ |
-| **Data Processing** | NAT Gateway & Inter-AZ Traffic | 1,000 GB processed | Combined rates | $\$52.50$ | $\text{MYR } 233.63$ |
-| **DNS & Monitoring** | Route 53 Health Checks + CloudWatch Logs | Failover + Logs | Baseline | $\$15.00$ | $\text{MYR } 66.75$ |
-| **TOTAL (Prod)** | | | | **$\$1,665.61$** | **$\text{MYR } 7,411.98$** |
+| **Ingress Load Balancer** | ALB (Multi-AZ Ingress) | 1 ALB (730h) | $0.0225 / hr | $16.43 | MYR 73.11 |
+| **ALB LCU Scaling** | Streaming / High Request LCUs | 5 LCUs average | $0.008 / LCU-hr | $29.20 | MYR 129.94 |
+| **AWS WAF** | WAF WebACL + Managed Rules + Requests | 5M requests/mo | Managed baseline | $22.50 | MYR 100.13 |
+| **Compute (ASG)** | EC2 c7g.2xlarge (8 vCPU, 16GB RAM) | 3 instances (Min 3) | $0.290 / hr | $635.10 | MYR 2,826.20 |
+| **Database Tier** | RDS PostgreSQL db.m7g.xlarge (Multi-AZ) | 4 vCPU, 16GB RAM | $0.674 / hr | $492.02 | MYR 2,189.49 |
+| **RDS Storage** | Provisioned IOPS gp3 (3,000 IOPS / 125 MB/s) | 250 GB Storage | Multi-AZ Storage rate | $57.50 | MYR 255.88 |
+| **Cache Tier** | ElastiCache Valkey cache.r7g.large (Multi-AZ) | 2 nodes + Failover | $0.136 / hr | $198.56 | MYR 883.59 |
+| **Shared Storage** | Amazon EFS (RAG Artifacts / Models) | 100 GB Storage | $0.30 / GB-mo | $30.00 | MYR 133.50 |
+| **Networking** | Triple-AZ NAT Gateways (High HA) | 3 NATs (730h) | $0.045 / hr | $98.55 | MYR 438.55 |
+| **Public IPv4** | Public IPs (ALB, 3 NATs) | 5 Public IPs | $0.005 / IP-hr | $18.25 | MYR 81.21 |
+| **Data Processing** | NAT Gateway & Inter-AZ Traffic | 1,000 GB processed | Combined rates | $52.50 | MYR 233.63 |
+| **DNS & Monitoring** | Route 53 Health Checks + CloudWatch Logs | Failover + Logs | Baseline | $15.00 | MYR 66.75 |
+| **TOTAL (Prod)** | | | | **$1,665.61** | **MYR 7,411.98** |
 
 ---
 
@@ -334,10 +334,14 @@ Standard cloud estimators frequently understate monthly expenditure by focusing 
 ```
 
 #### Mathematical Formula for NAT Gateway Costing:
-$$\text{Cost}_{\text{NAT}} = \left( N_{\text{AZ}} \times 730 \text{ hrs} \times \$0.045 \right) + \left( \text{Data}_{\text{Processed (GB)}} \times \$0.045 \right)$$
+```
+Cost_NAT = (N_AZ × 730 hours × $0.045) + (Data_Processed (GB) × $0.045)
+```
 
-For 3 Availability Zones handling $1,000 \text{ GB}$ of monthly ingestion traffic:
-$$\text{Cost}_{\text{NAT}} = (3 \times 730 \times 0.045) + (1000 \times 0.045) = \$98.55 + \$45.00 = \$143.55 / \text{month}$$
+For 3 Availability Zones handling 1,000 GB of monthly ingestion traffic:
+```
+Cost_NAT = (3 × 730 × 0.045) + (1000 × 0.045) = $98.55 + $45.00 = $143.55 / month
+```
 
 ---
 
@@ -346,22 +350,24 @@ To maximize financial efficiency without sacrificing high availability or perfor
 
 #### 5.1 Optimization Levers
 * **1-Year or 3-Year Compute Savings Plans:** Applying a 1-Year All Upfront Compute Savings Plan to EC2 compute (c7g.2xlarge) yields an average 34% discount. Applying a 1-Year Reserved Instance (RI) to RDS PostgreSQL Multi-AZ yields a 30% discount.
-* **NAT Gateway Consolidation for Staging/Dev:** In non-production environments, consolidate from multi-AZ NAT Gateways to a single NAT Gateway, reducing hourly gateway fees by $66\%$.
+* **NAT Gateway Consolidation for Staging/Dev:** In non-production environments, consolidate from multi-AZ NAT Gateways to a single NAT Gateway, reducing hourly gateway fees by 66%.
 * **AWS Systems Manager (SSM) Session Manager:** Eliminates the necessity for public IPv4-backed Bastion EC2 instances, saving instance hourly costs, EBS volumes, and public IP surcharges.
 * **Valkey Engine Adoption over Redis:** AWS ElastiCache for Valkey offers a 20% price reduction over traditional ElastiCache for Redis while remaining fully open-source and wire-compatible.
 
 #### 5.2 3-Year Cost Comparison (Enterprise Production)
-$$\begin{aligned} \text{Unoptimized On-Demand (3 Years)} &= \$1,665.61 \times 36 = \mathbf{\$59,961.96} \quad (\text{MYR } 266,830.72) \\ \text{Optimized (1-Yr Savings Plans + Valkey)} &= \$1,180.20 \times 36 = \mathbf{\$42,487.20} \quad (\text{MYR } 189,068.04) \\ \text{Optimized (3-Yr Compute Savings Plans)} &= \$945.30 \times 36 = \mathbf{\$34,030.80} \quad (\text{MYR } 151,437.06) \end{aligned}$$
+* **Unoptimized On-Demand (3 Years):** $1,665.61 × 36 = **$59,961.96** (MYR 266,830.72)
+* **Optimized (1-Yr Savings Plans + Valkey):** $1,180.20 × 36 = **$42,487.20** (MYR 189,068.04)
+* **Optimized (3-Yr Compute Savings Plans):** $945.30 × 36 = **$34,030.80** (MYR 151,437.06)
 
-**Financial Impact:** Implementing 3-Year Compute Savings Plans and RDS Reserved Instances delivers a Total Savings of $\$25,931.16$ ($\text{MYR } 115,393.66$) over 36 months, representing a $43.2\%$ reduction in total cloud expenditure.
+**Financial Impact:** Implementing 3-Year Compute Savings Plans and RDS Reserved Instances delivers a Total Savings of $25,931.16 (MYR 115,393.66) over 36 months, representing a 43.2% reduction in total cloud expenditure.
 
 ---
 
 ### 6. Audit Summary & Strategic Recommendations
 * **Adopt Graviton3/Graviton4 Architectures as Default:** Standardize compute images (c7g, t4g, m7g) across ASG nodes and RDS. Graviton instances deliver up to 40% better price-performance for Python/Go microservices and PostgreSQL vector queries compared to x86 instances.
 * **Implement PrivateLink S3 Endpoints:** Route all large document ingestion traffic from RAGFlow directly to Amazon S3 via free Gateway VPC Endpoints, bypassing NAT Gateway data processing fees ($0.045/\text{GB}$).
-* **Enforce Automated Non-Prod Shutdown Schedule:** Utilize AWS Instance Scheduler to auto-stop Dev and Staging ASG/EC2 nodes outside business hours (12h/day, 5 days/week), reducing non-production compute costs by an additional $64\%$.
-* **Establish Budget Guardrails:** Configure AWS Budgets with automated anomaly detection alerts set at $80\%$ and $100\%$ thresholds of expected monthly spending to prevent runaway LCU or NAT charges.
+* **Enforce Automated Non-Prod Shutdown Schedule:** Utilize AWS Instance Scheduler to auto-stop Dev and Staging ASG/EC2 nodes outside business hours (12h/day, 5 days/week), reducing non-production compute costs by an additional 64%.
+* **Establish Budget Guardrails:** Configure AWS Budgets with automated anomaly detection alerts set at 80% and 100% thresholds of expected monthly spending to prevent runaway LCU or NAT charges.
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────┐
