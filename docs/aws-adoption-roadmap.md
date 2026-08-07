@@ -8,7 +8,20 @@ topics: ["aws", "cloud", "architecture", "costing", "roadmap", "lifecycle", "com
 ---
 # AWS Phased Adoption Roadmap & Costing Guide
 
-This guide outlines the step-by-step AWS cloud adoption roadmap, designed to align with our project timeline spanning **2 years of development and 12 months of active support and maintenance (36 months total)**.
+This guide outlines the step-by-step AWS cloud adoption roadmap, designed to align with our project timeline spanning **2 years of development and 12 months of active support and maintenance (36 months total)**. Over this 36-month period, the **total overall AWS infrastructure cost** is projected at **$47,709.78 USD** (≈ **RM 212,308.88 MYR**). To provide a comprehensive financial blueprint for the entire lifecycle, we estimate **other non-AWS operational costs**—including Cyberjaya developer personnel, physical equipment, local office overheads, external third-party security auditing, and software licensing compliance—to be approximately **$248,056.18 USD** (≈ **RM 1,103,850.00 MYR**). This results in a combined 36-month project operating budget of **$295,765.96 USD** (≈ **RM 1,316,158.88 MYR**).
+
+### Combined 36-Month Financial Projection (AWS vs. Non-AWS)
+
+The table below provides a year-to-year financial breakdown comparing our cloud infrastructure expenditures directly against estimated non-AWS operating overheads:
+
+| Financial Period | AWS Cloud Cost (USD) | AWS Cloud Cost (MYR) | Estimated Non-AWS Cost (USD) | Estimated Non-AWS Cost (MYR) | Total Combined Cost (USD) | Total Combined Cost (MYR) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Year 1 (Months 1–12)** | $13,023.16 | RM 57,953.18 | $99,696.63 | RM 443,650.00 | $112,719.79 | RM 501,603.18 |
+| **Year 2 (Months 13–24)** | $23,343.02 | RM 103,876.62 | $114,633.93 | RM 510,121.00 | $137,976.95 | RM 613,997.62 |
+| **Year 3 (Months 25–36)** | $11,343.60 | RM 50,479.08 | $33,725.62 | RM 150,079.00 | $45,069.22 | RM 200,558.08 |
+| **Grand Total** | **$47,709.78** | **RM 212,308.88** | **$248,056.18** | **RM 1,103,850.00** | **$295,765.96** | **RM 1,316,158.88** |
+
+*Note: All local currency conversions are calculated at a baseline exchange rate of 1 USD ≈ 4.45 MYR.*
 
 To ensure complete privacy and confidentiality, all technical activities are described using generalised enterprise-grade classifications while remaining directly traceable to our core project deliverables. All original Malay terms from the project Gantt chart have been fully translated into **UK English** (e.g., *optimise*, *analysing*, *organise*).
 
