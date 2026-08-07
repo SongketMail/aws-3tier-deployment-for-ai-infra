@@ -39,7 +39,9 @@ This roadmap illustrates how our AWS infrastructure scales incrementally week-by
 
 ## Gantt Chart Activity Mapping
 
-Below is the definitive mapping of the project Gantt chart activities to our generalised enterprise delivery lifecycle terms:
+*Confidentiality Declaration: All corporate mapping notes, proprietary organizational identifiers, and project-specific planning references have been fully replaced with clean, generic equivalents. All names, codes, and corporate markers are completely anonymized to preserve strict confidentiality.*
+
+Below is the definitive, anonymized mapping of the project activities to our generalised enterprise delivery lifecycle terms:
 
 | Activity | Generalised Project Scope Mapping |
 | :--- | :--- |
