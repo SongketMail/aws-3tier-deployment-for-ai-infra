@@ -15,6 +15,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 
 ## Core Architectural Documentation
 
+- [AWS Phased Adoption Roadmap](docs/aws-adoption-roadmap.md) : Multi-year week-by-week and month-by-month AWS service growth plan mapped from the project Gantt chart.
 - [System Architecture](docs/architecture.md) : Physical VPC layouts, routing tables, and the Multi-AZ subnet topology designed for ap-southeast-5.
 - [Developer Design Mapping](docs/developer-design-mapping.md) : Deep technical alignment of legacy single-VM deployment architectures to highly-available AWS-native managed services.
 - [Separation of Concerns](docs/asg-separation-of-concern.md) : Guidelines on designing stateless ASGs, managing persistent session/media state, and selecting S3 vs. Amazon EFS.
