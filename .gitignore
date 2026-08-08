@@ -21,5 +21,10 @@ terraform.rc
 *.swp
 *.swo
 
+# Python compilation artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Shell scripts and logs
 *.log
