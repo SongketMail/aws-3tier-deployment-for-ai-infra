@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/sitemap.xml
