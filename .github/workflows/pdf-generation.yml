@@ -14,13 +14,32 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Webpage to PDF
-        uses: misaelnieto/web_to_pdf_action@v0.3.1
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          webPageURL: 'https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/print_all.html'
-          outputFile: './docs/assets/output.pdf'
-          usePuppeteer: true
-          pdfOptions: '{"format": "A4", "printBackground": true}'
+          python-version: "3.12"
+
+      - name: Prepare Markdown Front Matter
+        run: |
+          chmod +x scripts/prepare_docs.py
+          python scripts/prepare_docs.py
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
+      - name: Generate PDF
+        run: node scripts/generate_pdf.js
 
       - name: Upload PDF Artifact
         uses: actions/upload-artifact@v4
