@@ -17,5 +17,5 @@ variable "http_port" {
 variable "db_port" {
   description = "Database connection port"
   type        = number
-  default     = 3306 # Default for MySQL
+  default     = 5432 # Default for PostgreSQL
 }
