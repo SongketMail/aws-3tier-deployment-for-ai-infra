@@ -114,6 +114,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[Technology Stack Comparison](docs/tech-stack-comparison.md):** Architectural mapping and AWS-native options guide for the developer's containerized and external system dependencies.
 * **[Software Licensing & Technology Risk Register (TS/MC Series)](docs/licensing-risks.md):** Complete software licensing compliance framework, technology risk registry, and mitigation plans (TS/MC Series) covering LangChain4j, self-hosted operations, Bedrock with Qwen3 models, and standalone Wazuh SIEM.
 * **[Strategic Comparative Review](docs/aws-vs-self-hosted-review.md):** Comprehensive strategic analysis and financial TCO comparison of an AWS-Native Managed Platform against a Self-Hosted / On-Premises Custom Stack in Malaysia.
+* **[Load Testing Assumptions & Sizing Guide](docs/load-test-assumptions.md):** Workload definitions, SLA metrics, architectural performance assumptions, and multi-VU sizing models from 100 to 10,000 VUs.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.

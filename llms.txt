@@ -32,6 +32,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 - [Technology Stack Comparison](docs/tech-stack-comparison.md) : Comprehensive architectural mapping of containerized technologies (Java/Spring, React, Postgres, Valkey) and AWS-native options for third-party platforms (Twilio, Meta, OpenAI).
 - [Wazuh Standalone Installation & Costing](docs/wazuh.md) : Comprehensive guide detailing the best and cheapest cloud deployment strategy for standalone Wazuh in the cloud (AWS Marketplace AMI and Graviton Ubuntu modes), with separated USD/MYR costing models for budget isolation.
 - [Strategic Comparative Review](docs/aws-vs-self-hosted-review.md) : Comprehensive strategic analysis and financial TCO comparison of an AWS-Native Managed Platform against a Self-Hosted / On-Premises Custom Stack in Malaysia.
+- [Load Testing Assumptions & Sizing Guide](docs/load-test-assumptions.md) : Workload definitions, SLA metrics, architectural performance assumptions, and multi-VU sizing models from 100 to 10,000 VUs.
 
 ## Root Infrastructure Configurations
 
