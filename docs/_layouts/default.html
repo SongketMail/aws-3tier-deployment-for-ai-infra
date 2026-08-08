@@ -55,6 +55,7 @@
         <h3>Documentation</h3>
         <div class="buttons">
           <a href="{{ '/' | relative_url }}">Home</a>
+          <a href="{{ '/assets/output.pdf' | relative_url }}" target="_blank">📄 Download PDF</a>
           {% assign sorted_pages = site.pages | sort: "path" %}
           {% for p in sorted_pages %}
             {% if p.path != "index.md" and p.path contains ".md" and p.path != "README.md" %}
