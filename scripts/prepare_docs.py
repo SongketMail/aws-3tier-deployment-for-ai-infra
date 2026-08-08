@@ -3,6 +3,14 @@ import os
 import re
 import datetime
 
+def unescape_string(val):
+    """Strips outer quotes and unescapes backslashes and quotes from a string."""
+    if val.startswith('"') and val.endswith('"'):
+        return val[1:-1].replace('\\"', '"').replace('\\\\', '\\')
+    elif val.startswith("'") and val.endswith("'"):
+        return val[1:-1].replace("\\'", "'").replace('\\\\', '\\')
+    return val.strip('"\'')
+
 def parse_yaml(front_matter_str):
     lines = front_matter_str.strip().split('\n')
     data = {}
@@ -13,13 +21,7 @@ def parse_yaml(front_matter_str):
 
         # Check for list items
         if line.strip().startswith('-') and current_key:
-            val = line.strip()[1:].strip()
-            if val.startswith('"') and val.endswith('"'):
-                val = val[1:-1].replace('\\"', '"').replace('\\\\', '\\')
-            elif val.startswith("'") and val.endswith("'"):
-                val = val[1:-1].replace("\\'", "'").replace('\\\\', '\\')
-            else:
-                val = val.strip('"\'')
+            val = unescape_string(line.strip()[1:].strip())
             if isinstance(data[current_key], list):
                 data[current_key].append(val)
             else:
@@ -38,27 +40,14 @@ def parse_yaml(front_matter_str):
                     i = i.strip()
                     if not i:
                         continue
-                    if i.startswith('"') and i.endswith('"'):
-                        i = i[1:-1].replace('\\"', '"').replace('\\\\', '\\')
-                    elif i.startswith("'") and i.endswith("'"):
-                        i = i[1:-1].replace("\\'", "'").replace('\\\\', '\\')
-                    else:
-                        i = i.strip('"\'')
-                    items.append(i)
+                    items.append(unescape_string(i))
                 data[key] = items
             elif val.startswith('{') and val.endswith('}'):
                 data[key] = val
             elif val == '':
                 data[key] = []
             else:
-                parsed_val = val
-                if parsed_val.startswith('"') and parsed_val.endswith('"'):
-                    parsed_val = parsed_val[1:-1]
-                    parsed_val = parsed_val.replace('\\"', '"').replace('\\\\', '\\')
-                elif parsed_val.startswith("'") and parsed_val.endswith("'"):
-                    parsed_val = parsed_val[1:-1]
-                    parsed_val = parsed_val.replace("\\'", "'").replace('\\\\', '\\')
-                data[key] = parsed_val
+                data[key] = unescape_string(val)
     return data
 
 def format_yaml_value(key, val):
