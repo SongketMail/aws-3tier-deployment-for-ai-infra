@@ -54,6 +54,12 @@ resource "aws_launch_template" "main" {
     arn = aws_iam_instance_profile.instance_profile.arn
   }
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
   network_interfaces {
     associate_public_ip_address = false
     security_groups             = [var.asg_sg_id]

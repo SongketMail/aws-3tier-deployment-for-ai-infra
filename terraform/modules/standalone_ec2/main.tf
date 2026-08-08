@@ -104,6 +104,12 @@ resource "aws_instance" "standalone" {
   # Enable detailed monitoring for staging audit compatibility
   monitoring = true
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
   # Tag specifications for proper compliance
   tags = {
     Name        = "${var.environment}-standalone-instance-${count.index + 1}"

@@ -139,6 +139,12 @@ resource "aws_instance" "jumphost" {
   # Enable detailed monitoring for staging audit compatibility
   monitoring = true
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+  }
+
   root_block_device {
     volume_type           = "gp3"
     volume_size           = 15
