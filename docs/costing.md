@@ -207,7 +207,7 @@ By replacing high-cost vendor-managed SIEM platforms with our self-hosted, stand
 
 ### Target Region: AWS Malaysia (ap-southeast-5 - Kuala Lumpur)
 ### Workload Type: Enterprise RAG & AI Infrastructure (RAGFlow, Langfuse, Valkey, PostgreSQL + pgvector)
-### Currency: USD ($) / MYR (RM) — Estimated Exchange Rate: $1.00 = MYR 4.45$
+### Currency: USD ($) / MYR (RM) — Estimated Exchange Rate: $1.00 = MYR 4.50$
 
 ### 1. Executive Summary
 This report presents a thorough counter-check and financial verification of the AWS 3-Tier Deployment Architecture for AI Infrastructure. The proposed architecture supports containerized enterprise AI workloads (such as RAGFlow, Langfuse, and vector processing microservices) utilizing high-efficiency AWS Graviton3/Graviton4 compute instances, managed relational databases (Amazon RDS PostgreSQL with pgvector), high-speed caching (Amazon ElastiCache Valkey/Redis), and multi-AZ network isolation.
@@ -221,10 +221,10 @@ This report presents a thorough counter-check and financial verification of the 
   * **Cross-AZ Data Transfer:** Inter-AZ compute-to-database and compute-to-cache data transfer ($0.01 / GB each direction).
 
 #### Financial Impact Summary
-* **Dev / POC Tier:** ≈ $138.50 / month (MYR 616.33 / month)
-* **Staging Tier:** ≈ $482.10 / month (MYR 2,145.35 / month)
-* **Enterprise Production (Multi-AZ):** ≈ $1,285.80 / month (MYR 5,721.81 / month)
-* **Optimized Prod (1-Year Savings Plan):** ≈ $945.30 / month (MYR 4,206.59 / month) — 26.5% cost reduction.
+* **Dev / POC Tier:** ≈ $138.50 / month (MYR 623.25 / month)
+* **Staging Tier:** ≈ $482.10 / month (MYR 2,169.45 / month)
+* **Enterprise Production (Multi-AZ):** ≈ $1,285.80 / month (MYR 5,786.10 / month)
+* **Optimized Prod (1-Year Savings Plan):** ≈ $945.30 / month (MYR 4,253.85 / month) — 26.5% cost reduction.
 
 ---
 
@@ -259,16 +259,16 @@ Designed for low-cost verification, initial RAG model testing, and pipeline inte
 
 | Component | Resource Specification | Qty / Usage | Unit Cost (USD) | Monthly Cost (USD) | Monthly Cost (MYR) |
 | --- | --- | --- | --- | --- | --- |
-| **Compute (App)** | EC2 t4g.medium (2 vCPU, 4GB RAM) | 1 instance (730h) | $0.0336 / hr | $24.53 | MYR 109.16 |
-| **Jumphost** | EC2 t4g.micro (Burstable) | 1 instance (730h) | $0.0084 / hr | $6.13 | MYR 27.28 |
-| **Storage (EBS)** | gp3 Volume (App + Jumphost) | 50 GB Total | $0.08 / GB-mo | $4.00 | MYR 17.80 |
-| **Database** | RDS PostgreSQL db.t4g.medium (Single-AZ) | 1 instance (730h) | $0.065 / hr | $47.45 | MYR 211.15 |
-| **RDS Storage** | gp3 Storage (Database) | 30 GB | $0.115 / GB-mo | $3.45 | MYR 15.35 |
-| **Cache** | ElastiCache Valkey/Redis cache.t4g.micro | 1 node (730h) | $0.016 / hr | $11.68 | MYR 51.98 |
-| **Networking** | Single NAT Gateway (Shared Dev) | 1 NAT (730h) | $0.045 / hr | $32.85 | MYR 146.18 |
-| **Public IPv4** | Public IP Fees (Jumphost + NAT) | 2 Public IPs | $0.005 / IP-hr | $7.30 | MYR 32.49 |
-| **Data Processing** | NAT Gateway Data Processed | 25 GB / mo | $0.045 / GB | $1.11 | MYR 4.94 |
-| **TOTAL (Dev)** | | | | **$138.50** | **MYR 616.33** |
+| **Compute (App)** | EC2 t4g.medium (2 vCPU, 4GB RAM) | 1 instance (730h) | $0.0336 / hr | $24.53 | MYR 110.39 |
+| **Jumphost** | EC2 t4g.micro (Burstable) | 1 instance (730h) | $0.0084 / hr | $6.13 | MYR 27.59 |
+| **Storage (EBS)** | gp3 Volume (App + Jumphost) | 50 GB Total | $0.08 / GB-mo | $4.00 | MYR 18.00 |
+| **Database** | RDS PostgreSQL db.t4g.medium (Single-AZ) | 1 instance (730h) | $0.065 / hr | $47.45 | MYR 213.53 |
+| **RDS Storage** | gp3 Storage (Database) | 30 GB | $0.115 / GB-mo | $3.45 | MYR 15.53 |
+| **Cache** | ElastiCache Valkey/Redis cache.t4g.micro | 1 node (730h) | $0.016 / hr | $11.68 | MYR 52.56 |
+| **Networking** | Single NAT Gateway (Shared Dev) | 1 NAT (730h) | $0.045 / hr | $32.85 | MYR 147.83 |
+| **Public IPv4** | Public IP Fees (Jumphost + NAT) | 2 Public IPs | $0.005 / IP-hr | $7.30 | MYR 32.85 |
+| **Data Processing** | NAT Gateway Data Processed | 25 GB / mo | $0.045 / GB | $1.11 | MYR 5.00 |
+| **TOTAL (Dev)** | | | | **$138.50** | **MYR 623.25** |
 
 ---
 
@@ -277,19 +277,19 @@ Mirrors production topology with reduced instance scaling to validate multi-AZ f
 
 | Component | Resource Specification | Qty / Usage | Unit Cost (USD) | Monthly Cost (USD) | Monthly Cost (MYR) |
 | --- | --- | --- | --- | --- | --- |
-| **Ingress Load Balancer** | Application Load Balancer (ALB) | 1 ALB (730h) | $0.0225 / hr | $16.43 | MYR 73.11 |
-| **ALB LCU Usage** | Load Balancer Capacity Units | 2 LCUs average | $0.008 / LCU-hr | $11.68 | MYR 51.98 |
-| **WAF Protection** | AWS WAF WebACL + 2 Core Rulesets | 1 WebACL | $5.00 + $2.00 rules | $7.00 | MYR 31.15 |
-| **Compute Tier** | EC2 c7g.xlarge (4 vCPU, 8GB RAM) | 2 instances (ASG) | $0.145 / hr | $211.70 | MYR 942.07 |
-| **Jumphost** | EC2 t4g.small (Session Manager) | 1 instance (730h) | $0.0168 / hr | $12.26 | MYR 54.56 |
-| **Database Tier** | RDS PostgreSQL db.t4g.large (Multi-AZ) | Multi-AZ (730h) | $0.258 / hr | $188.34 | MYR 838.11 |
-| **RDS Storage** | gp3 Storage (Multi-AZ) | 100 GB | $0.23 / GB-mo | $23.00 | MYR 102.35 |
-| **Cache Tier** | ElastiCache cache.t4g.medium (Dual Node) | 2 nodes (Multi-AZ) | $0.065 / hr | $94.90 | MYR 422.31 |
-| **Shared Storage** | AWS EFS (General Purpose - Standard) | 20 GB storage | $0.30 / GB-mo | $6.00 | MYR 26.70 |
-| **Networking** | Dual-AZ NAT Gateways | 2 NATs (730h) | $0.045 / hr | $65.70 | MYR 292.37 |
-| **Public IPv4** | Public IPs (ALB + NAT + Jumphost) | 4 Public IPs | $0.005 / IP-hr | $14.60 | MYR 64.97 |
-| **Data Processing** | NAT + Inter-AZ Traffic Transfer | 300 GB | Mixed rates | $16.50 | MYR 73.43 |
-| **TOTAL (Staging)** | | | | **$668.11** | **MYR 2,973.11** |
+| **Ingress Load Balancer** | Application Load Balancer (ALB) | 1 ALB (730h) | $0.0225 / hr | $16.43 | MYR 73.94 |
+| **ALB LCU Usage** | Load Balancer Capacity Units | 2 LCUs average | $0.008 / LCU-hr | $11.68 | MYR 52.56 |
+| **WAF Protection** | AWS WAF WebACL + 2 Core Rulesets | 1 WebACL | $5.00 + $2.00 rules | $7.00 | MYR 31.50 |
+| **Compute Tier** | EC2 c7g.xlarge (4 vCPU, 8GB RAM) | 2 instances (ASG) | $0.145 / hr | $211.70 | MYR 952.65 |
+| **Jumphost** | EC2 t4g.small (Session Manager) | 1 instance (730h) | $0.0168 / hr | $12.26 | MYR 55.17 |
+| **Database Tier** | RDS PostgreSQL db.t4g.large (Multi-AZ) | Multi-AZ (730h) | $0.258 / hr | $188.34 | MYR 847.53 |
+| **RDS Storage** | gp3 Storage (Multi-AZ) | 100 GB | $0.23 / GB-mo | $23.00 | MYR 103.50 |
+| **Cache Tier** | ElastiCache cache.t4g.medium (Dual Node) | 2 nodes (Multi-AZ) | $0.065 / hr | $94.90 | MYR 427.05 |
+| **Shared Storage** | AWS EFS (General Purpose - Standard) | 20 GB storage | $0.30 / GB-mo | $6.00 | MYR 27.00 |
+| **Networking** | Dual-AZ NAT Gateways | 2 NATs (730h) | $0.045 / hr | $65.70 | MYR 295.65 |
+| **Public IPv4** | Public IPs (ALB + NAT + Jumphost) | 4 Public IPs | $0.005 / IP-hr | $14.60 | MYR 65.70 |
+| **Data Processing** | NAT + Inter-AZ Traffic Transfer | 300 GB | Mixed rates | $16.50 | MYR 74.25 |
+| **TOTAL (Staging)** | | | | **$668.11** | **MYR 3,006.50** |
 
 ---
 
@@ -298,19 +298,19 @@ Engineered for high-throughput RAG document parsing, vector indexing, Langfuse t
 
 | Component | Resource Specification | Qty / Usage | Unit Cost (USD) | Monthly Cost (USD) | Monthly Cost (MYR) |
 | --- | --- | --- | --- | --- | --- |
-| **Ingress Load Balancer** | ALB (Multi-AZ Ingress) | 1 ALB (730h) | $0.0225 / hr | $16.43 | MYR 73.11 |
-| **ALB LCU Scaling** | Streaming / High Request LCUs | 5 LCUs average | $0.008 / LCU-hr | $29.20 | MYR 129.94 |
-| **AWS WAF** | WAF WebACL + Managed Rules + Requests | 5M requests/mo | Managed baseline | $22.50 | MYR 100.13 |
-| **Compute (ASG)** | EC2 c7g.2xlarge (8 vCPU, 16GB RAM) | 3 instances (Min 3) | $0.290 / hr | $635.10 | MYR 2,826.20 |
-| **Database Tier** | RDS PostgreSQL db.m7g.xlarge (Multi-AZ) | 4 vCPU, 16GB RAM | $0.674 / hr | $492.02 | MYR 2,189.49 |
-| **RDS Storage** | Provisioned IOPS gp3 (3,000 IOPS / 125 MB/s) | 250 GB Storage | Multi-AZ Storage rate | $57.50 | MYR 255.88 |
-| **Cache Tier** | ElastiCache Valkey cache.r7g.large (Multi-AZ) | 2 nodes + Failover | $0.136 / hr | $198.56 | MYR 883.59 |
-| **Shared Storage** | Amazon EFS (RAG Artifacts / Models) | 100 GB Storage | $0.30 / GB-mo | $30.00 | MYR 133.50 |
-| **Networking** | Triple-AZ NAT Gateways (High HA) | 3 NATs (730h) | $0.045 / hr | $98.55 | MYR 438.55 |
-| **Public IPv4** | Public IPs (ALB, 3 NATs) | 5 Public IPs | $0.005 / IP-hr | $18.25 | MYR 81.21 |
-| **Data Processing** | NAT Gateway & Inter-AZ Traffic | 1,000 GB processed | Combined rates | $52.50 | MYR 233.63 |
-| **DNS & Monitoring** | Route 53 Health Checks + CloudWatch Logs | Failover + Logs | Baseline | $15.00 | MYR 66.75 |
-| **TOTAL (Prod)** | | | | **$1,665.61** | **MYR 7,411.98** |
+| **Ingress Load Balancer** | ALB (Multi-AZ Ingress) | 1 ALB (730h) | $0.0225 / hr | $16.43 | MYR 73.94 |
+| **ALB LCU Scaling** | Streaming / High Request LCUs | 5 LCUs average | $0.008 / LCU-hr | $29.20 | MYR 131.40 |
+| **AWS WAF** | WAF WebACL + Managed Rules + Requests | 5M requests/mo | Managed baseline | $22.50 | MYR 101.25 |
+| **Compute (ASG)** | EC2 c7g.2xlarge (8 vCPU, 16GB RAM) | 3 instances (Min 3) | $0.290 / hr | $635.10 | MYR 2,857.95 |
+| **Database Tier** | RDS PostgreSQL db.m7g.xlarge (Multi-AZ) | 4 vCPU, 16GB RAM | $0.674 / hr | $492.02 | MYR 2,214.09 |
+| **RDS Storage** | Provisioned IOPS gp3 (3,000 IOPS / 125 MB/s) | 250 GB Storage | Multi-AZ Storage rate | $57.50 | MYR 258.75 |
+| **Cache Tier** | ElastiCache Valkey cache.r7g.large (Multi-AZ) | 2 nodes + Failover | $0.136 / hr | $198.56 | MYR 893.52 |
+| **Shared Storage** | Amazon EFS (RAG Artifacts / Models) | 100 GB Storage | $0.30 / GB-mo | $30.00 | MYR 135.00 |
+| **Networking** | Triple-AZ NAT Gateways (High HA) | 3 NATs (730h) | $0.045 / hr | $98.55 | MYR 443.48 |
+| **Public IPv4** | Public IPs (ALB, 3 NATs) | 5 Public IPs | $0.005 / IP-hr | $18.25 | MYR 82.13 |
+| **Data Processing** | NAT Gateway & Inter-AZ Traffic | 1,000 GB processed | Combined rates | $52.50 | MYR 236.25 |
+| **DNS & Monitoring** | Route 53 Health Checks + CloudWatch Logs | Failover + Logs | Baseline | $15.00 | MYR 67.50 |
+| **TOTAL (Prod)** | | | | **$1,665.61** | **MYR 7,495.25** |
 
 ---
 
@@ -325,16 +325,16 @@ Standard cloud estimators frequently understate monthly expenditure by focusing 
 │    - App Load Balancers (2 IPs): $7.30/month                                      │
 │    - Multi-AZ NAT Gateways (3 IPs): $10.95/month                                  │
 │    - Bastion / Jumphosts (1 IP): $3.65/month                                      │
-│    Total IPv4 Overhead: $21.90/month (MYR 97.46)                                  │
+│    Total IPv4 Overhead: $21.90/month (MYR 98.55)                                  │
 │                                                                                   │
 │ 2. NAT Gateway Hourly + Processing Fees                                           │
 │    - Fixed Hourly Charge (3 AZs @ $0.045/hr): $98.55/month                        │
 │    - Data Processing (1,000 GB @ $0.045/GB): $45.00/month                         │
-│    Total NAT Overhead: $143.55/month (MYR 638.80)                                 │
+│    Total NAT Overhead: $143.55/month (MYR 645.98)                                 │
 │                                                                                   │
 │ 3. Inter-AZ Data Transfer (Cross-AZ Traffic)                                      │
 │    - App Compute to Multi-AZ RDS & ElastiCache: $0.01/GB inbound + outbound       │
-│    Total Transfer Overhead (1,000 GB): $20.00/month (MYR 89.00)                   │
+│    Total Transfer Overhead (1,000 GB): $20.00/month (MYR 90.00)                   │
 └───────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -360,11 +360,11 @@ To maximize financial efficiency without sacrificing high availability or perfor
 * **Valkey Engine Adoption over Redis:** AWS ElastiCache for Valkey offers a 20% price reduction over traditional ElastiCache for Redis while remaining fully open-source and wire-compatible.
 
 #### 5.2 3-Year Cost Comparison (Enterprise Production)
-* **Unoptimized On-Demand (3 Years):** $1,665.61 × 36 = **$59,961.96** (MYR 266,830.72)
-* **Optimized (1-Yr Savings Plans + Valkey):** $1,180.20 × 36 = **$42,487.20** (MYR 189,068.04)
-* **Optimized (3-Yr Compute Savings Plans):** $945.30 × 36 = **$34,030.80** (MYR 151,437.06)
+* **Unoptimized On-Demand (3 Years):** $1,665.61 × 36 = **$59,961.96** (MYR 269,828.82)
+* **Optimized (1-Yr Savings Plans + Valkey):** $1,180.20 × 36 = **$42,487.20** (MYR 191,192.40)
+* **Optimized (3-Yr Compute Savings Plans):** $945.30 × 36 = **$34,030.80** (MYR 153,138.60)
 
-**Financial Impact:** Implementing 3-Year Compute Savings Plans and RDS Reserved Instances delivers a Total Savings of $25,931.16 (MYR 115,393.66) over 36 months, representing a 43.2% reduction in total cloud expenditure.
+**Financial Impact:** Implementing 3-Year Compute Savings Plans and RDS Reserved Instances delivers a Total Savings of $25,931.16 (MYR 116,690.22) over 36 months, representing a 43.2% reduction in total cloud expenditure.
 
 ---
 

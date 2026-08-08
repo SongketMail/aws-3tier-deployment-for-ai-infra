@@ -124,7 +124,7 @@ Operating inside the AWS Malaysia region (`ap-southeast-5`) mandates strict comp
 
 To compare the Total Cost of Ownership (TCO) in the Malaysia region, we evaluate the **Enterprise Production Multi-AZ Environment** over 1-year and 3-year timelines.
 
-We assume an exchange rate of **1 USD ≈ 4.45 MYR** and calculate both the raw infrastructure charges and the specialized engineering labor (DBRE/SecOps) required to run and maintain the custom stack.
+We assume an exchange rate of **1 USD ≈ 4.50 MYR** and calculate both the raw infrastructure charges and the specialized engineering labor (DBRE/SecOps) required to run and maintain the custom stack.
 
 ### 4.1 1-Year Financial Model (USD & MYR)
 
@@ -136,8 +136,8 @@ We assume an exchange rate of **1 USD ≈ 4.45 MYR** and calculate both the raw 
 | **Storage & Backups** | **$37.50 / mo** (EFS + AWS Backup) | **$30.00 / mo** (EFS + self-managed scripts) | AWS Backup coordinates automated snapshot rotations. |
 | **Engineering Labor (OpEx)** | **$150.00 / mo**<br>• Estimated 2 DBA/Ops monitoring hours | **$1,500.00 / mo**<br>• Estimated 15 expert DBRE/SecOps hours (Patroni/etcd checks, Wazuh upgrades) | **The Real Difference:** Self-hosting introduces significant human maintenance overhead. |
 | **TOTAL MONTHLY COST (USD)** | **$1,616.31 USD / month** | **$2,167.13 USD / month** | When engineering labor is factored in, the AWS-Native platform is more cost-effective. |
-| **TOTAL MONTHLY COST (MYR)** | **~RM 7,192.58 MYR / month** | **~RM 9,643.73 MYR / month** | *Calculated at 1 USD ≈ 4.45 MYR* |
-| **TOTAL 1-YEAR TCO (USD)** | **$19,395.72 USD** | **$26,005.56 USD** | **AWS-Native saves $6,609.84 USD (RM 29,413.79 MYR) in Year 1.** |
+| **TOTAL MONTHLY COST (MYR)** | **~RM 7,273.40 MYR / month** | **~RM 9,752.09 MYR / month** | *Calculated at 1 USD ≈ 4.50 MYR* |
+| **TOTAL 1-YEAR TCO (USD)** | **$19,395.72 USD** | **$26,005.56 USD** | **AWS-Native saves $6,609.84 USD (RM 29,744.28 MYR) in Year 1.** |
 
 ---
 
@@ -154,21 +154,21 @@ Over a 3-year lifecycle, organisations can apply **AWS Compute Savings Plans** a
 │ Infrastructure (3-Yr SP): $34,030.80 │ Infrastructure (Raw): $24,016.80│
 │ Labor (Optimised):       $5,400.00   │ Labor (Ops):          $54,000.00│
 ├──────────────────────────────────────┼─────────────────────────────────┤
-│ Total: $39,430.80 USD (RM 175,467.06)│ Total: $78,016.80 USD (RM 347,174.76)│
+│ Total: $39,430.80 USD (RM 177,438.60)│ Total: $78,016.80 USD (RM 351,075.60)│
 └──────────────────────────────────────┴─────────────────────────────────┘
 ```
 
 * **Option A: AWS-Native Managed Solution (3-Year Optimised):**
-  - **Infrastructure Cost:** $945.30 / month × 36 = **$34,030.80 USD** (MYR 151,437.06)
-  - **Engineering Labor:** $150.00 / month × 36 = **$5,400.00 USD** (MYR 24,030.00)
-  - **Total 3-Year TCO:** **$39,430.80 USD (RM 175,467.06 MYR)**
+  - **Infrastructure Cost:** $945.30 / month × 36 = **$34,030.80 USD** (MYR 153,138.60)
+  - **Engineering Labor:** $150.00 / month × 36 = **$5,400.00 USD** (MYR 24,300.00)
+  - **Total 3-Year TCO:** **$39,430.80 USD (RM 177,438.60 MYR)**
 * **Option B: Self-Hosted Custom Stack (3-Year Operations):**
-  - **Infrastructure Cost:** $667.13 / month × 36 = **$24,016.80 USD** (MYR 106,874.76)
-  - **Engineering Labor:** $1,500.00 / month × 36 = **$54,000.00 USD** (MYR 240,300.00)
-  - **Total 3-Year TCO:** **$78,016.80 USD (RM 347,174.76 MYR)**
+  - **Infrastructure Cost:** $667.13 / month × 36 = **$24,016.80 USD** (MYR 108,075.60)
+  - **Engineering Labor:** $1,500.00 / month × 36 = **$54,000.00 USD** (MYR 243,000.00)
+  - **Total 3-Year TCO:** **$78,016.80 USD (RM 351,075.60 MYR)**
 
 #### Financial Impact:
-By opting for the AWS-Native Managed Solution, organisations save **$38,586.00 USD (~RM 171,707.70 MYR)** over 36 months, representing a **49.4% cost reduction**. This proves that managed database premiums are vastly outweighed by the heavy labor burden of running a custom, high-availability architecture.
+By opting for the AWS-Native Managed Solution, organisations save **$38,586.00 USD (~RM 173,637.00 MYR)** over 36 months, representing a **49.4% cost reduction**. This proves that managed database premiums are vastly outweighed by the heavy labor burden of running a custom, high-availability architecture.
 
 ---
 

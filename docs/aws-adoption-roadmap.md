@@ -8,7 +8,7 @@ topics: ["aws", "cloud", "architecture", "costing", "roadmap", "lifecycle", "com
 ---
 # AWS Phased Adoption Roadmap & Costing Guide
 
-This guide outlines the step-by-step AWS cloud adoption roadmap, designed to align with our project timeline spanning **2 years of development and 12 months of active support and maintenance (36 months total)**. Over this 36-month period, the **total overall AWS infrastructure cost** is projected at **$47,709.78 USD** (≈ **RM 212,308.88 MYR**). To provide a comprehensive financial blueprint for the entire lifecycle, we estimate **other non-AWS operational costs**—comprising software subscriptions, software licensing compliance, yearly Security Posture Assessments (SPA), load testing (first year only), and 3rd party on-call support for AWS—to be **$44,800.00 USD** (≈ **RM 199,360.00 MYR**). This results in a combined 36-month project operating budget of **$92,509.78 USD** (≈ **RM 411,668.88 MYR**).
+This guide outlines the step-by-step AWS cloud adoption roadmap, designed to align with our project timeline spanning **2 years of development and 12 months of active support and maintenance (36 months total)**. Over this 36-month period, the **total overall AWS infrastructure cost** is projected at **$47,709.78 USD** (≈ **RM 214,694.01 MYR**). To provide a comprehensive financial blueprint for the entire lifecycle, we estimate **other non-AWS operational costs**—comprising software subscriptions, software licensing compliance, yearly Security Posture Assessments (SPA), load testing (first year only), and 3rd party on-call support for AWS—to be **$44,800.00 USD** (≈ **RM 201,600.00 MYR**). This results in a combined 36-month project operating budget of **$92,509.78 USD** (≈ **RM 416,294.01 MYR**).
 
 ### Combined 36-Month Financial Projection (AWS vs. Non-AWS)
 
@@ -16,22 +16,22 @@ The table below provides a year-to-year financial breakdown comparing our cloud 
 
 | Financial Period | AWS Cloud Cost (USD) | AWS Cloud Cost (MYR) | Estimated Non-AWS Cost (USD) | Estimated Non-AWS Cost (MYR) | Total Combined Cost (USD) | Total Combined Cost (MYR) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Year 1 (Months 1–12)** | $13,023.16 | RM 57,953.18 | $16,600.00 | RM 73,870.00 | $29,623.16 | RM 131,823.18 |
-| **Year 2 (Months 13–24)** | $23,343.02 | RM 103,876.62 | $14,100.00 | RM 62,745.00 | $37,443.02 | RM 166,621.62 |
-| **Year 3 (Months 25–36)** | $11,343.60 | RM 50,479.08 | $14,100.00 | RM 62,745.00 | $25,443.60 | RM 113,224.08 |
-| **Grand Total** | **$47,709.78** | **RM 212,308.88** | **$44,800.00** | **RM 199,360.00** | **$92,509.78** | **RM 411,668.88** |
+| **Year 1 (Months 1–12)** | $13,023.16 | RM 58,604.22 | $16,600.00 | RM 74,700.00 | $29,623.16 | RM 133,304.22 |
+| **Year 2 (Months 13–24)** | $23,343.02 | RM 105,043.59 | $14,100.00 | RM 63,450.00 | $37,443.02 | RM 168,493.59 |
+| **Year 3 (Months 25–36)** | $11,343.60 | RM 51,046.20 | $14,100.00 | RM 63,450.00 | $25,443.60 | RM 114,496.20 |
+| **Grand Total** | **$47,709.78** | **RM 214,694.01** | **$44,800.00** | **RM 201,600.00** | **$92,509.78** | **RM 416,294.01** |
 
-*Note: All local currency conversions are calculated at a baseline exchange rate of 1 USD ≈ 4.45 MYR.*
+*Note: All local currency conversions are calculated at an estimated exchange rate of $1.00 = MYR 4.50.*
 
 ### Non-AWS Operational Costs Breakdown
 
 The estimated other non-AWS operational costs cover the following strategic categories:
 
-1. **Software Subscriptions ($200.00 USD/mo):** $2,400.00 USD per year (≈ RM 10,680.00 MYR/year) for development collaboration and utility software.
-2. **Software Licensing Compliance:** $1,200.00 USD per year (≈ RM 5,340.00 MYR/year) for security scans and automated compliance auditing.
-3. **Security Posture Assessment (SPA):** $4,500.00 USD per year (≈ RM 20,025.00 MYR/year) for professional penetration testing and security audits.
-4. **Load Testing (First Year):** $2,500.00 USD (≈ RM 11,125.00 MYR) in Year 1 to validate multi-tier system scalability under high concurrency.
-5. **3rd Party On-Call AWS Support ($500.00 USD/mo):** $6,000.00 USD per year (≈ RM 26,700.00 MYR/year) for active SLA and on-call engineering coverage.
+1. **Software Subscriptions ($200.00 USD/mo):** $2,400.00 USD per year (≈ RM 10,800.00 MYR/year) for development collaboration and utility software.
+2. **Software Licensing Compliance:** $1,200.00 USD per year (≈ RM 5,400.00 MYR/year) for security scans and automated compliance auditing.
+3. **Security Posture Assessment (SPA):** $4,500.00 USD per year (≈ RM 20,250.00 MYR/year) for professional penetration testing and security audits.
+4. **Load Testing (First Year):** $2,500.00 USD (≈ RM 11,250.00 MYR) in Year 1 to validate multi-tier system scalability under high concurrency.
+5. **3rd Party On-Call AWS Support ($500.00 USD/mo):** $6,000.00 USD per year (≈ RM 27,000.00 MYR/year) for active SLA and on-call engineering coverage.
 
 This roadmap illustrates how our AWS infrastructure scales incrementally week-by-week and month-by-month, starting from a absolute minimum cost, single-Availability Zone developer sandbox footprint and evolving into a fully-redundant, highly-available, secure, and compliant multi-AZ enterprise production architecture in the **AWS Asia Pacific (Malaysia) region (`ap-southeast-5`)**.
 
@@ -142,7 +142,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 2:** Draft security policies and Cyberjaya office CIDR access blocks for administrators.
   - **Week 3:** Initial provision of an empty modular VPC structure inside the Malaysia (`ap-southeast-5`) region utilizing OpenTofu.
   - **Week 4:** Set up shared project logging bucket with strict life-cycle rules inside Amazon S3.
-* **Phase Cost (USD / MYR):** **$1.00 USD / RM 4.45 MYR** (Route 53 hosted zone base fee + nominal IAM storage).
+* **Phase Cost (USD / MYR):** **$1.00 USD / RM 4.50 MYR** (Route 53 hosted zone base fee + nominal IAM storage).
 
 ---
 
@@ -160,7 +160,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 6:** Launch the SSH Jumphost and restrict port 22 access strictly to the Cyberjaya office IP address.
   - **Week 7:** Provision the standalone compute and Valkey nodes, ensuring the security groups block all traffic not originating from the Jumphost.
   - **Week 8:** Deploy Flyway on the database to verify schema migrations.
-* **Phase Cost (USD / MYR):** **$138.50 USD / RM 616.33 MYR** (Single-AZ baseline environment).
+* **Phase Cost (USD / MYR):** **$138.50 USD / RM 623.25 MYR** (Single-AZ baseline environment).
 
 ---
 
@@ -180,7 +180,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 17–20:** Implement auto-scaling policies triggered when average CPU usage exceeds 70% across the ASG.
   - **Week 21–24:** Establish private VPC endpoints to route Amazon S3 media traffic locally, bypassing NAT Gateway charges.
   - **Week 25–26:** Conduct chaos engineering tests, simulating a full Availability Zone outage to verify sub-minute automated DB and ALB failover.
-* **Phase Cost (USD / MYR):** **$668.11 USD / RM 2,973.11 MYR** (Dual-AZ Staging Environment).
+* **Phase Cost (USD / MYR):** **$668.11 USD / RM 3,006.50 MYR** (Dual-AZ Staging Environment).
 
 ---
 
@@ -200,7 +200,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 30:** Connect the WhatsApp endpoint to AWS End User Messaging (Social Channels), removing high-cost external SaaS middlemen.
   - **Week 31–32:** Execute massive simulated load testing, driving over 5,000 concurrent user interaction flows.
   - **Week 33–34:** Go-live with the WhatsApp Omnichannel API, monitoring trace logs in real-time.
-* **Phase Cost (USD / MYR):** **$1,665.61 USD / RM 7,411.98 MYR** (High-Performance Multi-AZ Enterprise Production).
+* **Phase Cost (USD / MYR):** **$1,665.61 USD / RM 7,495.25 MYR** (High-Performance Multi-AZ Enterprise Production).
 
 ---
 
@@ -216,7 +216,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 39–42:** Code backend CRM service APIs and construct robust relational mappings.
   - **Week 43–48:** Deploy database read-replicas inside the isolated database subnets to offload complex CRM query lookups from the write master node.
   - **Week 49–52:** Configure automated nightly snapshots using AWS Backup with cross-region replication.
-* **Phase Cost (USD / MYR):** **$1,685.00 USD / RM 7,498.25 MYR** (Production run-rate with nominal storage growth).
+* **Phase Cost (USD / MYR):** **$1,685.00 USD / RM 7,582.50 MYR** (Production run-rate with nominal storage growth).
 
 ---
 
@@ -232,7 +232,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 55–56:** Run exhaustive database transaction lock verification under a peak stress model.
   - **Week 57–58:** Launch the public CRM portal. Monitor database CPU and Valkey memory metrics closely during the initial cutover.
   - **Week 59–60:** Complete on-boarding training for internal business teams and hand over the final system guides.
-* **Phase Cost (USD / MYR):** **$1,720.00 USD / RM 7,654.00 MYR** (Incorporating active AWS DRS replication streams).
+* **Phase Cost (USD / MYR):** **$1,720.00 USD / RM 7,740.00 MYR** (Incorporating active AWS DRS replication streams).
 
 ---
 
@@ -249,7 +249,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 75–80:** Connect mobile push notifications through Amazon Simple Notification Service (SNS).
   - **Week 81–84:** Integrate on-device OCR components with our backend GPU compute.
   - **Week 85–86:** Submit the compiled hybrid application to the Apple App Store and Google Play Store, and cutover the production API endpoints.
-* **Phase Cost (USD / MYR):** **$2,150.00 USD / RM 9,567.50 MYR** (Peak pricing incorporating heavy GPU compute nodes and CDN data transfers).
+* **Phase Cost (USD / MYR):** **$2,150.00 USD / RM 9,675.00 MYR** (Peak pricing incorporating heavy GPU compute nodes and CDN data transfers).
 
 ---
 
@@ -264,7 +264,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 88:** Apply ASIMP Ansible playbooks to ensure 100% compliance with CIS Level 2 benchmarks.
   - **Week 89:** Finalise training for administrative teams on detecting API credential exposure.
   - **Week 90:** Adjust WAF geo-blocking rules to allow traffic exclusively from approved Southeast Asian networks, blocking foreign botnets.
-* **Phase Cost (USD / MYR):** **$2,215.71 USD / RM 9,860.00 MYR** (Peak development footprint with active Wazuh security auditing).
+* **Phase Cost (USD / MYR):** **$2,215.71 USD / RM 9,970.70 MYR** (Peak development footprint with active Wazuh security auditing).
 
 ---
 
@@ -278,7 +278,7 @@ The architecture matures through four logical environments matching the developm
   - **Week 91–94:** Complete formal Client Final Acceptance Testing across all integrated tiers (Chatbot, WhatsApp, CRM, Mobile).
   - **Week 95–98:** Complete the hard cutover of production databases. Deliver final OpenTofu infrastructure codebase files.
   - **Week 99–104:** Establish the 12-month Support & Maintenance framework. Configure Automated Instance Scheduler routines to shut down developer environments outside business hours, saving 64% on idle staging compute!
-* **Phase Cost (USD / MYR):** **$1,285.80 USD / RM 5,721.81 MYR** (Optimised, high-availability baseline run-rate).
+* **Phase Cost (USD / MYR):** **$1,285.80 USD / RM 5,786.10 MYR** (Optimised, high-availability baseline run-rate).
 
 ---
 
@@ -293,7 +293,7 @@ The architecture matures through four logical environments matching the developm
   - **Months 25–28:** Purchase the Reserved Instances and monitor the billing console to confirm discounts are successfully applied.
   - **Months 29–32:** Run monthly database indexing optimizations to keep storage footprints below 250 GB.
   - **Months 33–36:** Maintain high uptime (>99.99%) and prepare the final cloud transfer of ownership documents.
-* **Phase Cost (USD / MYR):** **$945.30 USD / RM 4,206.59 MYR** (Optimised enterprise production run-rate representing **43.2% savings** over standard on-demand pricing).
+* **Phase Cost (USD / MYR):** **$945.30 USD / RM 4,253.85 MYR** (Optimised enterprise production run-rate representing **43.2% savings** over standard on-demand pricing).
 
 ---
 
@@ -305,30 +305,30 @@ The table below breaks down the monthly run-rate (in USD and MYR) across each di
 ┌─────────────────────────────────┬─────────────────┬─────────────────┬─────────────────────────────────────────────────┐
 │ Milestone Phase                 │ Est. Cost (USD) │ Est. Cost (MYR) │ Primary Architectural Changes & Sizing          │
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Month 1 (Kick-off)              │ $1.00           │ RM 4.45         │ Initial DNS public zone mapping.                │
+│ Month 1 (Kick-off)              │ $1.00           │ RM 4.50         │ Initial DNS public zone mapping.                │
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Month 2 (Dev Setup)             │ $138.50         │ RM 616.33       │ Single-AZ sandbox: t4g.medium compute,          │
+│ Month 2 (Dev Setup)             │ $138.50         │ RM 623.25       │ Single-AZ sandbox: t4g.medium compute,          │
 │                                 │                 │                 │ db.t4g.medium PostgreSQL database, Valkey cache.│
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Months 3 - 6 (Staging)          │ $668.11         │ RM 2,973.11     │ Dual-AZ staging: NAT Gateways, ALB routing,     │
+│ Months 3 - 6 (Staging)          │ $668.11         │ RM 3,006.50     │ Dual-AZ staging: NAT Gateways, ALB routing,     │
 │                                 │                 │                 │ 2x c7g.xlarge ASG instances, Multi-AZ RDS.      │
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Months 7 - 8 (Chatbot Go-Live)  │ $1,665.61       │ RM 7,411.98     │ High-Performance Prod: AWS WAFv2 layer,         │
+│ Months 7 - 8 (Chatbot Go-Live)  │ $1,665.61       │ RM 7,495.25     │ High-Performance Prod: AWS WAFv2 layer,         │
 │                                 │                 │                 │ db.m7g.xlarge Multi-AZ RDS, Lambda webhooks.    │
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Months 9 - 14 (CRM Rollout)     │ $1,720.00       │ RM 7,654.00     │ Adding CRM schemas, RDS read-replicas, and      │
+│ Months 9 - 14 (CRM Rollout)     │ $1,720.00       │ RM 7,740.00     │ Adding CRM schemas, RDS read-replicas, and      │
 │                                 │                 │                 │ continuous AWS DRS on-premises replication.     │
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Months 15 - 20 (Mobile Launch)  │ $2,150.00       │ RM 9,567.50     │ Adding Amazon CloudFront global CDN edge and    │
+│ Months 15 - 20 (Mobile Launch)  │ $2,150.00       │ RM 9,675.00     │ Adding Amazon CloudFront global CDN edge and    │
 │                                 │                 │                 │ dedicated GPU-backed g5.xlarge AI parsing nodes.│
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Months 21 - 22 (Security Pen)   │ $2,215.71       │ RM 9,860.00     │ Launching standalone Wazuh SIEM auditor instance│
+│ Months 21 - 22 (Security Pen)   │ $2,215.71       │ RM 9,970.70     │ Launching standalone Wazuh SIEM auditor instance│
 │                                 │                 │                 │ and executing automated pen-testing suites.     │
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Months 23 - 24 (Project Go-Live)│ $1,285.80       │ RM 5,721.81     │ Streamlining production: shutting down staging  │
+│ Months 23 - 24 (Project Go-Live)│ $1,285.80       │ RM 5,786.10     │ Streamlining production: shutting down staging  │
 │                                 │                 │                 │ instances outside business hours.               │
 ├─────────────────────────────────┼─────────────────┼─────────────────┼─────────────────────────────────────────────────┤
-│ Year 3 (Support & Maintenance)  │ $945.30         │ RM 4,206.59     │ Day-2 financial optimization: lock-in 1-Year    │
+│ Year 3 (Support & Maintenance)  │ $945.30         │ RM 4,253.85     │ Day-2 financial optimization: lock-in 1-Year    │
 │                                 │                 │                 │ Savings Plans for 43%+ overall OpEx discount.   │
 └─────────────────────────────────┴─────────────────┴─────────────────┴─────────────────────────────────────────────────┘
 ```
