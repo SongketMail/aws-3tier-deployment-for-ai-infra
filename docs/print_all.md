@@ -7,7 +7,7 @@ timestamp: 2026-08-05T22:03:00Z
 topics: ["aws", "cloud", "architecture", "pdf"]
 permalink: "/print_all.html"
 ---
-{% assign ordered_paths = "index.md,architecture.md,aws-adoption-roadmap.md,developer-design-mapping.md,asg-separation-of-concern.md,root-files.md,opentofu-migration.md,ami-design.md,route53.md,jumphost.md,hybrid-onprem.md,dr-options.md,postgresql-comparison.md,ragflow-langfuse.md,antigravity-skills.md,SOP-KNOWLEDGE-FIRST-DISCOVERY.md,wazuh.md,tech-stack-comparison.md,licensing-risks.md,aws-vs-self-hosted-review.md,load-test-assumptions.md,modules/vpc.md,modules/security_groups.md,modules/waf.md,modules/alb.md,modules/asg.md,modules/rds.md,modules/standalone_ec2.md,modules/elasticache.md,modules/jumphost.md,scripts.md,cicd.md,gitlab-efs-cicd.md,costing.md" | split: "," %}
+{% assign ordered_paths = "index.md,architecture.md,aws-adoption-roadmap.md,developer-design-mapping.md,asg-separation-of-concern.md,root-files.md,opentofu-migration.md,ami-design.md,route53.md,jumphost.md,hybrid-onprem.md,dr-options.md,postgresql-comparison.md,ragflow-langfuse.md,antigravity-skills.md,SOP-KNOWLEDGE-FIRST-DISCOVERY.md,wazuh.md,tech-stack-comparison.md,licensing-risks.md,aws-vs-self-hosted-review.md,load-test-assumptions.md,context7.md,modules/vpc.md,modules/security_groups.md,modules/waf.md,modules/alb.md,modules/asg.md,modules/rds.md,modules/standalone_ec2.md,modules/elasticache.md,modules/jumphost.md,scripts.md,cicd.md,gitlab-efs-cicd.md,costing.md" | split: "," %}
 
 <div class="print-all-container">
   {% for path_str in ordered_paths %}

@@ -29,3 +29,5 @@ navbar:
     url: "/postgresql-comparison.html"
   - title: "Tech Stack"
     url: "/tech-stack-comparison.html"
+  - title: "Context7 AI"
+    url: "/context7.html"
