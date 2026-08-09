@@ -317,6 +317,7 @@ To guide executive management through the selection process, we present a techni
 
 | Evaluation Dimension | Strategy A: Backup & Restore | Strategy B: Pilot Light | Strategy C: Warm Standby | Strategy D: Active-Active | Strategy E: AWS DRS (Elastic DR) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Roadmap Gate Alignment** | **Year 1, Months 9–12 (Weeks 35–52):** Baseline local snapshots to prepare for CRM schema inception ([Roadmap Portal](aws-adoption-roadmap.html#year-1-months-912-weeks-3552-phase-2-managed-ops--phase-3-crm-inception)) | **Optional Phase 3 (As Needed):** Promoted as an active read-replica to offload real-time SQL queries ([Roadmap Portal](aws-adoption-roadmap.html#phase-3-transition-to-sovereign-in-region-pilot-light-as-real-time-hot-read-needs-arise)) | **Unrecommended Option:** High operating overhead; redundant cost is hard to justify | **Unrecommended Option:** Extreme cross-border PDPA regulatory and security risks | **Year 2, Months 1–2 (Weeks 53–60):** Continuous replication to secure staging subnets for CRM launch ([Roadmap Portal](aws-adoption-roadmap.html#year-2-months-12-weeks-5360-crm-integration--go-live)) |
 | **Target RPO** | 24 Hours | < 5 Minutes | < 1 Minute | Near Real-time | **Seconds to Sub-Minute** |
 | **Target RTO** | 4 to 8 Hours | 30 to 45 Minutes | 5 to 10 Minutes | Near Zero | **Minutes** |
 | **Relative Cost** | Extremely Low (1x) | Moderate (35x) | High (85x) | Very High (120x) | **Low-to-Moderate (15x)** |
