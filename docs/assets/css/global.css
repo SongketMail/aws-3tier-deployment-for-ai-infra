@@ -443,3 +443,34 @@ tr:nth-child(even) {
     text-decoration: underline !important;
   }
 }
+
+/* Architecture and Audience Badges */
+.arch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 5px;
+  margin-bottom: 25px;
+  border: 1px solid transparent;
+}
+.arch-badge-strategic {
+  background-color: var(--lab-warning-bg);
+  border-color: #f39c12;
+  color: var(--lab-text);
+}
+.arch-badge-devops {
+  background-color: var(--lab-alert-bg);
+  border-color: #2980b9;
+  color: var(--lab-text);
+}
+.arch-badge-security {
+  background-color: var(--lab-secure-bg);
+  border-color: var(--lab-success);
+  color: var(--lab-text);
+}
