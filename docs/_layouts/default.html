@@ -59,10 +59,26 @@
           {% assign sorted_pages = site.pages | sort: "path" %}
           {% for p in sorted_pages %}
             {% if p.path != "index.md" and p.path contains ".md" and p.path != "README.md" %}
-              {% unless p.path contains "modules/" %}
+              {% unless p.path contains "modules/" or p.path contains "executive/" or p.path contains "engineering/" %}
                 {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize %}
                 <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
               {% endunless %}
+            {% endif %}
+          {% endfor %}
+
+          <h3 style="margin-top: 25px;">Executive Blueprint</h3>
+          {% for p in sorted_pages %}
+            {% if p.path contains "executive/" and p.path contains ".md" %}
+              {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize | replace: "_", " " %}
+              <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
+            {% endif %}
+          {% endfor %}
+
+          <h3 style="margin-top: 25px;">Engineering Runbook</h3>
+          {% for p in sorted_pages %}
+            {% if p.path contains "engineering/" and p.path contains ".md" %}
+              {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize | replace: "_", " " %}
+              <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
             {% endif %}
           {% endfor %}
 
