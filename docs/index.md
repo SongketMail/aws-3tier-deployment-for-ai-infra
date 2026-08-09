@@ -49,6 +49,7 @@ Explore different sections of our infrastructure documentation:
 18. **[Software Licensing & Technology Risk Register (TS/MC Series)](licensing-risks.html):** Complete software licensing compliance framework, technology risk registry, and mitigation plans (TS/MC Series) covering LangChain4j, self-hosted operations, Bedrock with Qwen3 models, and standalone Wazuh SIEM.
 19. **[Strategic Comparative Review](aws-vs-self-hosted-review.html):** Comprehensive strategic analysis and financial TCO comparison of an AWS-Native Managed Platform against a Self-Hosted / On-Premises Custom Stack in Malaysia.
 20. **[Load Testing Assumptions & Sizing Guide](load-test-assumptions.html):** Workload definitions, SLA metrics, architectural performance assumptions, and multi-VU sizing models from 100 to 10,000 VUs.
+21. **[Context7 AI Chat Integration Guide](context7.html):** Guide detailing our AI chat widget, how to use it, the provider (Upstash), and integration details.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.

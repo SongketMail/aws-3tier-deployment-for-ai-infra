@@ -115,6 +115,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[Software Licensing & Technology Risk Register (TS/MC Series)](docs/licensing-risks.md):** Complete software licensing compliance framework, technology risk registry, and mitigation plans (TS/MC Series) covering LangChain4j, self-hosted operations, Bedrock with Qwen3 models, and standalone Wazuh SIEM.
 * **[Strategic Comparative Review](docs/aws-vs-self-hosted-review.md):** Comprehensive strategic analysis and financial TCO comparison of an AWS-Native Managed Platform against a Self-Hosted / On-Premises Custom Stack in Malaysia.
 * **[Load Testing Assumptions & Sizing Guide](docs/load-test-assumptions.md):** Workload definitions, SLA metrics, architectural performance assumptions, and multi-VU sizing models from 100 to 10,000 VUs.
+* **[Context7 AI Chat Integration Guide](docs/context7.md):** Detailed guide explaining our floating AI chat widget, how to use it, and background information about Context7 and its provider Upstash.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.
