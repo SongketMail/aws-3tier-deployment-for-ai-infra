@@ -32,6 +32,9 @@ This volume is partitioned into dedicated, high-fidelity engineering runbooks:
 ### 4. [Persistent EFS Mounting & GitLab CI/CD](efs_mount_scripts.html)
 *EFS network shared storage mount scripts, open_file_cache performance tuning, and automated GitLab CI/CD pipeline storage workflows.*
 
+### 5. [Explicit AI Agent Data Flow Mapping](ai_agent_discovery.html)
+*Tracing the "VIP Guest" lifecycle network trajectory, Zero-Trust Handshake (mTLS & IAM), EFS Shared storage model weight cache, and the completed Optimization Summary Checklist.*
+
 ---
 
 ## 🛠️ Targeted Audience & Operations
