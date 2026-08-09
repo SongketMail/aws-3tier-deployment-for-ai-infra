@@ -128,6 +128,75 @@ The architecture matures through four logical environments matching the developm
 
 ---
 
+## 4-Phase Dynamic Maturity Diagram
+
+The following interactive timeline illustrates the progression of system maturity across our four primary engineering dimensions over the 36-month lifecycle:
+
+```mermaid
+gantt
+    title 4-Phase Infrastructure Maturity Roadmap
+    dateFormat  X
+    axisFormat %d
+
+    section PHASE 1: Sandbox (M1-2)
+    Networking (Single-AZ, Public/Private Subnets) :active, p1_net, 0, 8
+    Compute (t4g.medium Dev, t4g.micro Bastion)   :active, p1_comp, 0, 8
+    Database (Single-AZ RDS, cache.t4g.micro Valkey) :active, p1_db, 0, 8
+    Security (IAM Policies, Billing Alarms)       :active, p1_sec, 0, 8
+
+    section PHASE 2: Staging (M3-6)
+    Networking (Dual-AZ Expansion, 2x NAT GWs, ALB) :active, p2_net, 8, 26
+    Compute (2x c7g.xlarge ASG, SSM Managed)       :active, p2_comp, 8, 26
+    Database (RDS Multi-AZ db.t4g.large, EFS Mount) :active, p2_db, 8, 26
+    Security (Secrets Manager, S3 Private Endpoints) :active, p2_sec, 8, 26
+
+    section PHASE 3: Production (M7-14)
+    Networking (Route 53 DNS Failover, ALB Rules)  :active, p3_net, 26, 60
+    Compute (ASG CRM Profiles, g5.xlarge GPU OCR)   :active, p3_comp, 26, 60
+    Database (Multi-AZ db.m7g.xlarge, Read Replicas) :active, p3_db, 26, 60
+    Security (AWS WAFv2, AWS DRS continuous replication) :active, p3_sec, 26, 60
+
+    section PHASE 4: Optimised Run-rate (M15-36)
+    Networking (CloudFront global CDN, Edge protection) :active, p4_net, 60, 156
+    Compute (Edge delivery, Non-prod scheduler 64% off) :active, p4_comp, 60, 156
+    Database (Savings Plans, RDS/Valkey Reserved Nodes) :active, p4_db, 60, 156
+    Security (Standalone Wazuh SIEM, CIS Hardening)  :active, p4_sec, 60, 156
+```
+
+### Detailed Multi-Tier Maturity Progression Matrix
+
+To facilitate thorough technical review, the matrix below details the incremental evolutionary steps of each distinct physical and virtual tier:
+
+```
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                       4-PHASE MULTI-TIER INFRASTRUCTURE MATURITY ROADMAP                              │
+├────────────┬─────────────────────────────┬─────────────────────────────┬──────────────────────────────┬───────────────┤
+│ Tier       │ PHASE 1: Dev/POC Sandbox    │ PHASE 2: Dual-AZ Staging    │ PHASE 3: Enterprise Prod     │ PHASE 4: Run  │
+│            │ (Months 1–2 / Weeks 1–8)    │ (Months 3–6 / Weeks 9–26)   │ (Months 7–14 / Weeks 27–60)  │ (M15–36 / W61)│
+├────────────┼─────────────────────────────┼─────────────────────────────┼──────────────────────────────┼───────────────┤
+│ NETWORKING │ • Single-AZ VPC             │ • Dual-AZ VPC expansion     │ • Route 53 Active-Passive DNS│ • CloudFront  │
+│            │ • 1x Public & 1x Private    │ • 2x NAT Gateways (Redundant)│ • ALB Path-routing (/crm/*)  │   Global CDN  │
+│            │ • Basic Security Groups     │ • Application Load Balancer │ • Strict SG Port isolation   │ • Edge WAF    │
+├────────────┼─────────────────────────────┼─────────────────────────────┼──────────────────────────────┼───────────────┤
+│ COMPUTE    │ • 1x Standalone EC2         │ • Auto Scaling Group (ASG)  │ • Multi-target JVM Profiles   │ • Instance    │
+│            │   (t4g.medium on hardened   │   (Min 2x c7g.xlarge nodes) │   in private ASG compute     │   Scheduler   │
+│            │   Ubuntu 26.04 OS)          │ • Passwordless SSM access   │ • Standalone g5.xlarge GPU   │   (64% staging│
+│            │ • t4g.micro SSH Jumphost    │   (Zero public SSH ports)   │   (NVIDIA A10G) for OCR tasks│   off-hours)  │
+├────────────┼─────────────────────────────┼─────────────────────────────┼──────────────────────────────┼───────────────┤
+│ DATABASE   │ • Single-AZ RDS PostgreSQL  │ • RDS Multi-AZ upgrade      │ • Production db.m7g.xlarge   │ • 1-Yr RI     │
+│ & CACHE    │   (db.t4g.medium sandbox)   │   (db.t4g.large sync replica)│ • Dedicated Read-Replicas    │ • Valkey      │
+│            │ • ElastiCache Valkey        │ • Amazon EFS Shared Storage │ • ElastiCache Valkey         │   Reserved    │
+│            │   (cache.t4g.micro node)    │   (Synchronous media/cache) │   (cache.r7g.large cluster)  │   Nodes lock-in│
+├────────────┼─────────────────────────────┼─────────────────────────────┼──────────────────────────────┼───────────────┤
+│ SECURITY   │ • AWS IAM Identity Center   │ • AWS Secrets Manager       │ • AWS WAFv2 Layer-7 filter   │ • Standalone  │
+│ & COM-     │   (Granular role RBAC)      │   (30-day credential rot.)  │ • AWS KMS customer keys (CMK)│   Wazuh SIEM  │
+│ PLIANCE    │ • AWS Budgets & alerts      │ • Private Gateway Endpoints │ • AWS Elastic DR (AWS DRS)   │ • CIS Level 2 │
+│            │   (set at $150 threshold)   │   (bypasses S3 NAT egress)  │   asynchronous replication   │   Hardening   │
+└────────────┴─────────────────────────────┴─────────────────────────────┴──────────────────────────────┴───────────────┘
+```
+
+---
+
 ## Detailed Chronological Roadmap
 
 ### Year 1, Month 1 (Weeks 1–4): Project Initiation & Kick-off
@@ -155,6 +224,9 @@ The architecture matures through four logical environments matching the developm
   - **Standalone Developer Compute Instance:** 1x `t4g.medium` instance running hardened Ubuntu 26.04 LTS (ASIMP framework) to compile and test the Java/Spring Boot AI Chatbot engine.
   - **Amazon RDS PostgreSQL (Single-AZ):** 1x `db.t4g.medium` PostgreSQL 16 database instance for chat history storage.
   - **Amazon ElastiCache Valkey:** 1x `cache.t4g.micro` node for caching user sessions.
+* **Chronological Alignment & Strategic Causality:**
+  - **Strategic Alignment:** Establishing the database and caching engines at this sandbox gate aligns directly with the [RDS PostgreSQL vs. Percona Server Guide](postgresql-comparison.html).
+  - **Business Causality:** Choosing AWS-native RDS PostgreSQL 16 (`db.t4g.medium` at ~$32.85/mo) and ElastiCache Valkey (`cache.t4g.micro` at ~$9.34/mo) instead of self-hosted Percona and custom Redis instances on EC2 eliminates upfront management overhead. This allows our developers to focus immediately on core Spring Boot chatbot endpoints without spending precious hours configuring Patroni replication or PgBouncer connection pools.
 * **Week-by-Week Technical Goals:**
   - **Week 5:** Finalise AI chatbot payload specifications and backend Spring Boot schema designs.
   - **Week 6:** Launch the SSH Jumphost and restrict port 22 access strictly to the Cyberjaya office IP address.
@@ -174,6 +246,9 @@ The architecture matures through four logical environments matching the developm
   - **Amazon EFS (Elastic File System):** Shared persistent NFS mount to share AI model cache files across the ASG compute tier.
   - **Amazon RDS (Multi-AZ Upgrade):** Database upgraded to Multi-AZ `db.t4g.large` with synchronous replication to prevent a single point of failure (SPOF).
   - **AWS Secrets Manager:** Deployed to secure database credentials, rotating them automatically every 30 days.
+* **Chronological Alignment & Strategic Causality:**
+  - **Strategic Alignment:** Integrating with core internal legacy APIs aligns directly with Low-Cost Option 1 (API-Based Connections) in the [Hybrid Cloud Integration Guide](hybrid-onprem.html).
+  - **Business Causality:** Connecting the Chatbot to on-premises business logic over secure HTTPS REST APIs using the NAT Gateway’s Elastic IPs avoids the massive, slow provisioning times and high capital expenses (~$522/mo port and partner loops) of AWS Direct Connect. Utilizing redundant NAT Gateways ensures continuous outbound integration streams during this critical staging phase.
 * **Week-by-Week Technical Goals:**
   - **Week 9–12:** Write Spring Boot Chatbot logic and vector indexing algorithms.
   - **Week 13–16:** Integrate the application tier with AWS Systems Manager (SSM) and completely disable traditional passwords or direct SSH.
@@ -193,6 +268,9 @@ The architecture matures through four logical environments matching the developm
   - **Production Cache Tier:** Scaled up to ElastiCache Valkey `cache.r7g.large` (Dual Node cluster) to act as a secure, fast query broker.
   - **Amazon API Gateway & AWS Lambda:** Serverless webhook receiver layer deployed to securely absorb massive, bursty incoming WhatsApp callback payloads from Meta, offloading them to **Amazon SQS** queues to prevent thread saturation in the Spring Boot backend.
   - **Amazon CloudWatch Application Signals:** Enabled to track end-to-end user latency and alert on HTTP 5XX spikes.
+* **Chronological Alignment & Strategic Causality:**
+  - **Strategic Alignment:** Establishing AI capability pipelines aligns with Low-Cost Option 2 (AI-Native MCP-Based Connections) in the [Hybrid Cloud Integration Guide](hybrid-onprem.html) and our hybrid connection patterns in the [RAGFlow + Langfuse GPU Guide](ragflow-langfuse.html).
+  - **Business Causality:** Introducing the Model Context Protocol (MCP) proxy via API Gateway at this gate allows the chatbot to securely query local, on-premises data catalogs in real time without passing raw citizen credentials over the public internet. Utilizing serverless webhooks (API Gateway + Lambda) ensures that high-volume WhatsApp callback storms from Meta are offloaded cleanly into SQS, completely shielding the core Java application from thread starvation during the public launch.
 * **Week-by-Week Technical Goals:**
   - **Week 27:** Establish production ALB SSL certificates using AWS Certificate Manager (ACM).
   - **Week 28:** Deploy AWS WAF and configure the core rule-sets. Run final technical training for administrator teams on emergency scaling.
@@ -211,6 +289,9 @@ The architecture matures through four logical environments matching the developm
   - **Isolated CRM DB Schema:** Configured inside the production RDS instance utilizing Flyway migrations, fully separating CRM tables with strict database roles.
   - **Additional ASG App Targets:** Launch template modified to run specialized CRM JVM profiles on the existing production ASG instances.
   - **Continuous Telemetry Tracking:** Enabled Amazon GuardDuty to monitor account-level DNS abuse and secure IAM roles.
+* **Chronological Alignment & Strategic Causality:**
+  - **Strategic Alignment:** Preparing backend storage and starting CRM schemas aligns directly with Strategy A (Backup and Restore) in our [Disaster Recovery Guide](dr-options.html).
+  - **Business Causality:** Incepting CRM database schemas requires early security precautions. Activating daily automated backups via AWS Backup (~$7.30/mo) at this gate ensures that early client data models and test customer records are securely captured. This provides a low-cost, compliant backup baseline before we introduce continuous near-real-time replication engines.
 * **Week-by-Week Technical Goals:**
   - **Week 35–38:** Deliver comprehensive operational training on Meta API token rotation.
   - **Week 39–42:** Code backend CRM service APIs and construct robust relational mappings.
@@ -227,6 +308,9 @@ The architecture matures through four logical environments matching the developm
   - **AWS Elastic Disaster Recovery (AWS DRS):** Configured as a continuous block-level continuous replication strategy from our on-premises database networks to a secure staging subnet in AWS.
   - **Elastic Load Balancer Routing Rules:** Configured listener paths to route `/crm/*` traffic to a dedicated CRM target group in the ASG.
   - **Amazon Route 53 Health Checks:** Automated DNS failover triggers routing traffic to emergency backup static endpoints.
+* **Chronological Alignment & Strategic Causality:**
+  - **Strategic Alignment:** Launching the CRM system requires switching from cold backups to high-frequency continuous protection, aligning with Strategy E (AWS Elastic Disaster Recovery) in the [Disaster Recovery Guide](dr-options.html).
+  - **Business Causality:** Weeks 53–60 (Year 2, CRM Go-Live): Activate AWS Elastic Disaster Recovery (AWS DRS) at ≈ $112/mo. Causality: Ingesting proprietary customer CRM data increases data criticality, justifying the DR insurance spend to maintain RPO/RTO SLAs.
 * **Week-by-Week Technical Goals:**
   - **Week 53–54:** Complete end-to-end integration mapping between CRM fields and internal legacy systems.
   - **Week 55–56:** Run exhaustive database transaction lock verification under a peak stress model.
@@ -243,6 +327,9 @@ The architecture matures through four logical environments matching the developm
   - **Amazon CloudFront:** Global Content Delivery Network (CDN) with edge caching to speed up mobile static asset and image retrieval.
   - **AWS WAFv2 on CloudFront:** Move WAF protection to the global CDN edge to block malicious requests before they even reach the ALB.
   - **High-Performance GPU Compute Tier:** 1x Standalone Staging `g5.xlarge` instance (NVIDIA A10G GPU with 24GB VRAM) to execute specialized DeepDoc visual layouts and high-speed OCR.
+* **Chronological Alignment & Strategic Causality:**
+  - **Strategic Alignment:** Introducing heavy-duty GPU-powered text parsing and OCR pipelines aligns directly with the architectural patterns in our [RAGFlow + Langfuse GPU Guide](ragflow-langfuse.html).
+  - **Business Causality:** Launching the Super Mobile App drives massive concurrent document/image uploads. Provisioning 1x Standalone GPU Staging instance (`g5.xlarge` at ~$1,215.71/mo during active development periods) at this gate is required to handle computationally heavy DeepDoc visual layout analysis and high-speed optical character recognition (OCR), ensuring a responsive, zero-lag user interface during the mobile rollout.
 * **Week-by-Week Technical Goals:**
   - **Week 61–68:** Code hybrid mobile screens in React Native and define the API contract.
   - **Week 69–74:** Provision S3 upload directories and attach CloudFront to bypass API endpoint processing.
@@ -259,6 +346,9 @@ The architecture matures through four logical environments matching the developm
 * **AWS Services Provisioned:**
   - **Standalone Wazuh SIEM Instance:** Sized at `t4g.large` inside the secure management subnet, continuously gathering and auditing Linux logs from all compute nodes.
   - **Amazon Inspector:** Automated security scanning of EC2 instances and container registries.
+* **Chronological Alignment & Strategic Causality:**
+  - **Strategic Alignment:** Establishing a centralized, secure threat monitoring baseline at this hardening gate aligns directly with the [Wazuh Standalone Installation Guide](wazuh.html).
+  - **Business Causality:** Preparing for final regulatory sign-off and penetration testing mandates strict operational auditing. Deploying a self-hosted Standalone Wazuh SIEM instance on a cost-effective ARM64 instance (`t4g.large` at ~$65.71/mo) provides comprehensive log aggregation and intrusion detection without high-premium SaaS subscription pricing, securing our infrastructure at a 57% savings.
 * **Week-by-Week Technical Goals:**
   - **Week 87:** Trigger a deep penetration test across all public-facing ALB endpoints.
   - **Week 88:** Apply ASIMP Ansible playbooks to ensure 100% compliance with CIS Level 2 benchmarks.
