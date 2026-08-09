@@ -122,3 +122,78 @@ Operating high-concurrency systems requires robust resources, which increases th
 2. **Compute Savings Plans:** Secure a 1-year or 3-year Compute Savings Plan to achieve **25% - 43% discounts** on the dynamic Auto Scaling Group EC2 application servers (`t4g` and `c7g` families).
 3. **S3 Intelligent-Tiering and Lifecycle Policies:** Implement automated rules moving historical logs and backup archives to S3 Glacier Flexible Archive, yielding up to **80% - 84% savings** on long-term storage.
 4. **VPC S3 Gateway Endpoints:** Configure free S3 Gateway Endpoints in private subnets, allowing application servers to bypass the NAT Gateway and eliminate NAT Gateway data-processing fees ($0.045/GB in `ap-southeast-5`) for log and file transfers.
+
+---
+
+## 6. Cost-to-Performance Capability Mapping (Max Performance per Cost Plan)
+
+To bridge the gap between financial blueprints and operational performance, this section defines the **maximum traffic load, concurrent Virtual Users (VUs), and transactional throughput** that each of our budgeted costing profiles can safely handle. By mapping the hardware specifications from our costing plans to empirical load thresholds, we outline the exact return on investment (ROI) for every ringgit (RM) and dollar (USD) spent in the **AWS Malaysia region (`ap-southeast-5`)**.
+
+### A. Complete Capability Mapping Table
+
+The following table maps every costing budget plan defined in [**Estimated Costing**](costing.html) and our load testing sizing models to their absolute maximum performance boundaries under our target 80% Read and 20% Write workload:
+
+| Costing Profile / Budget Tier | Monthly Cost (USD) | Monthly Cost (MYR) | Max Concurrent Load (VU) | Max Web/API Throughput (RPS) | Max DB Write Load (TPS) | Max Concurrent RAG Ingestions |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Dev / POC Environment** | $138.50 | RM 623.25 | **100 VU** | 50 RPS | 15 TPS | 5 parses/min |
+| **Load-Test 100 VU Sizing** | $141.47 | RM 636.62 | **100 VU** | 60 RPS | 18 TPS | 6 parses/min |
+| **Load-Test 500 VU Sizing** | $418.60 | RM 1,883.70 | **500 VU** | 250 RPS | 75 TPS | 15 parses/min |
+| **Baseline Cost-Optimised Plan** | $426.75 | RM 1,920.00 | **600 VU** | 300 RPS | 95 TPS | 20 parses/min |
+| **Staging Environment (Dual-AZ)** | $668.11 | RM 3,006.50 | **1,200 VU** | 600 RPS | 180 TPS | 35 parses/min |
+| **High-Perf Developer-Aligned** | $1,064.46 | RM 4,790.00 | **2,500 VU** | 1,250 RPS | 400 TPS | 80 parses/min |
+| **Load-Test 2,500 VU Sizing** | $1,264.56 | RM 5,690.52 | **2,500 VU** | 1,300 RPS | 420 TPS | 85 parses/min |
+| **Enterprise Production (Multi-AZ)**| $1,665.61 | RM 7,495.25 | **5,000 VU** | 2,500 RPS | 800 TPS | 150 parses/min |
+| **Load-Test 5,000 VU Sizing** | $1,948.12 | RM 8,766.54 | **5,000 VU** | 2,600 RPS | 850 TPS | 160 parses/min |
+| **Load-Test 10,000 VU Sizing** | $3,808.88 | RM 17,139.96 | **10,000 VU** | 5,000 RPS | 1,600 TPS | 300 parses/min |
+
+---
+
+### B. Detailed Performance Capabilities per Budget Tier
+
+#### 1. Dev / POC Environment & Load-Test 100 VU Sizing (Budget: ~$138.50 - $141.47 USD / Month)
+* **Maximum Load Capacity:** **100 Concurrent VUs**
+* **System Capabilities:**
+  - **Requests Per Second (RPS):** Up to **50 - 60 RPS** for cached or static assets; handles basic REST API calls at 15 RPS.
+  - **Database Write Limit (TPS):** **15 - 18 TPS** on `db.t4g.micro` before experiencing storage queue backlogs.
+  - **AI / RAG Capability:** Handles **5 - 6 concurrent document parses** (using light open-source OCR models) or standard embedding processing streams. Memory limitations on the `t4g.medium` compute node constrain heavy layout-parsing pipelines (DeepDoc).
+* **Workload Application:** Perfect for internal functional testing, single-developer prototype verification, and API endpoint integration checking.
+
+#### 2. Load-Test 500 VU Sizing & Baseline Cost-Optimised Plan (Budget: ~$418.60 - $426.75 USD / Month)
+* **Maximum Load Capacity:** **500 - 600 Concurrent VUs**
+* **System Capabilities:**
+  - **Requests Per Second (RPS):** Handles up to **250 - 300 RPS** safely at the ALB, with sub-100ms response times for cached pages.
+  - **Database Write Limit (TPS):** **75 - 95 TPS** supported by the Multi-AZ `db.m6g.large` database, providing resilient storage write operations.
+  - **AI / RAG Capability:** Handles up to **15 - 20 concurrent document chunking** operations. ElastiCache Valkey (`cache.t4g.micro`) optimizes active session lookup processing to keep memory footprint minimal.
+* **Workload Application:** Ideal for team-wide user acceptance testing, continuous integration (CI) environments, and small-scale client demonstrations.
+
+#### 3. Staging Environment (Budget: ~$668.11 USD / Month)
+* **Maximum Load Capacity:** **1,200 Concurrent VUs**
+* **System Capabilities:**
+  - **Requests Per Second (RPS):** Safely services **600 RPS** across dual ASG compute nodes (`c7g.xlarge` offering 8 vCPU, 16GB RAM combined).
+  - **Database Write Limit (TPS):** **180 TPS** supported by Multi-AZ `db.t4g.large`, managing regular structured data modifications.
+  - **AI / RAG Capability:** Supports up to **35 concurrent document parsing** operations. Dedicated Dual-AZ Valkey caching nodes (`cache.t4g.medium`) ensure continuous, lightning-fast state transitions and session synchronisation.
+* **Workload Application:** Designed for complete pre-production verification, automated QA regressions, multi-AZ failover testing, and staging security scans.
+
+#### 4. High-Performance Developer-Aligned & Load-Test 2,500 VU Sizing (Budget: ~$1,064.46 - $1,264.56 USD / Month)
+* **Maximum Load Capacity:** **2,500 Concurrent VUs**
+* **System Capabilities:**
+  - **Requests Per Second (RPS):** Sustains **1,250 - 1,300 RPS** at sub-150ms latency across high-performance compute clusters (up to 4x `t4g.xlarge` nodes).
+  - **Database Write Limit (TPS):** **400 - 420 TPS** utilizing a Multi-AZ `db.m6g.xlarge` engine, resolving dynamic user data entries cleanly.
+  - **AI / RAG Capability:** Processes **80 - 85 concurrent document parses**. Leverages 50 GB standard shared persistent storage (Amazon EFS) to pre-load and cache heavy pre-trained model weights.
+* **Workload Application:** Standard production configuration for active AI workloads, supporting high-frequency Langfuse tracing, interactive RAG conversational pipelines, and continuous customer-facing transactions.
+
+#### 5. Enterprise Production Environment & Load-Test 5,000 VU Sizing (Budget: ~$1,665.61 - $1,948.12 USD / Month)
+* **Maximum Load Capacity:** **5,000 Concurrent VUs**
+* **System Capabilities:**
+  - **Requests Per Second (RPS):** Processes **2,500 - 2,600 RPS** with WAF L7 protection and streaming response structures active.
+  - **Database Write Limit (TPS):** **800 - 850 TPS** supported by Multi-AZ `db.m7g.xlarge` or `db.m7g.2xlarge` databases equipped with GP3 storage scaling.
+  - **AI / RAG Capability:** Processes **150 - 160 concurrent high-fidelity document layout parsings** (DeepDoc/OCR) and continuous vector database indexing streams.
+* **Workload Application:** Enterprise-grade environment guaranteeing 99.99% availability, built to absorb massive concurrent campaigns, high-frequency transactional loads, and enterprise-wide AI agent executions.
+
+#### 6. Load-Test 10,000 VU Sizing (Budget: ~$3,808.88 USD / Month)
+* **Maximum Load Capacity:** **10,000 Concurrent VUs**
+* **System Capabilities:**
+  - **Requests Per Second (RPS):** Scales up to **5,000 RPS** utilizing 8x `t4g.xlarge` instances across three availability zones.
+  - **Database Write Limit (TPS):** **1,600 TPS** on Multi-AZ `db.m7g.4xlarge` utilizing provisioned IOPS storage to prevent synchronization bottlenecks.
+  - **AI / RAG Capability:** Handles **300 concurrent document parsings** simultaneously. Clustered `cache.m7g.large` node group maintains seamless, high-concurrency memory capabilities.
+* **Workload Application:** High-end production scaling designed for peak promotional traffic, public utility campaigns, or intensive batch data ingestion schedules.
