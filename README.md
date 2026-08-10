@@ -116,6 +116,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[Strategic Comparative Review](docs/aws-vs-self-hosted-review.md):** Comprehensive strategic analysis and financial TCO comparison of an AWS-Native Managed Platform against a Self-Hosted / On-Premises Custom Stack in Malaysia.
 * **[Load Testing Assumptions & Sizing Guide](docs/load-test-assumptions.md):** Workload definitions, SLA metrics, architectural performance assumptions, and multi-VU sizing models from 100 to 10,000 VUs.
 * **[Context7 AI Chat Integration Guide](docs/context7.md):** Detailed guide explaining our floating AI chat widget, how to use it, and background information about Context7 and its provider Upstash.
+* **[Security Posture Assessment (SPA) Checklist](docs/security-posture-assessment.md):** Comprehensive security control audit checklist, fully customized for our Java, Spring Boot, PostgreSQL, Valkey, and RAGFlow/Langfuse AI infrastructure.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.

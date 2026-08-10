@@ -31,3 +31,5 @@ navbar:
     url: "/tech-stack-comparison.html"
   - title: "Context7 AI"
     url: "/context7.html"
+  - title: "SPA Checklist"
+    url: "/security-posture-assessment.html"
