@@ -32,4 +32,4 @@ navbar:
   - title: "Context7 AI"
     url: "/context7.html"
   - title: "SPA Checklist"
-    url: "/security-posture-assessment.html"
+    url: "/audits/security-posture-assessment.html"
