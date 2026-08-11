@@ -1,6 +1,5 @@
 import os
 import re
-import pytest
 
 def get_markdown_files(root_dir):
     """

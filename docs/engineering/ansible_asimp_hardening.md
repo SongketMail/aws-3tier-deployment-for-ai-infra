@@ -55,13 +55,13 @@ The Ansible playbook below automates server hardening by closing security vulner
 
   tasks:
     - name: 1. Update APT packages and patch CVEs
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
         upgrade: dist
         autoremove: yes
 
     - name: 2. Enforce Strict SSH Configuration
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
@@ -75,12 +75,12 @@ The Ansible playbook below automates server hardening by closing security vulner
       notify: Restart SSH
 
     - name: 3. Deploy Local UFW Firewall
-      ufw:
+      community.general.ufw:
         state: enabled
         policy: deny
 
     - name: 4. Whitelist Cyberjaya Admin Office Ingress
-      ufw:
+      community.general.ufw:
         rule: allow
         from_ip: "{{ item }}"
         port: "{{ ssh_port }}"
@@ -88,13 +88,13 @@ The Ansible playbook below automates server hardening by closing security vulner
       loop: "{{ allowed_cidrs }}"
 
     - name: 5. Remove compiler utilities to prevent post-exploit compiling
-      apt:
+      ansible.builtin.apt:
         name: ["gcc", "g++", "make"]
         state: absent
 
   handlers:
     - name: Restart SSH
-      service:
+      ansible.builtin.service:
         name: sshd
         state: restarted
 ```

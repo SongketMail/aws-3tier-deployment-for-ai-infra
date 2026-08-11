@@ -248,7 +248,7 @@ def process_markdown_file(filepath, workspace_root):
 
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(new_content)
-    print(f"  -> Successfully updated with OKF v0.1 metadata")
+    print("  -> Successfully updated with OKF v0.1 metadata")
 
 def should_process_dir(dirpath):
     """
