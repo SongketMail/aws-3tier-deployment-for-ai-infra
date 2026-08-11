@@ -1,16 +1,27 @@
 #!/bin/bash
-# Update packages and install Apache HTTP Server
+# ==============================================================================
+# Script Name: user_data.sh
+# Description: Launch-time user data bootstrap script for newly-instantiated EC2
+#              instances inside the Auto Scaling Group (ASG). Handles standard
+#              package updates, installs/starts Apache HTTP Server, resolves IMDSv2
+#              instance identifiers (such as Instance ID and Availability Zone),
+#              and compiles a structured index.html landing page.
+# Usage:        Automatically executed by EC2 launch template bootstrap mechanism.
+# Author:       Harisfazillah Jamel (LinuxMalaysia)
+# ==============================================================================
+
+# Update system-wide packages and install Apache HTTP Server
 dnf update -y
 dnf install -y httpd
 systemctl start httpd
 systemctl enable httpd
 
-# Simple metadata service call to display on the index page
+# Retrieve metadata via IMDSv2 (using temporary session tokens for high security)
 TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
 INSTANCE_ID=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)
 AZ=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone)
 
-# Create index page
+# Compile the index landing page with local variables
 echo "<html>
 <head>
     <title>AWS 3-Tier Demo</title>

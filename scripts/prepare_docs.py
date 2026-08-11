@@ -4,7 +4,15 @@ import re
 import datetime
 
 def unescape_string(val):
-    """Strips outer quotes and unescapes backslashes and quotes from a string."""
+    """
+    Strips outer quotes and unescapes backslashes and quotes from a string.
+
+    Parameters:
+    val (str): The string value to unescape and clean up.
+
+    Returns:
+    str: The cleaned and unescaped string.
+    """
     if val.startswith('"') and val.endswith('"'):
         return val[1:-1].replace('\\"', '"').replace('\\\\', '\\')
     elif val.startswith("'") and val.endswith("'"):
@@ -12,6 +20,19 @@ def unescape_string(val):
     return val.strip('"\'')
 
 def parse_yaml(front_matter_str):
+    """
+    Parses a YAML front matter string into a dictionary of key-value pairs.
+
+    This function extracts values, handles inline list syntax (e.g. [a, b, c]),
+    handles block lists (lines starting with '-'), handles inline dictionaries,
+    and unescapes string values.
+
+    Parameters:
+    front_matter_str (str): The raw string contents of the front matter block.
+
+    Returns:
+    dict: A dictionary containing the parsed keys and values.
+    """
     lines = front_matter_str.strip().split('\n')
     data = {}
     current_key = None
@@ -51,6 +72,16 @@ def parse_yaml(front_matter_str):
     return data
 
 def format_yaml_value(key, val):
+    """
+    Formats a parsed metadata value back into its standard YAML front matter representation.
+
+    Parameters:
+    key (str): The YAML key.
+    val (str/list): The value to format, which could be a list or a string.
+
+    Returns:
+    str: The formatted YAML string value.
+    """
     if isinstance(val, list):
         list_str = ", ".join([f'"{x.replace("\\\\", "\\").replace("\\", "\\\\").replace("\"", "\\\"")}"' for x in val])
         return f'[{list_str}]'
@@ -66,6 +97,19 @@ def format_yaml_value(key, val):
         return str(val)
 
 def serialize_yaml(data):
+    """
+    Serializes a dictionary of metadata back into a YAML front matter block.
+
+    This function arranges specific core OKF keys in a consistent order
+    (layout, okf_version, type, title, timestamp, topics) followed by any remaining
+    metadata keys in alphabetical order.
+
+    Parameters:
+    data (dict): Dictionary of metadata properties to serialize.
+
+    Returns:
+    str: The serialized YAML metadata block as a single string.
+    """
     lines = []
     # Core OKF and Jekyll keys in consistent order
     keys_order = ['layout', 'okf_version', 'type', 'title', 'timestamp', 'topics']
@@ -79,6 +123,21 @@ def serialize_yaml(data):
     return "\n".join(lines)
 
 def process_markdown_file(filepath, workspace_root):
+    """
+    Processes a single Markdown file to parse, standardise, and save OKF v0.1 metadata.
+
+    This function extracts existing front matter (if present), auto-injects standard
+    values (such as default layout, okf_version of 0.1, dynamic titles, document types,
+    creation timestamps, and contextual topics based on content keywords), and serializes
+    them back to ensure strict compliance.
+
+    Parameters:
+    filepath (str): The absolute path to the Markdown file.
+    workspace_root (str): The absolute path of the root repository workspace.
+
+    Returns:
+    None
+    """
     rel_path = os.path.relpath(filepath, workspace_root)
     print(f"Processing: {rel_path}")
 
@@ -192,6 +251,17 @@ def process_markdown_file(filepath, workspace_root):
     print(f"  -> Successfully updated with OKF v0.1 metadata")
 
 def should_process_dir(dirpath):
+    """
+    Determines whether a directory should be scanned for Markdown files.
+
+    Excludes hidden folders (those starting with '.') except for '.agents'.
+
+    Parameters:
+    dirpath (str): The path to the directory.
+
+    Returns:
+    bool: True if the directory should be scanned, False otherwise.
+    """
     parts = dirpath.split(os.sep)
     for part in parts:
         if part.startswith('.') and part not in ['.agents']:
@@ -199,6 +269,18 @@ def should_process_dir(dirpath):
     return True
 
 def main():
+    """
+    Main entry point for the document preparation script.
+
+    Scans the repository for Markdown files, standardises their OKF front matter,
+    and saves the parsed files back to disk.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
     workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     print(f"Scanning markdown files under workspace: {workspace_root}")
 

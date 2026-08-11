@@ -1,13 +1,40 @@
+/**
+ * @file generate_pdf.js
+ * @description Automates repository-wide A4 PDF generation from a compiled Jekyll static site
+ * by running a local HTTP server and using Puppeteer to print the aggregated print_all.html.
+ * @author Harisfazillah Jamel (LinuxMalaysia)
+ * @license GNU General Public License v3.0
+ */
+
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
 
+/**
+ * Port number on which the local HTTP server will listen.
+ * @type {number}
+ */
 const PORT = 4000;
+
+/**
+ * Absolute path to the Jekyll statically built output directory.
+ * @type {string}
+ */
 const SITE_DIR = path.resolve(__dirname, '../_site');
+
+/**
+ * Absolute path where the generated high-fidelity PDF will be saved.
+ * @type {string}
+ */
 const OUTPUT_PATH = path.resolve(__dirname, '../docs/assets/output.pdf');
 
-// Helper to determine Content-Type
+/**
+ * Returns the HTTP 'Content-Type' header value for a given file path based on its extension.
+ *
+ * @param {string} filePath - The path to the file.
+ * @returns {string} The appropriate MIME content-type string.
+ */
 function getContentType(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   switch (ext) {
@@ -26,7 +53,10 @@ function getContentType(filePath) {
   }
 }
 
-// Create a static web server to serve the Jekyll-built site
+/**
+ * HTTP server to serve the statically built Jekyll site.
+ * Resolves safe URLs, prevents path traversal, and returns files with appropriate content types.
+ */
 const server = http.createServer((req, res) => {
   // Prevent path traversal
   const safeUrl = req.url.split('?')[0].replace(/\.\./g, '');
@@ -48,6 +78,11 @@ const server = http.createServer((req, res) => {
   });
 });
 
+/**
+ * Starts the HTTP server, launches a headless Puppeteer browser instance,
+ * navigates to print_all.html, prints to a high-fidelity A4 PDF with appropriate margins,
+ * and cleans up all resources on completion or failure.
+ */
 server.listen(PORT, async () => {
   console.log(`[Server] Running at http://localhost:${PORT}`);
   let browser;
