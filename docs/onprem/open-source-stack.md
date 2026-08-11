@@ -27,7 +27,7 @@ The table below outlines our transition framework, mapping cloud-managed service
 | :--- | :--- | :--- | :--- | :--- |
 | **AWS ALB & WAFv2** | **BunkerWeb Edge Proxy** (Nginx-based) | VM-01 (DMZ) | Rootless Quadlet Container | Built-in ModSecurity WAF rules, automated local Let's Encrypt / CA SSL, rate-limiting, and web administrative GUI. |
 | **AWS ASG Compute** | **Spring Boot 3.5.12 JVM + React 19** | VM-02 (App) | Rootless Quadlet Pod (`skm_pod`) | Hardened Ubuntu host running unprivileged JVM, SSM-equivalent terminal logging, and structured systemd metrics. |
-| **Amazon RDS PostgreSQL** | **PostgreSQL 17 + pgvector** | VM-03 (DB/AI) | Rootless Quadlet Container | Volume storage mapped to physical NVMe disks, restricted VLAN 30 port access, and cron-scheduled automated backup dumps. |
+| **Amazon RDS PostgreSQL** | **Percona Server for PostgreSQL 17** (or standard Postgres 17 + pgvector) | VM-03 (DB/AI) | Rootless Quadlet Container | High-Availability on-premises deployment utilizing **Patroni** and **etcd**, Volume storage mapped to physical NVMe disks, restricted VLAN 30 port access, and **pg_backrest** backups. See [Enterprise Percona PostgreSQL 17 Guide](percona-postgresql.html) for detailed setup. |
 | **ElastiCache Valkey** | **Valkey 7.x / 8.0** (Open Source) | VM-03 (DB/AI) | Rootless Quadlet Container | In-memory session store restricted to VLAN 20/30 ingress with forced password authentication. |
 | **Amazon Bedrock & GPUs** | **Ollama** (Local Inference Model Engine) | VM-03 (DB/AI) | Rootless GPU-Passthrough Container | Secure offline execution of Qwen3 LLM and embedding models. Zero foreign network transfer. |
 | **Amazon Cognito** | **Keycloak** or **Authentik** | VM-02 (App) | Rootless Quadlet Container | Managed OAuth 2.0, OpenID Connect (OIDC), active JWT generation, credential hashing, and user directory management. |
@@ -63,8 +63,12 @@ UserNS=keep-id:uid=2001,gid=2001
 Restart=always
 ```
 
-### B. Relational Database Layer: **PostgreSQL 17**
-To replicate the reliability of Amazon RDS, we run PostgreSQL 17 with the `pgvector` extension. To match the High-Availability and disaster recovery of RDS, we implement a local cron-based backup script.
+### B. Relational Database Layer: **Percona Server for PostgreSQL 17**
+To replicate the reliability of Amazon RDS, we run Percona Server for PostgreSQL 17. It functions identically to upstream PostgreSQL 17 as a binary-compatible drop-in replacement.
+
+To achieve production-grade high availability, resilience, and automated failover matching RDS, we implement a clustered setup using **Patroni** and **etcd**, managed via **pg_backrest** backups. Please refer to our specialized [Enterprise Percona Server for PostgreSQL 17 On-Premises Guide](percona-postgresql.html) for detailed step-by-step specifications, HAProxy load balancing config, and Quadlet blueprints.
+
+For simpler standalone staging/development setups on-premises, standard unprivileged PostgreSQL containers with automated custom backup scripts can still be utilized:
 
 ```ini
 # /home/songket/.config/containers/systemd/postgresql.container
@@ -82,8 +86,8 @@ UserNS=keep-id:uid=2001,gid=2001
 Restart=always
 ```
 
-#### 💾 The RDS-Equivalent Automated Backup Cron Script
-To protect against database corruption on-premises, a local shell script is scheduled on `VM-03` via a systemd timer (or standard cron):
+#### 💾 The Standalone Database Automated Backup Cron Script
+To protect against standalone database corruption, a local shell script can be scheduled on `VM-03` via a systemd timer (or standard cron):
 
 ```bash
 #!/bin/bash

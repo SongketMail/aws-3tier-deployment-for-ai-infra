@@ -59,7 +59,7 @@ If the primary instance fails, RDS automatically triggers a failover by changing
 ---
 
 ### Design B: Percona Server for PostgreSQL 17 on EC2 (Patroni, PgBouncer & etcd)
-Deploying Percona Server on EC2 requires a self-managed High Availability (HA) stack. This architecture uses **Patroni** as the template for cluster management, **etcd** as the Distributed Consensus Store (DCS), **PgBouncer** for connection pooling, and **pg_backrest** for robust, compressed backup streaming to S3.
+Deploying Percona Server on EC2 requires a self-managed High Availability (HA) stack. This architecture uses **Patroni** as the template for cluster management, **etcd** as the Distributed Consensus Store (DCS), **PgBouncer** for connection pooling, and **pg_backrest** for robust, compressed backup streaming to S3. For onsite on-premises VM deployments, we mirror this identical design pattern (utilising HAProxy and containerised etcd/Patroni Quadlets) as detailed in the [Enterprise Percona Server for PostgreSQL 17 On-Premises Guide](onprem/percona-postgresql.html).
 
 ```
                            ┌─────────────────────────────────┐
