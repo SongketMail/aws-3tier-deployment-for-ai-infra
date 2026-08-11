@@ -32,3 +32,4 @@ https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/architecture.htm
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/antigravity-skills.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/ragflow-langfuse.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/gitlab-efs-cicd.html
+https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/legal-notice.html
