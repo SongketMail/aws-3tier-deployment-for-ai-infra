@@ -37,3 +37,5 @@ navbar:
     url: "/context7.html"
   - title: "SPA Checklist"
     url: "/audits/security-posture-assessment.html"
+  - title: "Legal Notice"
+    url: "/legal-notice.html"
