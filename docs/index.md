@@ -61,6 +61,7 @@ Explore different sections of our infrastructure documentation:
 - **[Rootless Podman 5+ & systemd Quadlets](onprem/podman-quadlet.html):** Configuration guidelines for running production containers without administrative root rights using keep-id remapping.
 - **[On-Premises Infrastructure with Ansible](onprem/ansible-orchestration.html):** Symmetric privilege separation, FQCN-compliant plays, and local CI/CD pipelines integrating Gitea, Semaphore, and ARA.
 - **[Open-Source Containerized Stack Specifications](onprem/open-source-stack.html):** Standard blueprints replacing core AWS managed components with containerized equivalents (BunkerWeb, Valkey, Postgres 17, Keycloak, Ollama, RAGFlow, and Langfuse).
+- **[Enterprise Percona Server Setup](onprem/percona-postgresql.html):** Standard blueprints for running production-grade Percona Server for PostgreSQL 17 on-premises using Patroni cluster management, etcd distributed consensus stores, pg_backrest, and HAProxy load balancing.
 
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.

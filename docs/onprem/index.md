@@ -39,6 +39,9 @@ This volume is divided into four highly detailed engineering and strategic guide
 ### 4. [Open-Source Containerized Stack Specifications](open-source-stack.html)
 *High-fidelity mapping of AWS core offerings (ALB, ASG, RDS, Valkey, Bedrock, Cognito) to containerized open-source alternatives (BunkerWeb, Spring Boot, PostgreSQL 17, Valkey, Keycloak, Ollama, RAGFlow, and Langfuse) with Quadlet configuration blueprints.*
 
+### 5. [Enterprise Percona Server for PostgreSQL 17 Setup](percona-postgresql.html)
+*Comprehensive blueprints for running production-grade Percona Server for PostgreSQL 17 on-premises using Patroni cluster management, etcd distributed consensus stores, pg_backrest, and HAProxy load balancing.*
+
 ---
 
 ## 🛡️ Strategic Alignment & Governance
