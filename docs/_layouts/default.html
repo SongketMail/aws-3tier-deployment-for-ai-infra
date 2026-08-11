@@ -60,7 +60,7 @@
           {% for p in sorted_pages %}
             {% if p.path != "index.md" and p.path contains ".md" and p.path != "README.md" %}
               {% unless p.path contains "modules/" or p.path contains "executive/" or p.path contains "engineering/" or p.path contains "audits/" or p.path contains "onprem/" %}
-                {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize %}
+                {% assign page_title = p.title | default: p.name | replace: ".md", "" | replace: "-comparison", " Comparison" | replace: "-review", " Review" | replace: "-roadmap", " Roadmap" | replace: "-concern", " Concerns" | capitalize %}
                 <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
               {% endunless %}
             {% endif %}

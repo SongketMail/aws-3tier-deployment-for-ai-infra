@@ -29,6 +29,8 @@ navbar:
     url: "/postgresql-comparison.html"
   - title: "Tech Stack"
     url: "/tech-stack-comparison.html"
+  - title: "AWS vs. On-Prem"
+    url: "/aws-vs-onprem-stack-comparison.html"
   - title: "Context7 AI"
     url: "/context7.html"
   - title: "SPA Checklist"
