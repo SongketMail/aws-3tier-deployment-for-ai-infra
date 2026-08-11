@@ -55,6 +55,13 @@ Explore different sections of our infrastructure documentation:
 24. **[Output of Lynis](audits/lynis-output.html):** High-fidelity example of the Lynis host auditing utility scanning logs, attributes, and suggestions.
 25. **[Output of OpenSCAP](audits/openscap-output.html):** Detailed example of OpenSCAP CIS Level 2 scan evaluation rules, results, and generated remediations.
 
+### Onsite On-Premises Volume
+- **[Onsite On-Premises Blueprint Portal](onprem/index.html):** Overview portal and strategic rationale for moving from AWS to rootless, open-source local on-premises deployments.
+- **[VM & Network Architecture](onprem/architecture.html):** Physical host configurations, sizing models, multi-tier VLAN isolation, and stateful routing rulesets.
+- **[Rootless Podman 5+ & systemd Quadlets](onprem/podman-quadlet.html):** Configuration guidelines for running production containers without administrative root rights using keep-id remapping.
+- **[On-Premises Infrastructure with Ansible](onprem/ansible-orchestration.html):** Symmetric privilege separation, FQCN-compliant plays, and local CI/CD pipelines integrating Gitea, Semaphore, and ARA.
+- **[Open-Source Containerized Stack Specifications](onprem/open-source-stack.html):** Standard blueprints replacing core AWS managed components with containerized equivalents (BunkerWeb, Valkey, Postgres 17, Keycloak, Ollama, RAGFlow, and Langfuse).
+
 ### Infrastructure Submodules
 - **[VPC Module](modules/vpc.html):** Core networking, public/private subnets, internet gateways, and NAT configurations.
 - **[Security Groups Module](modules/security_groups.html):** Strict firewall rulesets and port-level isolation.
