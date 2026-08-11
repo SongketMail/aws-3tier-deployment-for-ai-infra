@@ -1,23 +1,32 @@
 #!/usr/bin/env bash
+# ==============================================================================
+# Script Name: destroy.sh
+# Description: Safely handles the complete removal and destruction of all deployed
+#              AWS 3-tier infrastructure components using OpenTofu (tofu).
+#              Performs verification of existing backend/initialization status and
+#              demands explicit double-confirmation before applying destructive actions.
+# Usage:        ./scripts/destroy.sh
+# Author:       Harisfazillah Jamel (LinuxMalaysia)
+# ==============================================================================
 
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# Colors for output
+# Colors for output warning indications
 BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0;3m' # No Color
 
 echo -e "${RED}=== WARNING: Starting AWS 3-Tier Infrastructure Destruction ===${NC}"
 
-# Verify OpenTofu is installed
+# Verify OpenTofu is installed in the current environment
 if ! command -v tofu &> /dev/null; then
     echo -e "${RED}[Error] OpenTofu (tofu) CLI is not installed.${NC}"
     echo "To install OpenTofu, please refer to: https://opentofu.org/docs/intro/install/"
     exit 1
 fi
 
-# Navigate to terraform directory
+# Navigate to the root terraform configuration directory
 cd "$(dirname "$0")/../terraform"
 
 # Verify OpenTofu state exists
@@ -26,7 +35,7 @@ if [ ! -d ".terraform" ]; then
     exit 1
 fi
 
-# Ask for confirmation
+# Ask for explicit confirmation before destroying live cloud resources
 read -p "Are you absolutely sure you want to completely DESTROY all deployed AWS resources? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
