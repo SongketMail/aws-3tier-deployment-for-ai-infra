@@ -27,7 +27,7 @@ if ! command -v tofu &> /dev/null; then
 fi
 
 # Navigate to the root terraform configuration directory
-cd "$(dirname "$0")/../terraform"
+cd "$(dirname "$0")/../terraform" || { echo -e "${RED}[Error] Failed to navigate to terraform directory.${NC}"; exit 1; }
 
 # Verify OpenTofu state exists
 if [ ! -d ".terraform" ]; then
@@ -36,9 +36,9 @@ if [ ! -d ".terraform" ]; then
 fi
 
 # Ask for explicit confirmation before destroying live cloud resources
-read -p "Are you absolutely sure you want to completely DESTROY all deployed AWS resources? (y/n) " -n 1 -r
+read -r -p "Are you absolutely sure you want to completely DESTROY all deployed AWS resources? (y/n) " -n 1
 echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     echo -e "${BLUE}Running tofu destroy...${NC}"
     tofu destroy -auto-approve
     echo -e "${RED}=== Infrastructure Destroyed! ===${NC}"

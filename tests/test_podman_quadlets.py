@@ -1,7 +1,6 @@
 import os
 import re
 import configparser
-import pytest
 
 def extract_quadlets_from_md(filepath):
     """

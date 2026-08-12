@@ -1,6 +1,5 @@
 import os
 import re
-import pytest
 
 def extract_ansible_playbooks_from_md(filepath):
     """

@@ -29,7 +29,7 @@ if ! command -v tofu &> /dev/null; then
 fi
 
 # Navigate to the root terraform configuration directory
-cd "$(dirname "$0")/../terraform"
+cd "$(dirname "$0")/../terraform" || { echo -e "${RED}[Error] Failed to navigate to terraform directory.${NC}"; exit 1; }
 
 # Ensure terraform.tfvars exists before launching deployment actions
 if [ ! -f "terraform.tfvars" ]; then
@@ -66,9 +66,9 @@ echo -e "${BLUE}Generating OpenTofu execution plan...${NC}"
 tofu plan -out=tfplan
 
 # Step 5: Safety check and interactive approval before applying changes
-read -p "Do you want to apply this deployment? (y/n) " -n 1 -r
+read -r -p "Do you want to apply this deployment? (y/n) " -n 1
 echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     echo -e "${BLUE}Applying OpenTofu plan...${NC}"
     tofu apply tfplan
     echo -e "${GREEN}=== Deployment Complete! ===${NC}"
