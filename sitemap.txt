@@ -1,5 +1,6 @@
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/wazuh.html
+https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/wazuh-detailed.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/hybrid-onprem.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/costing.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/developer-design-mapping.html
