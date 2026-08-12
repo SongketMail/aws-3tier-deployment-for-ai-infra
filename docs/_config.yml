@@ -29,6 +29,8 @@ navbar:
     url: "/postgresql-comparison.html"
   - title: "Redis vs Valkey"
     url: "/redis-vs-valkey.html"
+  - title: "Wazuh SIEM & XDR"
+    url: "/wazuh-detailed.html"
   - title: "Tech Stack"
     url: "/tech-stack-comparison.html"
   - title: "AWS vs. On-Prem"
