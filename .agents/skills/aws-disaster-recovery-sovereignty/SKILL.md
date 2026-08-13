@@ -4,7 +4,7 @@ okf_version: "0.1"
 type: "Skill"
 title: "AWS Disaster Recovery & Sovereignty Skill"
 timestamp: 2026-08-05T21:59:00Z
-topics: ["aws", "cloud", "architecture", "skill", "disaster-recovery", "sovereignty", "compliance", "pdpa", "drs"]
+topics: ["aws", "cloud", "architecture", "skill", "disaster-recovery", "sovereignty", "compliance", "pdpa", "drs", "tco"]
 description: "Instructions for designing PDPA-compliant In-Region/Cross-Region DR architectures, deploying AWS DRS (Strategy E) replication, and addressing AI sovereignty."
 name: "aws-disaster-recovery-sovereignty"
 ---
@@ -26,16 +26,18 @@ This skill governs disaster recovery design, sovereignty compliance under the Ma
 
 - **In-Region DR:** Highly recommended for strict local compliance. Utilise AWS `ap-southeast-5` Multi-AZ clustering for instant data replication and failover circuit breakers.
 - **Cross-Region DR:** Utilise multi-region backups and continuous replication with KMS cryptographic isolation.
-- **AWS DRS (Strategy E - Continuous Replication):** Model continuous asynchronous block-level replication (RPO in seconds, RTO in minutes) from on-premises or cloud servers into a lightweight staging subnet using low-cost `t3.small` replication nodes and gp3 volumes.
+- **AWS DRS (Strategy E - Continuous Replication):** AWS Elastic Disaster Recovery (AWS DRS) is integrated as 'Strategy E' in `docs/dr-options.md`, modeling continuous asynchronous block-level replication (RPO in seconds/minutes, RTO in minutes) from on-premises or cloud servers into a lightweight staging area subnet (using low-cost `t3.small` replication instances and gp3 staging volumes) to support cost-optimized, sovereign recovery under Malaysian regulatory rules (as per **Item 43**).
 
 ---
 
-## 3. RAGFlow + Langfuse Sovereign AI Workloads
+## 3. AWS-Native vs. Self-Hosted / On-Premises RAGFlow + Langfuse
 
-- For sensitive generative AI workloads (RAGFlow & Langfuse):
-  - DeepDoc and OCR parsing are highly GPU-dependent.
-  - Evaluate AWS-native GPU instances vs. local on-premises hardware.
-  - Bridge secure hybrid connections using cost-effective API integration or Model Context Protocol (MCP) proxies via AWS API Gateway to access remote compute models without compromising data sovereignty boundaries.
+For sensitive generative AI workloads (RAGFlow & Langfuse):
+- **12-Layer Stack Comparison:** A comprehensive 12-layer comparison guide (`docs/aws-vs-onprem-stack-comparison.md`) maps AWS services to onsite open-source equivalents across all core infrastructure layers (from Frontend to Error Tracking) and is fully integrated across all major portal indexes (as per **Item 10**).
+- **GPU Dependency:** DeepDoc and OCR parsing are highly GPU-dependent. Evaluate AWS-native GPU instances vs. local on-premises hardware.
+- **Strategic Comparative Review (TCO):** A comprehensive Strategic Comparative Review has been documented at `docs/aws-vs-self-hosted-review.md` delivering a high-fidelity architectural, operational, and financial TCO (1-year and 3-year) comparison between an AWS-Native Managed Platform and a Self-Hosted Custom Stack within the Malaysia (`ap-southeast-5`) region (as per **Item 26**).
+- **Hybrid Bridge:** Bridge secure hybrid connections using cost-effective API integration or Model Context Protocol (MCP) proxies via AWS API Gateway to access remote compute models without compromising data sovereignty boundaries.
+- **Real-World Scaling Constraints:** Refer to production benchmarks and architectural scaling constraints for Langfuse (V3/V4 ClickHouse migrations, Valkey queue sharding) and RAGFlow synchronous retrieval bottlenecks under high loads (as per **Item 25**).
 
 ---
 
