@@ -43,6 +43,17 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 - [Output of OpenSCAP](docs/audits/openscap-output.md) : Detailed example of OpenSCAP CIS Level 2 scan evaluation rules, results, and generated remediations.
 - [AWS Services vs. On-Premises Open-Source Stack Comparison](docs/aws-vs-onprem-stack-comparison.md) : Comprehensive 12-layer comparison guide mapping AWS services to self-hosted equivalents.
 
+## Documentation Framework & Project Utilities
+
+- [Quickstart: Operating Project Utilities](docs/tutorials/quickstart.md) : Guided step-by-step introduction to repository automation and metadata standardisation tools.
+- [How-To: Standardising Metadata](docs/how-to/manage-metadata.md) : Practical task-oriented recipes on formatting file front matter headers using prepare_docs.py.
+- [How-To: Compiling LLM Curation Formats](docs/how-to/generate-llms-xml.md) : Step-by-step instructions on generating XML context data and unified text manuals.
+- [Reference: prepare_docs.py Spec](docs/reference/prepare_docs.md) : Programmatic API and command-line specifications for the metadata formatter.
+- [Reference: parse_llms.py Spec](docs/reference/parse_llms.md) : Technical documentation detailing API interfaces, CLI parameters, and output contracts of the compiler.
+- [Reference: Bash & PDF Scripts](docs/reference/bash_scripts.md) : Technical specifications for build, teardown, bootstrapping, and PDF aggregation utilities.
+- [Explanation: The Diátaxis Framework](docs/explanation/diataxis.md) : Deep-dive into our user-centric documentation architecture and framework implementation strategy.
+- [Explanation: Automation Architecture](docs/explanation/automation_architecture.md) : Conceptual and data flow designs of the metadata formatting and compilation pipelines.
+
 ## Onsite On-Premises Documentation Volume
 
 - [Onsite On-Premises Blueprint Portal](docs/onprem/index.md) : Overview portal and strategic rationale for moving from AWS to rootless, open-source local on-premises deployments.

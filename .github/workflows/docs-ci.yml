@@ -1,0 +1,39 @@
+name: "Documentation CI/CD Pipeline"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  validate-docs:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v4"
+
+      - name: "Set up Python"
+        uses: "actions/setup-python@v5"
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: "Install dependencies"
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest ruff
+
+      - name: "Run metadata auto-formatter"
+        run: |
+          python scripts/prepare_docs.py
+
+      - name: "Compile LLM sitemaps"
+        run: |
+          python scripts/parse_llms.py
+
+      - name: "Execute compliance & link integrity tests"
+        run: |
+          pytest -v

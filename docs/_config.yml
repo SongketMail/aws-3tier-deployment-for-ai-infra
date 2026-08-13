@@ -7,6 +7,8 @@ google_analytics:
 navbar:
   - title: "Home"
     url: "/"
+  - title: "Docs Portal"
+    url: "/README.html"
   - title: "Architecture"
     url: "/architecture.html"
   - title: "Root Files"

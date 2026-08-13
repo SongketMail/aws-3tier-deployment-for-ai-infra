@@ -153,3 +153,48 @@ def test_markdown_dsom_footer_compliance():
         # Verify the body has reference to Deep State of Mind (DSOM) or DSOM
         assert ("Deep State of Mind" in body or "DSOM" in body), \
             f"DSOM Footer Compliance Error in {rel_path}: document must include the standard Deep State of Mind (DSOM) footer"
+
+def test_markdown_relative_links_integrity():
+    """
+    Scans every Markdown file in the repository to extract relative links and
+    validates that the referenced files exist in the repository filesystem.
+    """
+    workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    md_files = get_markdown_files(workspace_root)
+
+    for filepath in md_files:
+        rel_path = os.path.relpath(filepath, workspace_root)
+
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # Regex to find links [text](url)
+        links = re.findall(r'\[([^\]]+)\]\(([^)]+)\)', content)
+
+        for text, url in links:
+            # Skip external links, mailto, anchor links, and PDF files
+            if (url.startswith('http://') or
+                url.startswith('https://') or
+                url.startswith('mailto:') or
+                url.startswith('#') or
+                url.startswith('data:') or
+                url.endswith('.pdf')):
+                continue
+
+            # Strip anchors or query params
+            clean_url = url.split('#')[0].split('?')[0]
+            if not clean_url:
+                continue
+
+            # Jekyll compiles .md files to .html, so if we link to another guide as .html,
+            # we should look for the corresponding .md file in the source workspace
+            if clean_url.endswith('.html'):
+                clean_url = clean_url[:-5] + '.md'
+
+            # Resolve relative path from the current file's directory
+            current_dir = os.path.dirname(filepath)
+            resolved_path = os.path.abspath(os.path.join(current_dir, clean_url))
+
+            # Assert file exists
+            assert os.path.exists(resolved_path), \
+                f"Broken Link in {rel_path}: link to '{url}' (resolved as '{os.path.relpath(resolved_path, workspace_root)}') does not exist."
