@@ -59,10 +59,42 @@
           {% assign sorted_pages = site.pages | sort: "path" %}
           {% for p in sorted_pages %}
             {% if p.path != "index.md" and p.path contains ".md" and p.path != "README.md" %}
-              {% unless p.path contains "modules/" or p.path contains "executive/" or p.path contains "engineering/" or p.path contains "audits/" or p.path contains "onprem/" %}
+              {% unless p.path contains "modules/" or p.path contains "executive/" or p.path contains "engineering/" or p.path contains "audits/" or p.path contains "onprem/" or p.path contains "tutorials/" or p.path contains "how-to/" or p.path contains "reference/" or p.path contains "explanation/" %}
                 {% assign page_title = p.title | default: p.name | replace: ".md", "" | replace: "-comparison", " Comparison" | replace: "-review", " Review" | replace: "-roadmap", " Roadmap" | replace: "-concern", " Concerns" | capitalize %}
                 <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
               {% endunless %}
+            {% endif %}
+          {% endfor %}
+
+          <h3 style="margin-top: 25px;">🎓 Tutorials</h3>
+          {% for p in sorted_pages %}
+            {% if p.path contains "tutorials/" and p.path contains ".md" %}
+              {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize | replace: "_", " " | replace: "-", " " %}
+              <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
+            {% endif %}
+          {% endfor %}
+
+          <h3 style="margin-top: 25px;">📋 How-To Guides</h3>
+          {% for p in sorted_pages %}
+            {% if p.path contains "how-to/" and p.path contains ".md" %}
+              {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize | replace: "_", " " | replace: "-", " " %}
+              <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
+            {% endif %}
+          {% endfor %}
+
+          <h3 style="margin-top: 25px;">📘 Reference Specs</h3>
+          {% for p in sorted_pages %}
+            {% if p.path contains "reference/" and p.path contains ".md" %}
+              {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize | replace: "_", " " | replace: "-", " " %}
+              <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
+            {% endif %}
+          {% endfor %}
+
+          <h3 style="margin-top: 25px;">🧠 Explanations</h3>
+          {% for p in sorted_pages %}
+            {% if p.path contains "explanation/" and p.path contains ".md" %}
+              {% assign page_title = p.title | default: p.name | replace: ".md", "" | capitalize | replace: "_", " " | replace: "-", " " %}
+              <a href="{{ p.url | relative_url }}">{{ page_title }}</a>
             {% endif %}
           {% endfor %}
 
