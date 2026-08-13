@@ -4,7 +4,7 @@ okf_version: "0.1"
 type: "Skill"
 title: "Google Jules Infrastructure & Cloud Engineering Skill"
 timestamp: 2026-08-05T21:48:38Z
-topics: ["aws", "cloud", "architecture", "skill", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "route53", "dns", "ssl", "acm", "disaster-recovery", "gitlab", "efs", "postgresql", "gpu", "ragflow", "langfuse", "antigravity", "skills", "sovereignty", "compliance", "costing"]
+topics: ["aws", "cloud", "architecture", "skill", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "route53", "dns", "ssl", "acm", "disaster-recovery", "gitlab", "efs", "postgresql", "gpu", "ragflow", "langfuse", "antigravity", "skills", "sovereignty", "compliance", "costing", "wazuh", "siem", "seo"]
 description: "Comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices curated from Google Jules. Use this when performing Cloud and Systems Engineering tasks in this repository."
 name: "jules-knowledge"
 ---
@@ -22,94 +22,45 @@ This skill embeds the full engineering knowledge, context, standards, and constr
 4. **LLM Crawling Index (`llms.txt`):** The `llms.txt` file is located in the root directory following the `llmstxt.org` specification, serving as an index for LLM web crawlers and AI agents to discover, parse, and navigate all architecture, costing, scripting, and disaster recovery guides.
 5. **Developer Portal (`README.md`):** The root `README.md` is fully updated to serve as a comprehensive developer portal, structuring navigation paths to local repository files, OpenTofu (Terraform) submodules, and their fully compiled, respective Jekyll GitHub Pages documentation URLs.
 6. **Comprehensive Documentation Standard:** The project requires comprehensive Markdown documentation for all modules, scripts, and workflows to support generating documentation pages for GitHub Pages. Centralized documentation is stored in the `docs/` folder configured for Jekyll.
+7. **Sovereign GitHub Pages base URL:** The deployed GitHub Pages site's base URL is `https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/` (as per **Item 41**).
 
 ---
 
 ## 2. Regional Defaults & Cloud Platform Target
 
-7. **Default Target Region & Compute:** The default deployment target is the AWS Asia Pacific (Malaysia) region (`ap-southeast-5`), using ARM64/Graviton instances (`t4g.micro` for EC2/ASG and `db.t4g.micro` for RDS PostgreSQL 16) by default.
-8. **Dynamic AMI Selection:** The Auto Scaling Group (`asg`) module dynamically selects the appropriate Amazon Linux 2023 AMI (ARM64 or x86_64) based on the configured EC2 instance type family.
-9. **Native OpenTofu Alignment:** The infrastructure configuration and documentation have been updated to target OpenTofu natively. Outdated Terraform references were corrected, including setting the recommended version specification to `OpenTofu >= 1.6.0` (while preserving backward compatibility with `Terraform >= 1.5.0`).
-10. **Sandbox Execution Constraint:** The sandbox execution environment does not have the `terraform` or `tofu` CLI binaries installed by default.
+8. **Default Target Region & Compute:** The default deployment target is the AWS Asia Pacific (Malaysia) region (`ap-southeast-5`), using ARM64/Graviton instances (`t4g.micro` for EC2/ASG and `db.t4g.micro` for RDS PostgreSQL 16) by default.
+9. **Dynamic AMI Selection:** The Auto Scaling Group (`asg`) module dynamically selects the appropriate Amazon Linux 2023 AMI (ARM64 or x86_64) based on the configured EC2 instance type family.
+10. **Native OpenTofu Alignment:** The infrastructure configuration and documentation have been updated to target OpenTofu natively. Outdated Terraform references were corrected, including setting the recommended version specification to `OpenTofu >= 1.6.0` (while preserving backward compatibility with `Terraform >= 1.5.0`).
+11. **Sandbox Execution Constraint:** The sandbox execution environment does not have the `terraform` or `tofu` CLI binaries installed by default.
 
 ---
 
-## 3. OpenTofu Modular Infrastructure Design
+## 3. Security, Hardening & Wazuh SIEM/XDR Deep-Dive
 
-11. **Secure 3-Tier Architecture:** The repository is structured to deploy a secure AWS 3-tier architecture (ALB, ASG, Multi-AZ RDS) integrated with AWS WAFv2 using OpenTofu.
-12. **Highly Modular Directory Structure:** The OpenTofu infrastructure is modularly organized under the `terraform/` directory, including submodules for `vpc`, `security_groups`, `waf`, `alb`, `asg`, `rds`, `standalone_ec2`, `route53`, `elasticache` (Valkey), and `jumphost` (Bastion).
-13. **Optional Route 53 Module Integration:** The architecture incorporates an optional Route 53 module controlled via the `enable_route53` root boolean variable. This module provisions a public hosted zone and creates an A Alias record pointing directly to the Application Load Balancer.
-14. **Type-Safe Variable Definitions:** The invalid syntax type specification `boolean` in `terraform/variables.tf` for the `enable_standalone_ec2` variable was corrected to `bool` to satisfy OpenTofu and Terraform verification checks.
-
----
-
-## 4. Auto Scaling Groups & Standalone Instances
-
-15. **Staging & Testing Pairings:** The system architecture pairs each of the three Auto Scaling Group (ASG) application groups (Frontend Nginx, Backend, and AI Tier) with a dedicated standalone EC2 instance connected to the same databases/shared storage (RDS, S3, or EFS) to serve as a staging and testing environment for pre-baking AMIs.
-16. **Secure Standalone EC2 Deployment:** The OpenTofu infrastructure includes a `standalone_ec2` module (at `terraform/modules/standalone_ec2/`) to deploy standalone Ubuntu 26.04 LTS development and application instances inside secure private subnets, integrated with AWS Systems Manager (SSM) for passwordless management.
-17. **Legacy-to-Cloud Alignment & Hardening:** The architecture documentation includes a detailed developer alignment guide (at `docs/developer-design-mapping.md`) that maps legacy, single-VM configurations to AWS-native managed services and secure private subnets, with the target operating system upgraded to Ubuntu 26.04 LTS hardened via the ASIMP (Ansible System Integrity Management Platform) framework.
-18. **Multi-Tier ASG Separation of Concerns:** A comprehensive architectural guide on Auto Scaling Groups (ASGs) and Separation of Concerns is available at `docs/asg-separation-of-concern.md`. It explains multi-tier ASG designs, state management, and provides comparative guidelines and implementation details for Amazon S3 and Amazon EFS in auto-scaling environments.
+12. **Wazuh SIEM & XDR Integration:** A comprehensive Wazuh SIEM & XDR Deep-Dive Guide (`docs/wazuh-detailed.md`) outlines Wazuh's core functions, cloud and on-premises deployment modes, and critical operational guidance regarding Antivirus coexistence (including Windows Defender compatibility, third-party AV compatibility, potential conflict areas, and mutual exclusions configurations). This document is fully integrated into site navigations (`docs/_config.yml`), index files (`docs/index.md`, `README.md`, `llms.txt`), compilation pages (`docs/print_all.md`), and search sitemaps (`sitemap.txt`, `sitemap.xml`) (as per **Item 1**).
+13. **Dedicated Licensing & Technology Risk Register (TS/MC Series):** Documented at `docs/licensing-risks.md` and integrated into Jekyll navigation, index files (`docs/index.md`, `README.md`), and guides (`docs/tech-stack-comparison.md`, `docs/costing.md`). It defines and tracks six critical risk/decision codes: LangChain4j SLA (TS-02), standalone Wazuh SIEM (TS-04), permissive/open-source licensing compliance (TS-05), self-hosted database operations (TS-06), Qwen3 LLM inference via Amazon Bedrock (MC-01), and Qwen3 embedding indexing (MC-02) (as per **Item 46**).
+14. **Legal Notice & Disclaimer (`docs/legal-notice.md`):** Conforms to OKF v0.1 format and is fully integrated into the layout footer (`docs/_layouts/default.html`), navigation bar (`docs/_config.yml`), index and portal documents (`docs/index.md`, `README.md`, `llms.txt`), print compilation (`docs/print_all.md`), and search sitemaps (`sitemap.txt`, `sitemap.xml`) (as per **Item 8**).
+15. **Context7 AI Widget & Page:** A dedicated integration page at `docs/context7.md` contains comprehensive documentation for the Context7 chat assistant widget. This page is formatted in compliance with OKF v0.1 front matter guidelines and integrated across all index files including `docs/_config.yml`, `docs/index.md`, `README.md`, `llms.txt`, and `docs/print_all.md` (as per **Item 30**).
 
 ---
 
-## 5. Database & Caching Architecture
+## 4. Software Stack Comparison, Role-Based Directories & SEO
 
-19. **PostgreSQL Migration & Comparison:** A comprehensive technical comparison guide comparing AWS RDS PostgreSQL 17 (Multi-AZ) and self-installed Percona Server for PostgreSQL 17 on EC2 (detailing costing models in USD/MYR for `ap-southeast-5`, architectural layouts with Patroni/PgBouncer, telemetry comparison with PMM, and extension differences like `pg_stat_monitor`) is documented at `docs/postgresql-comparison.md` and integrated into the Jekyll site navigation.
-20. **Amazon ElastiCache for Valkey Integration:** The repository supports Amazon ElastiCache for Valkey as a modern, license-compliant replacement for Redis OSS, which delivers 20% lower on-demand pricing ($0.0128/hr for `cache.t4g.micro` and $0.0544/hr for `cache.t4g.medium` in `ap-southeast-5`) with high security (transit & at-rest encryption, subnet group, and strict security groups limiting ingress to compute ASG and standalone nodes on port 6379).
-
----
-
-## 6. Security, Bastion SSH & AMI Baking Compliance
-
-21. **SSH Bastion Jumphost Module:** The OpenTofu infrastructure includes a `jumphost` module (at `terraform/modules/jumphost/`) to deploy a secure SSH Jumphost (Bastion) in the public subnet. It allocates a static Elastic IP, whitelists incoming SSH exclusively from a configured Cyberjaya developer office CIDR, and automatically injects SSH ingress rules into private downstream compute security groups.
-22. **Developer SSH Hardening & Access Guide:** A detailed developer access and SSH hardening guide is available at `docs/jumphost.md` outlining connection steps for Windows (PowerShell, PuTTY), macOS, and Linux, security procedures for private key protection (`chmod`, Windows NTFS ACLs via `icacls`), and OS-level hardening instructions using the ASIMP framework.
-23. **CIS Compliant AMI Baking Strategy:** The project documents its Amazon Machine Images (AMI) baking and compliance strategy at `docs/ami-design.md`, utilizing HashiCorp Packer and Ansible with the ASIMP framework to bake secure, CIS Level 2-compliant Ubuntu 26.04 LTS images for each Auto Scaling Group.
+16. **AWS-vs-Onprem 12-Layer Stack Comparison Guide:** Documented at `docs/aws-vs-onprem-stack-comparison.md`, this guide maps AWS services to onsite open-source equivalents across all core infrastructure layers (from Frontend to Error Tracking) and is fully integrated across all major portal indexes (as per **Item 10**).
+17. **Technology Stack Comparison Guide:** Documented at `docs/tech-stack-comparison.md` and integrated into Jekyll navigation and indexes (`docs/index.md`, `README.md`, `llms.txt`), comparing the local containerized developer stack (Spring Boot, React, React Native, Redis, PostgreSQL, RAGFlow, Twilio, Meta) against AWS equivalents (as per **Item 50**).
+18. **Role-Based Architectural Directories:** The architectural documentation is modularised into dedicated, role-based subdirectories: `docs/executive/` (housing the 36-month TCO, non-AWS operational overheads, quarterly OpEx curves, and regulatory risk compliance under PDPA 2010 and 2025 CBPDT Guidelines) and `docs/engineering/` (containing low-level DevOps materials like OpenTofu module structures, systemd DNS troubleshooting steps, Ansible ASIMP hardening playbooks, and EFS shared storage mount scripts) (as per **Item 28**).
+19. **Standard SEO Indexer Suite:** The repository contains a suite of standard SEO indexer files in the root directory: `sitemap.txt` (plain text list of all documentation URLs starting with `https://`), `sitemap.xml` (the standard XML sitemap for search engines with location, priority, lastmod, and changefreq tags), and `robots.txt` (which allows all search crawlers and points to the XML sitemap URL) (as per **Item 29**).
 
 ---
 
-## 7. Disaster Recovery, National Sovereignty & Hybrid Integrations
+## 5. Script Hardening, Testing & Formatting Compliance
 
-24. **AWS-Native vs. On-Premises RAGFlow & Langfuse:** A comprehensive architectural and economic guide comparing AWS-native and on-premises deployments for RAGFlow + Langfuse is documented at `docs/ragflow-langfuse.md` and integrated into the Jekyll site navigation, detailing the critical role of GPUs in visual layout analysis (DeepDoc) and OCR, hybrid API/MCP integration, and localized cost/sovereignty trade-offs.
-25. **PDPA-Aligned In-Region vs. Cross-Region DR Decision Matrix:** The Disaster Recovery Options & Sovereignty Guide (`docs/dr-options.md`) includes specific, separate classifications for both In-Region and Cross-Region deployments in its decision matrix (Section 5), supported by a detailed technical approach (Section 2.3) addressing field-level encryption/tokenization, KMS cryptographic isolation, programmatic failover circuit breakers, and Transfer Impact Assessments (TIAs) under PDPA Section 129.
-26. **AWS Disaster Recovery (DR) & Sovereignty Guide:** A comprehensive AWS Disaster Recovery (DR) and National Sovereignty Guide is documented at `docs/dr-options.md` and integrated into the Jekyll site navigation and index, detailing four standard cloud DR options alongside AWS Elastic Disaster Recovery (AWS DRS) as a fifth continuous block-level replication option, aligned with the Multi-AZ 3-tier system architecture, regulatory compliance pathways under the Malaysian Personal Data Protection Act (PDPA) 2010 (and 2025 CBPDT Guidelines), and highly detailed monthly cost estimates in USD and MYR.
-27. **AWS Elastic Disaster Recovery (AWS DRS) Integration:** AWS Elastic Disaster Recovery (AWS DRS) is integrated as 'Strategy E' in `docs/dr-options.md`, modeling continuous asynchronous block-level replication (RPO in seconds/minutes, RTO in minutes) from on-premises or cloud servers into a lightweight staging area subnet (using low-cost `t3.small` replication instances and gp3 staging volumes) to support cost-optimized, sovereign recovery under Malaysian regulatory rules.
-28. **Hybrid Cloud Integration & Costing Guide:** A comprehensive hybrid cloud integration and costing guide comparing cost-effective API-based and AI-native MCP-based (Model Context Protocol via AWS API Gateway MCP Proxy) connections against official AWS hybrid networking solutions (Site-to-Site VPN, Direct Connect, and Transit Gateway) in the `ap-southeast-5` (Malaysia) region is documented at `docs/hybrid-onprem.md` and integrated into the Jekyll site navigation.
-
----
-
-## 8. Financial Management & Detailed Cost Breakdown
-
-29. **Baseline vs. High-Performance Financial Plans:** The system costing documentation (at `docs/costing.md`) includes detailed Baseline Cost-Optimized (~$426.75 USD/mo) and High-Performance (~$1,064.46 USD/mo) Plans, which incorporate ElastiCache for Valkey, dedicated standalone EC2 instances, a secure SSH Jumphost ($10.98/mo), and AWS Route 53 hosting/query costs ($1.30/mo).
-30. **Infrastructure Cost Breakdown Page:** An AWS infrastructure cost estimation breakdown page is available at `docs/costing.md` and integrated into the Jekyll site navigation and index.
-
----
-
-## 9. Build Scripts, Automation Workflows & CI/CD
-
-31. **Landing Web Page Brand Consistency:** The bootstrap script `scripts/user_data.sh` generates a landing web page with a footer that references 'OpenTofu' instead of 'Terraform' for managed deployment visualization.
-32. **GitLab CI/CD & Persistent NFS Integration:** A comprehensive deployment guide for integrating GitLab CI/CD pipelines with shared AWS EFS storage (mounted on ASGs and standalone instances), persistent NFS configurations, dedicated Nginx server paths, EFS metadata performance tuning (via `open_file_cache`), and robust architectural alternatives (e.g., S3 pulling or Docker on ECS) is documented at `docs/gitlab-efs-cicd.md`.
-33. **GitHub Actions OpenTofu OIDC Pipeline:** A GitHub Actions CI/CD pipeline is configured in `.github/workflows/opentofu.yml` to automatically lint, validate, plan, and apply the infrastructure configuration using OpenTofu (`opentofu/setup-opentofu@v1`).
-34. **Conditional Job Execution:** The GitHub Actions workflow conditionalises jobs requiring AWS credentials (such as `opentofu-plan` and `opentofu-apply`) to run only when `secrets.AWS_ROLE_TO_ASSUME` is populated, avoiding credential loading failures in environments without secrets (e.g., fork pull requests). Since direct evaluation of the `secrets` context in job-level `if` conditionals causes parse errors, this is achieved via a dedicated `check-secrets` helper job which exports a `has-aws-role` boolean output.
-35. **OpenTofu Migration & Commands Guide:** A comprehensive research and migration guide detailing AWS's compatibility, authentication, state management, commands, and managed service integrations with OpenTofu is available at `docs/opentofu-migration.md`.
-36. **Deployment & Destruction Bash Utilities:** Bash scripts for deploying and destroying the infrastructure are provided under `scripts/deploy.sh` and `scripts/destroy.sh` and use the OpenTofu (`tofu`) CLI.
-37. **GitHub Pages Deployment Pipeline:** The GitHub Pages deployment pipeline is defined in `.github/workflows/jekyll-gh-pages.yml` (replacing the redundant `pages.yml`), which automates document preparation using Python, Jekyll building from `./docs`, and deployment of the documentation site on pushes to the `main` branch.
-38. **Pre-Build Documentation Preparation:** A pre-build Python script (`scripts/prepare_docs.py`) is used to recursively scan the `docs/` directory and prepend Jekyll front matter (layout and auto-extracted titles) to Markdown documentation files that lack it.
-
----
-
-## 10. Historical Narrative & Changelog Milestones
-
-39. **Strategic Engineering Log:** The historical narrative detailing strategic engineering choices from Day 0 (the monolithic single-VM starting point) is documented in `HISTORY.md`, and its development milestones are structured as a standard-compliant changelog in `CHANGELOG.md`.
-
----
-
-## 11. Jekyll Documentation, Dynamic Layout, and High-Fidelity PDF Generation
-
-40. **Custom Responsive Sidebar Layout:** The documentation layout features a custom responsive Jekyll theme configured in `docs/_layouts/default.html` and `docs/assets/css/global.css` with a left navigation sidebar and a main content area. It is styled for 100% width on desktop using a `260px 1fr` grid, and transitions to a stacked vertical layout below `992px` to support tablet and mobile screens, featuring touch-friendly navigation button grids and horizontally scrollable tables.
-41. **Horizontal Table & Diagram Wrapping Safeguard:** To prevent standard code blocks from overflowing horizontally, `#content pre` in `docs/assets/css/global.css` is configured with `white-space: pre-wrap`. However, to prevent text-based diagrams and tables from wrapping and breaking their alignment, a lightweight JavaScript script in `docs/_layouts/default.html` dynamically scans for box-drawing characters and applies a `.no-wrap` class, which overrides wrapping with `white-space: pre !important` and enables modern, customized horizontal scrollbars.
-42. **PDF Pagination Page-Break Safeguard:** To prevent blank first pages during PDF generation or printing, `html`, `body`, and `#container` are configured with `height: auto !important` and `min-height: auto !important` inside the `@media print` CSS block in `docs/assets/css/global.css` to override screen-specific `100vh` constraints.
-43. **High-Fidelity PDF Generation Workflow:** The Jekyll-based documentation layout supports high-fidelity printing to A4 PDF with a clean white ("day") background via a comprehensive `@media print` CSS block in `docs/assets/css/global.css`, an integrated interactive "PRINT PDF" JavaScript button in `docs/_layouts/default.html`, and an automated PDF generation workflow configured in `.github/workflows/pdf-generation.yml` using `misaelnieto/web_to_pdf_action@v0.3.1`.
-44. **Route 53 DNS Failure Modes Analysis:** The project documents and explains Route 53 domain mapping, ACM SSL/TLS validation, and common causes of Auto Scaling Group DNS resolution failures (such as the Nginx dynamic resolver cache issue, systemd-resolved behaviors, security group rules, and Route 53 query throttling) in a dedicated technical guide at `docs/route53.md`.
+20. **Bash Script Navigation & Input Checks:** Bash scripts (`scripts/deploy.sh` and `scripts/destroy.sh`) are hardened to enforce success checks on directory navigation (`cd ... || exit 1`), quote variables consistently, and use standard `read -r -p` flag options for user input (as per **Item 2**).
+21. **Python Codebase Formatting Cleanup:** Codebase formatting is cleaned up by removing unused `pytest` imports from all test files and correcting an extraneous `f` prefix on a log statement in `scripts/prepare_docs.py`, verified with `ruff check` and the `pytest` suite (as per **Item 4**).
+22. **Complete Script Docstrings:** All major script files in the repository are updated with complete docstrings: PEP-257-compliant docstrings for `scripts/prepare_docs.py`, JSDoc-compliant comments for `scripts/generate_pdf.js`, and comprehensive header documentation with inline explanations for Bash scripts `scripts/deploy.sh`, `scripts/destroy.sh`, and `scripts/user_data.sh` (as per **Item 5**).
+23. **Automated Pytest Suite:** The project features a comprehensive `pytest` test suite under the `tests/` directory containing 11 tests that validate: document preparation utilities (`test_prepare_docs.py`), FQCN-compliance and privilege separation in embedded Ansible playbooks (`test_ansible_playbooks.py`), valid systemd INI syntax and unprivileged user namespace mappings (`UserNS=keep-id:uid=2001,gid=2001`) in Podman Quadlet specifications (`test_podman_quadlets.py`), and OKF front matter / DSOM footer compliance across Markdown files (`test_md_compliance.py`) (as per **Item 6**).
+24. **DRY Script Refactoring:** The pre-build Python script `scripts/prepare_docs.py` was refactored to eliminate a severe DRY violation (code duplication) by extracting duplicate string-unescaping and quote-stripping code blocks from `parse_yaml()` into a single, clean helper function `unescape_string(val)`. This refactoring preserved full operational parity and strict OKF parsing behavior (as per **Item 34**).
+25. **Root Caches & IaC Exclusions:** The root `.gitignore` file includes exclusions for standard Python compilation and caching bytecode (`__pycache__/`, `*.py[cod]`, `*$py.class`) alongside standard OpenTofu/Terraform state and system configurations to ensure the git workspace remains clean during documentation preparation or test runs (as per **Item 35**).
 
 ---
 

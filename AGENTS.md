@@ -20,6 +20,7 @@ Before you perform any action, review our sovereign rules. This file acts as a h
 - **Sovereign Constitution & Detailed Rulebook:** [**.agents/AGENTS.md**](.agents/AGENTS.md)
 - **Standard Operating Procedure (SOP) for Local Discovery:** [**docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md**](docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md)
 - **Spatial Memory Manifest:** [**.agents/brain/active_context_manifest.md**](.agents/brain/active_context_manifest.md)
+- **Google Jules Master Knowledge Ledger:** [**.agents/brain/jules_knowledge_ledger.md**](.agents/brain/jules_knowledge_ledger.md)
 
 ---
 
@@ -30,7 +31,7 @@ To ensure token efficiency and avoid remote command errors or remote server prob
 2. Probing live staging/production standalone EC2 or active ASG nodes.
 3. Conducting external Google queries.
 
-Remote server execution or live telemetry collection is strictly reserved for applying configuration updates or inspecting dynamic live runtime state that cannot be modeled locally.
+Remote server execution or live telemetry collection is strictly reserved for applying configuration updates or inspecting dynamic live runtime state that cannot be modeled locally. Always consult the **Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`)** to instantly access Jules' 51 technical knowledge and operational milestones.
 
 ---
 
@@ -38,19 +39,21 @@ Remote server execution or live telemetry collection is strictly reserved for ap
 
 To bridge the knowledge bases of Google Jules and Google Antigravity seamlessly, we have deployed a comprehensive suite of 11 Antigravity-compatible Agent Skills under `.agents/skills/`. Each skill consists of a directory with a `SKILL.md` file featuring a combined OKF/Antigravity YAML frontmatter and concludes with the standard Deep State of Mind (DSOM) AI Protocol footer.
 
-### Complete List of Agent Skills:
+**All 11 skills have been fully enriched with all 51 items of Google Jules' operational and domain-specific knowledge from Day 0 until now.**
 
-1. **[`jules-knowledge`](.agents/skills/jules-knowledge/SKILL.md):** Generic cloud engineering skill containing comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices.
-2. **[`aws-malaysia-defaults`](.agents/skills/aws-malaysia-defaults/SKILL.md):** Guidelines for configuring regional defaults, AWS Graviton architecture, standard instance sizes, and dynamic ARM64/x86_64 AMI selection for `ap-southeast-5` (Malaysia).
-3. **[`opentofu-infrastructure-design`](.agents/skills/opentofu-infrastructure-design/SKILL.md):** Standards for managing, validating, and designing the secure modular 3-tier OpenTofu architecture (VPC, Security Groups, WAF, ALB).
-4. **[`aws-asg-standalone-compute`](.agents/skills/aws-asg-standalone-compute/SKILL.md):** Guidelines for deploying multi-tier ASGs, pairing them with standalone EC2 instances for staging/pre-baking AMIs, and managing compute passwordlessly via SSM.
-5. **[`rds-postgresql-valkey-cache`](.agents/skills/rds-postgresql-valkey-cache/SKILL.md):** Settings for Multi-AZ RDS PostgreSQL (PostgreSQL 16/17 default), secure ElastiCache Valkey caching clusters, port-level network isolation, and comparative self-hosted vs. RDS database designs.
-6. **[`ssh-jumphost-ami-baking`](.agents/skills/ssh-jumphost-ami-baking/SKILL.md):** Guidelines for secure public SSH Jumphost (Bastion) access whitelisting Cyberjaya, protecting private keys, and baking CIS Level 2-compliant Ubuntu 26.04 AMIs with Packer & Ansible.
+### Enriched Agent Skills List:
+
+1. **[`jules-knowledge`](.agents/skills/jules-knowledge/SKILL.md):** Generic cloud engineering skill containing comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices. Includes Wazuh SIEM/XDR guides, legal notices, stacks comparisons, and script docstring standards.
+2. **[`aws-malaysia-defaults`](.agents/skills/aws-malaysia-defaults/SKILL.md):** Guidelines for configuring regional defaults, AWS Graviton architecture, standard instance sizes, dynamic ARM64/x86_64 AMI selection, and OpenTofu global installations on Ubuntu 24.04.4 LTS.
+3. **[`opentofu-infrastructure-design`](.agents/skills/opentofu-infrastructure-design/SKILL.md):** Standards for managing, validating, and designing the secure modular 3-tier OpenTofu architecture, incorporating ALB-aware auto-healing, IMDSv2 enforcement, and PostgreSQL db_port alignment to 5432.
+4. **[`aws-asg-standalone-compute`](.agents/skills/aws-asg-standalone-compute/SKILL.md):** Guidelines for deploying multi-tier ASGs, pairing them with standalone EC2 instances for staging/pre-baking AMIs on hardened Ubuntu 26.04 LTS, and managing compute passwordlessly via SSM.
+5. **[`rds-postgresql-valkey-cache`](.agents/skills/rds-postgresql-valkey-cache/SKILL.md):** Settings for Multi-AZ RDS PostgreSQL (PostgreSQL 16/17 default), secure ElastiCache Valkey caching clusters, port-level network isolation, Percona PostgreSQL, redis-vs-valkey comparison, and real-world scaling benchmarks (Langfuse / RAGFlow).
+6. **[`ssh-jumphost-ami-baking`](.agents/skills/ssh-jumphost-ami-baking/SKILL.md):** Guidelines for secure public SSH Jumphost (Bastion) access whitelisting Cyberjaya, protecting private keys, and baking CIS Level 2-compliant Ubuntu 26.04 AMIs with FQCN-compliant Packer & Ansible playbooks. Includes audit logs and Security Posture Assessments (SPA).
 7. **[`aws-disaster-recovery-sovereignty`](.agents/skills/aws-disaster-recovery-sovereignty/SKILL.md):** Playbook for PDPA-compliant In-Region and Cross-Region DR, deploying AWS DRS (Strategy E) replication, and addressing generative AI sovereign workloads (RAGFlow + Langfuse).
-8. **[`aws-infrastructure-costing`](.agents/skills/aws-infrastructure-costing/SKILL.md):** Financial management models evaluating the Baseline Cost-Optimised Plan (~$426.75 USD/mo) and High-Performance Enterprise Plan (~$1,064.46 USD/mo) inside the Malaysia region.
-9. **[`gitlab-efs-cicd-automation`](.agents/skills/gitlab-efs-cicd-automation/SKILL.md):** Procedures for GitLab CI/CD pipelines, mounting shared AWS EFS storage, tuning NFS mounts, and configuring dynamic Nginx paths (`open_file_cache`).
-10. **[`changelog-milestones-narrative`](.agents/skills/changelog-milestones-narrative/SKILL.md):** Procedures for maintaining standard-compliant semantic changelogs (`CHANGELOG.md`) and strategic engineering history logs (`HISTORY.md`) from Day 0.
-11. **[`jekyll-pdf-generation`](.agents/skills/jekyll-pdf-generation/SKILL.md):** Guidelines for custom responsive Jekyll sidebar themes, preventing diagram text wrapping with dynamic JavaScript scanners, print page-break overrides, and high-fidelity PDF workflows.
+8. **[`aws-infrastructure-costing`](.agents/skills/aws-infrastructure-costing/SKILL.md):** Financial management models evaluating the Baseline Cost-Optimised Plan (~$426.75 USD/mo) and High-Performance Enterprise Plan (~$1,064.46 USD/mo) inside the Malaysia region, utilizing exchange rate exactly $1.00 USD = MYR 4.50 and the 1,000 VU sizing tier.
+9. **[`gitlab-efs-cicd-automation`](.agents/skills/gitlab-efs-cicd-automation/SKILL.md):** Procedures for GitLab CI/CD pipelines, mounting shared AWS EFS storage, tuning NFS mounts, rootless Podman 5+ unprivileged deployments using systemd Quadlets, and the VIP Guest lifecycle trajectory.
+10. **[`changelog-milestones-narrative`](.agents/skills/changelog-milestones-narrative/SKILL.md):** Procedures for maintaining standard-compliant semantic changelogs (`CHANGELOG.md`) and strategic engineering history logs (`HISTORY.md`) from Day 0, plus the AWS Adoption Roadmap chronological alignment and confidentiality declarations.
+11. **[`jekyll-pdf-generation`](.agents/skills/jekyll-pdf-generation/SKILL.md):** Guidelines for custom responsive Jekyll sidebar themes, preventing diagram text wrapping with dynamic JavaScript scanners, print page-break overrides, and Puppeteer-based automated PDF generation.
 
 ---
 

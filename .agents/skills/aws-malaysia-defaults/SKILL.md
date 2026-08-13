@@ -34,10 +34,12 @@ When configuring Auto Scaling Groups (ASGs) or standalone instances:
 
 ---
 
-## 3. Native OpenTofu Requirements
+## 3. Native OpenTofu & Development Environment Requirements
 
+- **Global OpenTofu Installation:** The development and testing environment runs on Ubuntu 24.04.4 LTS, where OpenTofu (`v1.12.5`) has been installed globally from the official OpenTofu apt repository (`packages.opentofu.org`) to support recursive configuration formatting (`tofu fmt`) and syntax validation (`tofu validate`) checks (as per **Item 19**).
 - **Version Specification:** The project requires `OpenTofu >= 1.6.0` (while preserving backward compatibility with `Terraform >= 1.5.0`).
 - Ensure no hardcoded old Terraform providers are used, and utilize OpenTofu commands (`tofu fmt`, `tofu validate`, `tofu plan`, `tofu apply`) natively.
+- **Verification Suites:** Leverages the comprehensive 11-test `pytest` suite in `tests/` validating OpenTofu formatting, embedded Ansible playbooks, systemd Quadlet files, and OKF compliance (as per **Item 6**).
 
 ---
 
