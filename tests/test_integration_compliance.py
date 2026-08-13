@@ -61,3 +61,22 @@ def test_jekyll_config_navbar_compliance():
     # Verify that the URL is registered in the configuration
     assert "url: \"/wazuh-detailed.html\"" in content or "url: '/wazuh-detailed.html'" in content or "url: /wazuh-detailed.html" in content, \
         "docs/_config.yml must include /wazuh-detailed.html in its navbar configuration"
+
+
+def test_jules_knowledge_ledger_completeness():
+    """
+    Validates that the Google Jules Master Knowledge Ledger (.agents/brain/jules_knowledge_ledger.md)
+    exists and completely indexes all 51 distinct items of Jules knowledge from Day 0 until now.
+    """
+    workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    ledger_path = os.path.join(workspace_root, '.agents', 'brain', 'jules_knowledge_ledger.md')
+
+    assert os.path.exists(ledger_path), "Google Jules Master Knowledge Ledger must exist under .agents/brain/"
+
+    with open(ledger_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    # Verify that all 51 knowledge items are indexed (IDs 1 to 51)
+    for i in range(1, 52):
+        expected_id_pattern = f"| **{i}** |"
+        assert expected_id_pattern in content, f"Ledger must index knowledge item ID: {i}"
