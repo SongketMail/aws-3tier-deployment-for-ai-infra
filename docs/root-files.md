@@ -36,11 +36,12 @@ provider "aws" {
 }
 ```
 
-### 2. `main.tf`
-Serves as the central manifest, calling modules in sequential dependency orders (Networking -> Security Groups -> ALB -> WAF -> ASG -> RDS -> Route 53) and passing cross-module attributes.
-- **Example:** VPC subnet IDs are fed directly into ALB subnets, ASG subnets, and RDS subnets.
-- **Example:** Security Group IDs are automatically mapped to protect dependencies.
-- **Example:** Route 53 setup uses the ALB DNS name and Canonical Zone ID to route custom domain aliases.
+### 2. Infrastructure Domain Modules (`main.tf`, `compute.tf`, `database.tf`, `web.tf`)
+Serves as the central manifest, organized cleanly across domain-focused files within the root module to call submodules in logical dependency order and pass cross-module attributes:
+- **`main.tf`**: Foundational network infrastructure (`vpc`) and microsegmentation security rules (`security_groups`).
+- **`compute.tf`**: Workload compute instances including Auto Scaling Groups (`asg`), standalone EC2 nodes (`standalone_ec2`), and secure SSH bastions (`jumphost`).
+- **`database.tf`**: Isolated data persistence and caching layers (`rds`, `elasticache_valkey`).
+- **`web.tf`**: Web routing, edge security filtering, and DNS delegation (`alb`, `waf`, `route53`).
 
 ### 3. `variables.tf`
 Declares environmental configurations, default configurations, and input parameter structures.
