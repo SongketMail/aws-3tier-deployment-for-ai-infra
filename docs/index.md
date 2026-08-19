@@ -58,6 +58,7 @@ Explore different sections of our infrastructure documentation:
 27. **[Output of Lynis](audits/lynis-output.html):** High-fidelity example of the Lynis host auditing utility scanning logs, attributes, and suggestions.
 28. **[Output of OpenSCAP](audits/openscap-output.html):** Detailed example of OpenSCAP CIS Level 2 scan evaluation rules, results, and generated remediations.
 29. **[AWS Services vs. On-Premises Open-Source Stack Comparison](aws-vs-onprem-stack-comparison.html):** Detailed layer-by-layer architectural comparison across 12 layers mapping AWS services to self-hosted open-source counterparts.
+30. **[Google Jules AI Platform Guide](jules-platform-guide.html):** Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.
 
 ### Onsite On-Premises Volume
 - **[Onsite On-Premises Blueprint Portal](onprem/index.html):** Overview portal and strategic rationale for moving from AWS to rootless, open-source local on-premises deployments.

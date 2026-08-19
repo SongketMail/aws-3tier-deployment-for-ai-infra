@@ -123,6 +123,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[Output of Lynis](docs/audits/lynis-output.md):** High-fidelity example of the Lynis host auditing utility scanning logs, attributes, and suggestions.
 * **[Output of OpenSCAP](docs/audits/openscap-output.md):** Detailed example of OpenSCAP CIS Level 2 scan evaluation rules, results, and generated remediations.
 * **[AWS Services vs. On-Premises Open-Source Stack Comparison](docs/aws-vs-onprem-stack-comparison.md):** Comprehensive 12-layer comparison guide mapping AWS services to self-hosted equivalents.
+* **[Google Jules AI Platform Guide](docs/jules-platform-guide.md):** Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.
