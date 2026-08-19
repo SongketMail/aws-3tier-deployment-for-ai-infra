@@ -6,6 +6,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 
 ## Project Resources
 
+- [START-HERE.md](START-HERE.md) : Dual-audience onboarding standard adapting Diátaxis learn-by-doing principle for Human Engineers and AI Agents.
 - [README.md](README.md) : The central portal and entrypoint for developers, showcasing the architecture, repository layout, local execution, and deployment steps.
 - [AGENTS.md](AGENTS.md) : Root gateway file for AI agents (specifically Google Jules & Antigravity), redirecting to the Sovereign Constitution.
 - [.agents/AGENTS.md](.agents/AGENTS.md) : Sovereign Constitution & Agent Rulebook detailing Rule 29 and local knowledge-first constraints.
