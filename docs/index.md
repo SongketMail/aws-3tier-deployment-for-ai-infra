@@ -31,8 +31,8 @@ Explore different sections of our infrastructure documentation:
 ### Core Configuration
 1. **[Start Here: Onboarding Standard](start-here.html):** Dual-audience onboarding guide adapting Diátaxis learn-by-doing principle for Human Engineers and AI Agents.
 2. **[System Architecture](architecture.html):** Deep dive into the physical network structure, routing tables, and AWS resource layout in the Malaysia region, including how the Developer's first design is mapped.
-2. **[AWS Phased Adoption Roadmap & Costing Guide](aws-adoption-roadmap.html):** Multi-year week-by-week and month-by-month AWS service growth plan mapped from the project Gantt chart.
-3. **[Developer Design Alignment Guide](developer-design-mapping.html):** Rationale and comparison of shifting from legacy single-node Ubuntu VMs to an enterprise secure AWS design.
+3. **[AWS Phased Adoption Roadmap & Costing Guide](aws-adoption-roadmap.html):** Multi-year week-by-week and month-by-month AWS service growth plan mapped from the project Gantt chart.
+4. **[Developer Design Alignment Guide](developer-design-mapping.html):** Rationale and comparison of shifting from legacy single-node Ubuntu VMs to an enterprise secure AWS design.
 4. **[ASGs & Separation of Concerns Guide](asg-separation-of-concern.html):** Best practice guide detailing auto-scaling with distinct ASGs, stateless principles, and the role of Amazon S3, EFS, or both.
 5. **[Root OpenTofu/Terraform Files](root-files.html):** Overview of the root configuration entries (`main.tf`, `variables.tf`, `outputs.tf`, `providers.tf`).
 6. **[OpenTofu Migration Guide](opentofu-migration.html):** Detailed compatibility research and transition path for deploying using OpenTofu on AWS.

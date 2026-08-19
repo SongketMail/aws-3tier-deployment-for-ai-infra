@@ -63,7 +63,7 @@ pytest
 
 Autonomous AI Agents (such as Google Jules or Google Antigravity) must follow this 4-step execution protocol upon task assignment:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ 1. BOUNDARY PARSING                                                     │
 │ Read OKF front matter in README.md, AGENTS.md, and llms.txt.             │
@@ -107,7 +107,7 @@ To preserve context window precision and eliminate token waste, AI Agents operat
 
 For immediate high-level context, our core AWS architecture deploys a Zero-Trust 3-Tier layout in the Malaysia region (`ap-southeast-5`):
 
-```
+```text
                                 [ INTERNET ]
                                      │
                                      ▼
