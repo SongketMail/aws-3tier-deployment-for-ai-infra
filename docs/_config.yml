@@ -39,6 +39,8 @@ navbar:
     url: "/aws-vs-onprem-stack-comparison.html"
   - title: "Context7 AI"
     url: "/context7.html"
+  - title: "Jules AI Platform"
+    url: "/jules-platform-guide.html"
   - title: "SPA Checklist"
     url: "/audits/security-posture-assessment.html"
   - title: "Legal Notice"
