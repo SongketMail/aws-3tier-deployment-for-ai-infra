@@ -22,7 +22,7 @@ Modern cloud engineering demands speed without sacrificing governance, security,
 2. **Automated Continuous Documentation:** Jekyll-based static site generator publishing directly to GitHub Pages with automated Puppeteer PDF generation and Open Knowledge Format (OKF) metadata validation.
 3. **Multi-Agent Pair Programming Synergy:** Autonomous AI collaboration where **Google Jules** operates as a senior co-engineer in the cloud and **Google Antigravity** operates as a local CLI assistant, synchronized via spatial memory and standardized Agent Skills.
 
-```
+```text
 +-----------------------------------------------------------------------------------+
 |                            HUMAN ENGINEER / ARCHITECT                             |
 +-----------------------------------------------------------------------------------+
@@ -62,7 +62,7 @@ This section chronicles the exact sequence of engineering milestones undertaken 
 ### Milestone 1: Repository Scaffolding & GitHub Pages Pipeline
 1. **Initial Bootstrap:** Created the base repository structure containing `docs/`, `terraform/`, `scripts/`, and root documentation files.
 2. **Jekyll Integration:** Configured `docs/_config.yml` with custom sidebar navigation, responsive CSS layouts (`docs/assets/css/global.css`), and liquid templates.
-3. **Automated CI/CD Deployment:** Authored `.github/workflows/pages.yml` for publishing the Jekyll site to GitHub Pages, and `.github/workflows/pdf-generation.yml` using Puppeteer to compile `docs/print_all.md` into an A4 PDF (`docs/assets/output.pdf`).
+3. **Automated CI/CD Deployment:** Authored `.github/workflows/jekyll-gh-pages.yml` for publishing the Jekyll site to GitHub Pages, and `.github/workflows/pdf-generation.yml` using Puppeteer to compile `docs/print_all.md` into an A4 PDF (`docs/assets/output.pdf`).
 
 ### Milestone 2: Authoring Sovereign IaC with OpenTofu
 1. **Root Module Modularisation:** Refactored single monolithic Terraform files into clean, domain-specific OpenTofu files:
@@ -93,7 +93,7 @@ To guarantee that AI models produce deterministic, region-aligned, and policy-co
 
 One of Google Jules' most powerful capabilities is its ability to engage in natural, iterative pair programming directly within GitHub Pull Request review threads.
 
-```
+```text
        +-----------------------------------------------------------------+
        |                        GITHUB PULL REQUEST                      |
        +-----------------------------------------------------------------+
@@ -137,15 +137,15 @@ The human engineer and Jules interact like trusted colleagues. Rather than issui
 #### Example 2: Resolving a Documentation & Link Validation Bug
 
 **Human Engineer Comment on PR #22:**
-> *@jules-agent Morning Jules! The `pytest` run failed on `test_markdown_relative_links_integrity`. Looks like the relative link in `docs/architecture.md` pointing to `docs/dr-options.md` is broken after the recent directory restructuring. Can you fix the link, run `python scripts/prepare_docs.py`, and check that `pytest` passes?*
+> *@jules-agent Morning Jules! The `pytest` run failed on `test_markdown_relative_links_integrity`. Looks like the relative link in `docs/architecture.md` pointing to `dr-options.md` was mistakenly altered. Since `architecture.md` and `dr-options.md` are sibling files inside `docs/`, can you confirm `dr-options.md` is preserved, run `python scripts/prepare_docs.py`, and check that `pytest` passes?*
 
 **Jules Autonomous Response & Execution:**
-1. Jules inspects `docs/architecture.md` and detects `[Disaster Recovery](dr-options.md)` where the file is now under `docs/dr-options.md`.
-2. Jules corrects the relative link path.
-3. Jules executes `python scripts/prepare_docs.py` to auto-format front matter across modified Markdown files.
+1. Jules inspects `docs/architecture.md` and confirms that `dr-options.md` is a sibling file within the `docs/` directory, so `[Disaster Recovery](dr-options.md)` is the correct relative link path (not `docs/dr-options.md`).
+2. Jules verifies link integrity.
+3. Jules executes `python scripts/prepare_docs.py` to format and normalize OKF YAML front matter across modified Markdown files.
 4. Jules runs `pytest tests/test_md_compliance.py` to verify green test status.
 5. Jules replies:
-   > *All fixed! Updated the relative link in `docs/architecture.md`, ran `prepare_docs.py` to ensure OKF front matter compliance, and verified that all 18 pytest checks pass cleanly.*
+   > *All verified! Confirmed that `dr-options.md` is correctly linked as a sibling document within `docs/`, formatted front matter using `prepare_docs.py`, and verified that all pytest checks pass cleanly.*
 
 #### Example 3: Iterative Pair-Programming & Conceptual Discussion
 
@@ -166,19 +166,18 @@ Google Jules is built to operate within a multi-agent ecosystem. Developers can 
 
 ### Configuring the Jules CLI & API Authentication
 
-The Jules CLI (`jules`) allows engineers to trigger agent runs, send PR review comments, and inspect agent telemetry directly from command line interfaces.
+The Jules CLI (`jules`) allows engineers to trigger agent sessions and inspect agent telemetry directly from command line interfaces.
 
 #### 1. Obtaining the API Key
-Generate a personal access token or API Key from the Jules Developer Portal:
+Obtain a Jules API key from the developer console and pass it dynamically per session:
 ```bash
-export JULES_API_KEY="jules_live_sec_98f7a6b5c4d3e2f1..."
-export JULES_WORKSPACE_ID="ws_songketmail_aws_3tier"
+export JULES_API_KEY="YOUR_API_KEY"
 ```
 
 #### 2. Installing the Jules CLI
-Install the official Jules CLI using Node.js or native binaries:
+Install the official Jules CLI package using Node.js:
 ```bash
-npm install -g @google/jules-cli
+npm install -g @google/jules
 # Or verify installation
 jules --version
 ```
@@ -191,22 +190,20 @@ Engineers on the go can manage infrastructure and prompt Jules directly from mob
 pkg update && pkg upgrade -y
 pkg install nodejs-lts git openssh -y
 
-# Set environment variables in ~/.bashrc
-echo 'export JULES_API_KEY="jules_live_sec_..."' >> ~/.bashrc
-source ~/.bashrc
+# Pass JULES_API_KEY for the active session (or secret store)
+export JULES_API_KEY="YOUR_API_KEY"
 
-# Initialize Jules CLI task from mobile terminal
-jules task create \
+# Dispatch a new remote session using jules remote new
+jules remote new \
   --repo "songketmail/aws-3tier-deployment-for-ai-infra" \
-  --branch "feature/wazuh-siem-update" \
-  --prompt "Update docs/wazuh-detailed.md to include Windows Defender passive mode exclusion rules."
+  --session "Update docs/wazuh-detailed.md to include Windows Defender passive mode exclusion rules."
 ```
 
-```
+```text
 +--------------------------------------------------------------------+
 |                  TERMUX MOBILE TERMINAL INTERFACE                  |
 +--------------------------------------------------------------------+
- $ jules task status --id task_881204
+ $ jules remote status --id session_881204
  [STATUS]: IN_PROGRESS
  [ACTION]: Reading docs/wazuh-detailed.md
  [ACTION]: Applying Git merge diff...
@@ -217,9 +214,9 @@ jules task create \
 
 ### Establishing Programmatic Workflows: Google Antigravity to Jules Delegation
 
-When using **Google Antigravity** (CLI: `agy`), Antigravity can hand off heavy coding, refactoring, or documentation generation tasks to **Google Jules** via the Jules API or Model Context Protocol (MCP) bridge.
+When using **Google Antigravity** (CLI: `agy`), Antigravity can hand off heavy coding, refactoring, or documentation generation tasks to **Google Jules** via the Jules REST API or Model Context Protocol (MCP) bridge.
 
-```
+```text
 +---------------------------+                      +---------------------------+
 |    GOOGLE ANTIGRAVITY     |                      |       GOOGLE JULES        |
 |      (Local Assistant)    |                      |      (Autonomous Agent)   |
@@ -239,30 +236,57 @@ When using **Google Antigravity** (CLI: `agy`), Antigravity can hand off heavy c
 
 import os
 import requests
-import json
 
-JULES_API_URL = "https://api.jules.google.dev/v1/tasks"
-API_KEY = os.getenv("JULES_API_KEY")
+# Jules REST API endpoints
+JULES_SESSIONS_URL = "https://jules.googleapis.com/v1/sessions"
+JULES_SOURCES_URL = "https://jules.googleapis.com/v1/sources"
+
+api_key = os.getenv("JULES_API_KEY")
+if not api_key:
+    raise ValueError("JULES_API_KEY environment variable is required.")
 
 headers = {
-    "Authorization": f"Bearer {API_KEY}",
+    "X-Goog-Api-Key": api_key,
     "Content-Type": "application/json"
 }
 
+# 1. Resolve source name for target repository
+sources_resp = requests.get(JULES_SOURCES_URL, headers=headers, timeout=30)
+sources_resp.raise_for_status()
+sources_data = sources_resp.json()
+
+target_repo = "songketmail/aws-3tier-deployment-for-ai-infra"
+source_name = None
+
+for src in sources_data.get("sources", []):
+    if target_repo in src.get("githubRepository", {}).get("repository", ""):
+        source_name = src.get("name")
+        break
+
+if not source_name:
+    source_name = f"sources/github-{target_repo.replace('/', '-')}"
+
+# 2. Dispatch session request to Jules
 payload = {
-    "repository": "songketmail/aws-3tier-deployment-for-ai-infra",
-    "branch": "main",
-    "title": "Automated Security Audit & Hardening Update",
-    "instructions": (
+    "prompt": (
         "1. Check all OpenTofu modules for compliance with IMDSv2.\n"
         "2. Run prepare_docs.py to reformat headers.\n"
         "3. Execute pytest suite to confirm zero regressions."
     ),
-    "dsom_context_enabled": True
+    "sourceContext": {
+        "source": source_name,
+        "githubRepoContext": {
+            "startingBranch": "main"
+        }
+    }
 }
 
-response = requests.post(JULES_API_URL, headers=headers, json=payload)
-print(f"Task dispatched to Jules. Task ID: {response.json().get('task_id')}")
+response = requests.post(JULES_SESSIONS_URL, headers=headers, json=payload, timeout=30)
+response.raise_for_status()
+res_json = response.json()
+
+session_id = res_json.get("name") or res_json.get("id")
+print(f"Session successfully dispatched to Jules. Session ID: {session_id}")
 ```
 
 ### Multi-Agent Cross-Team PR Collaboration Patterns
@@ -293,7 +317,7 @@ Google Jules represents a fundamental shift in how software engineering is perfo
 To verify this documentation guide and its integration:
 
 ```bash
-# 1. Validate OKF Front Matter Formatting
+# 1. Format and Normalize OKF Front Matter Metadata
 python scripts/prepare_docs.py
 
 # 2. Run Test Suite (Link Integrity & Markdown Validation)
