@@ -6,6 +6,142 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 
 ## Project Resources
 
+### START-HERE.md (START-HERE.md)
+*Dual-audience onboarding standard adapting Diátaxis learn-by-doing principle for Human Engineers and AI Agents.*
+
+# Start Here: Pragmatic Onboarding & Execution Standard
+
+> *"You don’t need to read everything in this repository to make sense of our architecture, or to start using it in practice. In fact, we recommend that you don’t. The best way to get started is by applying it — to something, however small."*
+> — Adapted from the Diátaxis Foundational Principle
+
+---
+
+## 1. Epigraph & Onboarding Philosophy
+
+Welcome to the **AWS 3-Tier Deployment for AI & Web Infra** repository. This document serves as the primary operational entry point designed to deliver immediate, low-friction value for both human operators and autonomous AI agents.
+
+### Dual-Interface Objective
+Traditional documentation forces engineering teams and automated systems to absorb vast knowledge bases prior to execution. We reject this paradigm. This platform enforces a **dual-interface onboarding architecture**:
+- **For Human Operators:** Clean, structured, Git-native navigation optimized for rapid local environment bootstrapping, architectural comprehension, and peer collaboration.
+- **For Autonomous AI Agents (Jules, Google Antigravity, Sub-Agents):** Deterministic, machine-parseable context boundaries, structured metadata schemas (OKF v0.1), and explicit tool-calling execution guidelines.
+
+---
+
+## 2. Dual-Audience Entry Matrix (Diátaxis Navigation Grid)
+
+Our documentation is structured around the four Diátaxis documentation quadrants. Use the routing matrix below to locate the precise resources required for your target role and current operational phase.
+
+| Quadrant | Purpose | Human Developer Pathway | Autonomous AI Agent Pathway |
+| :--- | :--- | :--- | :--- |
+| **🎓 Tutorials** | Guided learning by execution | • [Quickstart: Operating Project Utilities](docs/tutorials/quickstart.md)<br>• Local sandbox initialization and test execution | • Step-by-step tool invocation verification<br>• Execution sandbox validation protocols |
+| **📋 How-To Guides** | Problem-solving for real-world tasks | • [How-To: Standardising Metadata](docs/how-to/manage-metadata.md)<br>• [How-To: Compiling LLM Formats](docs/how-to/generate-llms-xml.md)<br>• [OpenTofu Deployment](docs/scripts.md) | • Task-specific delta generation<br>• [SOP: Knowledge-First Discovery](docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md)<br>• PR comment collaboration recipes |
+| **📘 Reference Specs** | Dry, authoritative facts & specifications | • [System Architecture](docs/architecture.md)<br>• [OpenTofu Submodules](docs/modules/vpc.md)<br>• [Script Specs](docs/reference/prepare_docs.md) | • Machine-readable indices (`llms.txt`, `llms.xml`)<br>• Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`) |
+| **🧠 Explanation** | Background, design decisions & rationale | • [Diátaxis Framework](docs/explanation/diataxis.md)<br>• [AWS vs Self-Hosted TCO Review](docs/aws-vs-self-hosted-review.md)<br>• [Jules Platform Guide](docs/jules-platform-guide.md) | • Architectural constraints and boundary checks<br>• Deep State of Mind (DSOM) governance rules |
+
+---
+
+## 3. Immediate Action: The Smallest Viable Task
+
+Do not read the full repository before taking action. Execute the minimal task sequence for your interface below to verify workspace integrity immediately.
+
+### 🛠️ Human Pathway: 3-Step Quickstart Command Chain
+
+Execute these three commands in your terminal to validate dependencies and verify local documentation processing:
+
+```bash
+# 1. Clone the repository and navigate to root
+git clone https://github.com/songketmail/aws-3tier-deployment-for-ai-infra.git
+cd aws-3tier-deployment-for-ai-infra
+
+# 2. Run documentation metadata preparation and LLM index compilation
+python3 scripts/prepare_docs.py && python3 scripts/parse_llms.py
+
+# 3. Execute the unit and compliance test suite
+pytest
+```
+
+---
+
+### 🤖 Agent Pathway: Standardised Task Ingestion Protocol
+
+Autonomous AI Agents (such as Google Jules or Google Antigravity) must follow this 4-step execution protocol upon task assignment:
+
+```text
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. BOUNDARY PARSING                                                     │
+│ Read OKF front matter in README.md, AGENTS.md, and llms.txt.             │
+│ Do NOT load entire directory trees into context.                         │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+                                     ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 2. CONTEXT ANCHORING                                                    │
+│ Check spatial memory in .agents/brain/active_context_manifest.md and    │
+│ consult .agents/brain/jules_knowledge_ledger.md for past decisions.    │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+                                     ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 3. DELTA EXECUTION & VERIFICATION                                       │
+│ Apply minimal code/doc edits. Verify changes using read-only tools or   │
+│ running `pytest` / `python3 scripts/prepare_docs.py`.                   │
+└────────────────────────────────────┬────────────────────────────────────┘
+                                     │
+                                     ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 4. STRUCTURED DIFF & COMMIT                                             │
+│ Submit changes using standardized commit messages and pre-commit checks.│
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 4. Agent Context Governance (DSOM & OKF Integration)
+
+To preserve context window precision and eliminate token waste, AI Agents operating within this repository are governed by strict context loading constraints:
+
+1. **Context Window Minimization:** Agents must never read all repository files upfront. Search local knowledge in `.agents/brain/` and `docs/` using `topics:` / `description:` metadata filters before probing remote services or reading bulk files.
+2. **Metadata Compliance (OKF v0.1):** Every created or updated Markdown file must begin with line 1 column 1 YAML front matter containing mandatory fields (`layout`, `okf_version`, `type`, `title`, `timestamp`, `topics`). Strings containing special characters must be double-quoted.
+3. **Multi-Agent Interoperability:** Agents communicate state changes by updating `.agents/brain/active_context_manifest.md` and logging key milestones in `.agents/brain/jules_knowledge_ledger.md`. Eleven (11) dedicated agent skills are maintained in `.agents/skills/` to standardize cross-agent capabilities between Google Jules, Google Antigravity, and CI/CD automation runners.
+
+---
+
+## 5. Architectural Overview at a Glance
+
+For immediate high-level context, our core AWS architecture deploys a Zero-Trust 3-Tier layout in the Malaysia region (`ap-southeast-5`):
+
+```text
+                                [ INTERNET ]
+                                     │
+                                     ▼
+                               [ AWS WAFv2 ]   <-- (OWASP Top 10 + Rate Limiting)
+                                     │
+                                     ▼
+                       [ Application Load Balancer ]  <-- (Public Subnets)
+                                     │
+                       ┌─────────────┴─────────────┐
+                       ▼                           ▼
+                [ Frontend Nginx ]          [ Frontend Nginx ]  <-- (ASG EC2 Private Subnets)
+                       │                           │
+                       └─────────────┬─────────────┘
+                                     ▼
+                            [ ElasticCache Valkey ]     <-- (Session Caching Layer)
+                                     │
+                                     ▼
+                            [ Multi-AZ RDS PG ]         <-- (Isolated Database Subnets)
+```
+
+---
+
+## 🧠 Deep State of Mind (DSOM) Governance
+
+This repository operates under the **Deep State of Mind (DSOM) AI Protocol**, enforcing spatial memory persistence in `.agents/brain/`, agent skill modularization in `.agents/skills/`, and strict local knowledge-first discovery.
+
+---
+*End of Start Here Standard.*
+
+---
+
 ### README.md (README.md)
 *The central portal and entrypoint for developers, showcasing the architecture, repository layout, local execution, and deployment steps.*
 
@@ -107,6 +243,7 @@ Our design is built on the **Zero-Trust Network Principle**, dividing components
 Our comprehensive documentation is compiled, auto-formatted, and deployed directly via **GitHub Pages**. Use the catalog below to navigate to specific sections:
 
 ### 1. Conceptual Alignment & Architecture
+* **[Start Here: Pragmatic Onboarding & Execution Standard](START-HERE.md):** Dual-audience onboarding standard for Human Engineers and Autonomous AI Agents (Diátaxis "learn-by-doing" ethos).
 * **[AWS Phased Adoption Roadmap & Costing Guide](docs/aws-adoption-roadmap.md):** Multi-year week-by-week and month-by-month AWS service growth plan mapped from the project Gantt chart.
 * **[Developer Design Alignment](docs/developer-design-mapping.md):** Architectural breakdown mapping fragile legacy single-VM developer architectures into enterprise-level highly available managed services.
 * **[Separation of Concerns](docs/asg-separation-of-concern.md):** Guidelines for implementing stateless ASG layers, session persistence, and comparative analysis of S3 vs. Amazon EFS.
@@ -126,6 +263,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[Output of Lynis](docs/audits/lynis-output.md):** High-fidelity example of the Lynis host auditing utility scanning logs, attributes, and suggestions.
 * **[Output of OpenSCAP](docs/audits/openscap-output.md):** Detailed example of OpenSCAP CIS Level 2 scan evaluation rules, results, and generated remediations.
 * **[AWS Services vs. On-Premises Open-Source Stack Comparison](docs/aws-vs-onprem-stack-comparison.md):** Comprehensive 12-layer comparison guide mapping AWS services to self-hosted equivalents.
+* **[Google Jules AI Platform Guide](docs/jules-platform-guide.md):** Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.
@@ -6090,6 +6228,336 @@ The matrix below provides an executive-level summary of the architectural and fi
 
 ---
 
+### Google Jules AI Platform Guide (docs/jules-platform-guide.md)
+*Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.*
+
+# Autonomous AI Pair-Programming & Multi-Agent Operations with Google Jules
+
+Welcome to the comprehensive technical showcase and operational guide for **Google Jules**, the autonomous AI coding agent, and its integration within our sovereign cloud infrastructure lifecycle.
+
+This guide details the end-to-end development journey of building, testing, and deploying this repository—from initial bootstrap to automated GitHub Pages publication, OpenTofu infrastructure provisioning, Ansible configuration management, and multi-agent coordination with Google Antigravity.
+
+---
+
+## 1. Overview & Engineering Philosophy
+
+### The Vision: Sovereign IaC, Automated Documentation & Multi-Agent Synergy
+Modern cloud engineering demands speed without sacrificing governance, security, or compliance. Our architectural vision unites three fundamental pillars:
+1. **Sovereign Infrastructure as Code (IaC):** Modular, deterministic OpenTofu code and FQCN-compliant Ansible playbooks providing full infrastructure control in the **AWS Asia Pacific (Malaysia) region (`ap-southeast-5`)** and rootless on-premises Podman environments.
+2. **Automated Continuous Documentation:** Jekyll-based static site generator publishing directly to GitHub Pages with automated Puppeteer PDF generation and Open Knowledge Format (OKF) metadata validation.
+3. **Multi-Agent Pair Programming Synergy:** Autonomous AI collaboration where **Google Jules** operates as a senior co-engineer in the cloud and **Google Antigravity** operates as a local CLI assistant, synchronized via spatial memory and standardized Agent Skills.
+
+```text
++-----------------------------------------------------------------------------------+
+|                            HUMAN ENGINEER / ARCHITECT                             |
++-----------------------------------------------------------------------------------+
+       |                                       |                               |
+       | Inline PR Comments                    | CLI / Termux Session          | Natural Language Directives
+       v                                       v                               v
++-----------------------+           +-----------------------+       +-----------------------+
+|  GitHub Web & PRs     | <=======> |  Google Jules Engine  | <===> |   Google Antigravity  |
+|  (PR Comments & Diff) |  Webhooks |  (API / Web Console)  |  MCP  |   (Local CLI / Skills)|
++-----------------------+           +-----------------------+       +-----------------------+
+       |                                       |                               |
+       +-------------------+-------------------+-------------------------------+
+                           |
+                           v
+        +------------------------------------------------------+
+        |      REPOS-WIDE ARTIFACTS & INFRASTRUCTURE           |
+        |  - OpenTofu Modules (`terraform/`)                   |
+        |  - Ansible Playbooks & Hardening                     |
+        |  - DSOM Spatial Memory (`.agents/brain/`)             |
+        |  - Agent Skills (`.agents/skills/`)                  |
+        |  - GitHub Pages & PDF Workflow                       |
+        +------------------------------------------------------+
+```
+
+### Core Value Delivery: Reducing MTTD/MTTR & Operational Toil
+Integrating Google Jules directly into our Git lifecycle transformed our engineering velocity:
+- **Mean Time to Detect & Resolve (MTTD/MTTR):** Decreased from hours to minutes. Jules reads diagnostic logs, executes local test suites, identifies syntax or logic flaws, and pushes precise Git merge diffs directly.
+- **Zero Friction Context Retention:** Unlike traditional LLM chat interfaces that forget state between prompts, Jules retains spatial memory, branch state, and repository rules across commits and PR comments.
+- **Elimination of Operational Toil:** Jules handles repetitive chores—updating sitemaps, generating cross-reference indexes, enforcing OKF front matter formatting, and maintaining synchronization between code and documentation.
+
+---
+
+## 2. Step-by-Step Build & Implementation Log
+
+This section chronicles the exact sequence of engineering milestones undertaken by the human architect and Google Jules to construct this repository.
+
+### Milestone 1: Repository Scaffolding & GitHub Pages Pipeline
+1. **Initial Bootstrap:** Created the base repository structure containing `docs/`, `terraform/`, `scripts/`, and root documentation files.
+2. **Jekyll Integration:** Configured `docs/_config.yml` with custom sidebar navigation, responsive CSS layouts (`docs/assets/css/global.css`), and liquid templates.
+3. **Automated CI/CD Deployment:** Authored `.github/workflows/jekyll-gh-pages.yml` for publishing the Jekyll site to GitHub Pages, and `.github/workflows/pdf-generation.yml` using Puppeteer to compile `docs/print_all.md` into an A4 PDF (`docs/assets/output.pdf`).
+
+### Milestone 2: Authoring Sovereign IaC with OpenTofu
+1. **Root Module Modularisation:** Refactored single monolithic Terraform files into clean, domain-specific OpenTofu files:
+   - `terraform/main.tf` (VPC and Security Groups)
+   - `terraform/compute.tf` (Auto Scaling Groups, Standalone EC2, SSM profiles)
+   - `terraform/database.tf` (Multi-AZ RDS PostgreSQL 17 and ElastiCache Valkey)
+   - `terraform/web.tf` (Application Load Balancer and AWS WAFv2 regional rulesets)
+2. **Security & Compliance Hardening:**
+   - Enforced **IMDSv2** (`http_tokens = "required"`, `http_put_response_hop_limit = 1`) across all compute launch templates (`aws_launch_template.main`, `aws_instance.standalone`, `aws_instance.jumphost`).
+   - Integrated ALB-aware auto-healing (`health_check_type = "ELB"`).
+   - Standardised instance families on cost-efficient **AWS Graviton (ARM64)** nodes (`t4g.micro`, `t4g.xlarge`).
+
+### Milestone 3: Configuration Management Baseline via Ansible
+1. **Privilege Separation:** Developed FQCN-compliant Ansible playbooks (`ansible.builtin.apt`, `community.general.ufw`) split into rootful OS tuning (`become: yes`) and unprivileged user operations (`become_user: songket`).
+2. **ASIMP & Security Audits:** Configured Australian Cyber Security Centre (ACSC) Information Security Manual (ISM) alignment playbooks and generated high-fidelity audit reports for ASIMP, Lynis, and OpenSCAP CIS Level 2 compliance.
+
+### Milestone 4: Deep State of Mind (DSOM) Governance Protocol Implementation
+To guarantee that AI models produce deterministic, region-aligned, and policy-compliant code, we implemented the **Deep State of Mind (DSOM) for My AI** framework:
+- **Spatial Memory (`.agents/brain/`):**
+  - `.agents/brain/jules_knowledge_ledger.md`: Centralized spatial memory ledger indexing all 51 engineering and operational milestones.
+  - `.agents/brain/active_context_manifest.md`: Dynamic active context tracker preserving conversation state and architectural decisions.
+- **Modular Agent Skills (`.agents/skills/`):** Created 11 enriched skill packages (`jules-knowledge`, `aws-malaysia-defaults`, `opentofu-infrastructure-design`, `rds-postgresql-valkey-cache`, etc.) combining OKF YAML front matter and DSOM footers.
+- **Sovereign Constitution (`.agents/AGENTS.md`):** Enforced Rule 29 (Local Knowledge-First Discovery) and Rule 6 (OKF Metadata Standard).
+
+---
+
+## 3. Collaborative Engineering via GitHub PR Comments
+
+One of Google Jules' most powerful capabilities is its ability to engage in natural, iterative pair programming directly within GitHub Pull Request review threads.
+
+```text
+       +-----------------------------------------------------------------+
+       |                        GITHUB PULL REQUEST                      |
+       +-----------------------------------------------------------------+
+          |                                                           ^
+          | 1. Human posts inline review comment                      | 4. Jules pushes code
+          |    "Please enforce IMDSv2 and add unit test"              |    commit & replies
+          v                                                           |
+       +-----------------------------------------------------------------+
+       |                    GOOGLE JULES RUNTIME                         |
+       |  - Parses comment thread & git diff                            |
+       |  - Loads spatial memory (`.agents/brain/`)                      |
+       |  - Applies search-and-replace or write_file                     |
+       |  - Runs local validation (`pytest`, `tofu validate`)            |
+       +-----------------------------------------------------------------+
+```
+
+### Real-World Interaction Patterns & Examples
+
+The human engineer and Jules interact like trusted colleagues. Rather than issuing cold, formal prompts, developers talk to Jules as an equal partner.
+
+#### Example 1: Refactoring OpenTofu Code for IMDSv2 Compliance
+
+**Human Engineer Comment on PR #14 (File: `terraform/modules/asg/main.tf`):**
+> *@jules-agent Hey Jules, great job on setting up the launch template! However, security audit flagged that IMDSv1 is still permitted on the compute nodes. Could you update `aws_launch_template.main` to enforce IMDSv2 with `http_tokens = "required"`? Also run `tofu validate` to ensure syntax is clean.*
+
+**Jules Autonomous Response & Execution:**
+1. Jules reads the PR comment and parses `terraform/modules/asg/main.tf`.
+2. Jules applies a Git merge diff modifying the launch template:
+   ```hcl
+   metadata_options {
+     http_endpoint               = "enabled"
+     http_tokens                 = "required"
+     http_put_response_hop_limit = 1
+     instance_metadata_tags      = "enabled"
+   }
+   ```
+3. Jules runs `tofu init -backend=false && tofu validate` in the sandbox.
+4. Jules replies in the PR thread:
+   > *Done! I've updated `aws_launch_template.main` to strictly enforce IMDSv2 with `http_tokens = "required"` and a hop limit of 1. OpenTofu validation passed cleanly with 0 errors. Committed and pushed!*
+
+#### Example 2: Resolving a Documentation & Link Validation Bug
+
+**Human Engineer Comment on PR #22:**
+> *@jules-agent Morning Jules! The `pytest` run failed on `test_markdown_relative_links_integrity`. Looks like the relative link in `docs/architecture.md` pointing to `dr-options.md` was mistakenly altered. Since `architecture.md` and `dr-options.md` are sibling files inside `docs/`, can you confirm `dr-options.md` is preserved, run `python scripts/prepare_docs.py`, and check that `pytest` passes?*
+
+**Jules Autonomous Response & Execution:**
+1. Jules inspects `docs/architecture.md` and confirms that `dr-options.md` is a sibling file within the `docs/` directory, so `[Disaster Recovery](dr-options.md)` is the correct relative link path (not `docs/dr-options.md`).
+2. Jules verifies link integrity.
+3. Jules executes `python scripts/prepare_docs.py` to format and normalize OKF YAML front matter across modified Markdown files.
+4. Jules runs `pytest tests/test_md_compliance.py` to verify green test status.
+5. Jules replies:
+   > *All verified! Confirmed that `dr-options.md` is correctly linked as a sibling document within `docs/`, formatted front matter using `prepare_docs.py`, and verified that all pytest checks pass cleanly.*
+
+#### Example 3: Iterative Pair-Programming & Conceptual Discussion
+
+**Human Engineer Comment on PR #31:**
+> *@jules-agent What do you think about adding a dedicated guide for Redis vs. Valkey? We should highlight Valkey's BSD-3-clause license and 20% lower cost on AWS ElastiCache ap-southeast-5.*
+
+**Jules Autonomous Response:**
+1. Jules references spatial memory and `.agents/skills/rds-postgresql-valkey-cache/SKILL.md`.
+2. Jules creates `docs/redis-vs-valkey.md` complete with OKF front matter, cost comparison tables ($1.00 USD = MYR 4.50 exchange rate), and licensing breakdown.
+3. Jules updates `docs/_config.yml`, `docs/index.md`, `README.md`, `llms.txt`, and `docs/print_all.md`.
+4. Jules replies in the PR with a friendly summary and commit reference.
+
+---
+
+## 4. Advanced Interoperability: Jules API, CLI, & Google Antigravity
+
+Google Jules is built to operate within a multi-agent ecosystem. Developers can invoke Jules from web consoles, terminal CLIs, or directly delegate tasks from external AI systems like **Google Antigravity**.
+
+### Configuring the Jules CLI & API Authentication
+
+The Jules CLI (`jules`) allows engineers to trigger agent sessions and inspect agent telemetry directly from command line interfaces.
+
+#### 1. Obtaining the API Key
+Obtain a Jules API key from the developer console and pass it dynamically per session:
+```bash
+export JULES_API_KEY="YOUR_API_KEY"
+```
+
+#### 2. Installing the Jules CLI
+Install the official Jules CLI package using Node.js:
+```bash
+npm install -g @google/jules
+# Or verify installation
+jules --version
+```
+
+#### 3. Mobile-First & Termux Terminal Environment
+Engineers on the go can manage infrastructure and prompt Jules directly from mobile devices running **Termux** (Android terminal emulator):
+
+```bash
+# Inside Termux (Android)
+pkg update && pkg upgrade -y
+pkg install nodejs-lts git openssh -y
+
+# Pass JULES_API_KEY for the active session (or secret store)
+export JULES_API_KEY="YOUR_API_KEY"
+
+# Dispatch a new remote session using jules remote new
+jules remote new \
+  --repo "songketmail/aws-3tier-deployment-for-ai-infra" \
+  --session "Update docs/wazuh-detailed.md to include Windows Defender passive mode exclusion rules."
+```
+
+```text
++--------------------------------------------------------------------+
+|                  TERMUX MOBILE TERMINAL INTERFACE                  |
++--------------------------------------------------------------------+
+ $ jules remote status --id session_881204
+ [STATUS]: IN_PROGRESS
+ [ACTION]: Reading docs/wazuh-detailed.md
+ [ACTION]: Applying Git merge diff...
+ [STATUS]: COMPLETED
+ [COMMIT]: 4f81a29 - "docs: update Wazuh Windows Defender exclusions"
++--------------------------------------------------------------------+
+```
+
+### Establishing Programmatic Workflows: Google Antigravity to Jules Delegation
+
+When using **Google Antigravity** (CLI: `agy`), Antigravity can hand off heavy coding, refactoring, or documentation generation tasks to **Google Jules** via the Jules REST API or Model Context Protocol (MCP) bridge.
+
+```text
++---------------------------+                      +---------------------------+
+|    GOOGLE ANTIGRAVITY     |                      |       GOOGLE JULES        |
+|      (Local Assistant)    |                      |      (Autonomous Agent)   |
+|                           |                      |                           |
+|  - High-level planning    |  API / MCP Request   |  - Execution & Sandbox    |
+|  - CLI command testing    | -------------------> |  - Deep Code Refactoring  |
+|  - Skill discovery        |                      |  - Validation & Pytest    |
+|                           | <------------------- |  - Git Push & PR Reply    |
+|                           |    Telemetry & Diff  |                           |
++---------------------------+                      +---------------------------+
+```
+
+#### Delegation Script Example (`scripts/antigravity_to_jules.py`)
+```python
+#!/usr/bin/env python3
+"""Programmatic task delegation from Google Antigravity to Google Jules API."""
+
+import os
+import requests
+
+# Jules REST API endpoints
+JULES_SESSIONS_URL = "https://jules.googleapis.com/v1/sessions"
+JULES_SOURCES_URL = "https://jules.googleapis.com/v1/sources"
+
+api_key = os.getenv("JULES_API_KEY")
+if not api_key:
+    raise ValueError("JULES_API_KEY environment variable is required.")
+
+headers = {
+    "X-Goog-Api-Key": api_key,
+    "Content-Type": "application/json"
+}
+
+# 1. Resolve source name for target repository
+sources_resp = requests.get(JULES_SOURCES_URL, headers=headers, timeout=30)
+sources_resp.raise_for_status()
+sources_data = sources_resp.json()
+
+target_repo = "songketmail/aws-3tier-deployment-for-ai-infra"
+source_name = None
+
+for src in sources_data.get("sources", []):
+    if target_repo in src.get("githubRepository", {}).get("repository", ""):
+        source_name = src.get("name")
+        break
+
+if not source_name:
+    source_name = f"sources/github-{target_repo.replace('/', '-')}"
+
+# 2. Dispatch session request to Jules
+payload = {
+    "prompt": (
+        "1. Check all OpenTofu modules for compliance with IMDSv2.\n"
+        "2. Run prepare_docs.py to reformat headers.\n"
+        "3. Execute pytest suite to confirm zero regressions."
+    ),
+    "sourceContext": {
+        "source": source_name,
+        "githubRepoContext": {
+            "startingBranch": "main"
+        }
+    }
+}
+
+response = requests.post(JULES_SESSIONS_URL, headers=headers, json=payload, timeout=30)
+response.raise_for_status()
+res_json = response.json()
+
+session_id = res_json.get("name") or res_json.get("id")
+print(f"Session successfully dispatched to Jules. Session ID: {session_id}")
+```
+
+### Multi-Agent Cross-Team PR Collaboration Patterns
+
+In modern engineering teams, multiple human engineers and AI agents work on the same pull request. Jules natively synchronizes with this workflow:
+
+1. **Agent-to-Agent Handshake:** Google Antigravity generates an architecture proposal in `.agents/brain/active_context_manifest.md`.
+2. **PR Initiation:** Antigravity triggers Jules via API to implement the OpenTofu code changes.
+3. **Human Peer Review:** Human engineer reviews Jules' PR, leaving inline review comments.
+4. **Jules Iteration:** Jules reads comments, refactors code, runs unit tests, and commits updates until the PR is merged.
+
+---
+
+## 5. Why Developers Fall in Love with Google Jules
+
+Google Jules represents a fundamental shift in how software engineering is performed. It is not merely a chat assistant sitting on the side of an IDE—it is an **autonomous, context-aware co-engineer**.
+
+### Core Platform Advantages
+- **True Repository Context:** Jules understands the entire project structure, reading `AGENTS.md`, spatial memory in `.agents/brain/`, and custom Agent Skills.
+- **Self-Healing Verification:** Jules doesn't just write code and hope for the best. It executes build commands (`tofu validate`, `prepare_docs.py`, `pytest`), reads error outputs, and corrects its own mistakes before asking for review.
+- **Seamless Git Integration:** Communicating with Jules via PR comments feels like working with a brilliant colleague across the world. You leave feedback on specific lines of code, and Jules replies with exact commits.
+- **Friendly & Adaptive Partnership:** Jules adapts to your team's tone, guidelines, and standards, turning tedious refactoring into an empowering, enjoyable experience.
+
+---
+
+## 6. Verification & Quality Gates
+
+To verify this documentation guide and its integration:
+
+```bash
+# 1. Format and Normalize OKF Front Matter Metadata
+python scripts/prepare_docs.py
+
+# 2. Run Test Suite (Link Integrity & Markdown Validation)
+pytest tests/test_md_compliance.py
+
+# 3. Compile Local Site Preview (if Jekyll installed)
+bundle exec jekyll build
+```
+
+---
+
+*Deep State of Mind (DSOM) For My AI Protocol | Harisfazillah Jamel (LinuxMalaysia) | 2026-08-05 Standard: UK English | DBP-standard Bahasa Melayu Malaysia (Piawai) | GNU General Public License v3.0*
+
+---
+
 ## Documentation Framework & Project Utilities
 
 ### Quickstart: Operating Project Utilities (docs/tutorials/quickstart.md)
@@ -7672,11 +8140,12 @@ provider "aws" {
 }
 ```
 
-### 2. `main.tf`
-Serves as the central manifest, calling modules in sequential dependency orders (Networking -> Security Groups -> ALB -> WAF -> ASG -> RDS -> Route 53) and passing cross-module attributes.
-- **Example:** VPC subnet IDs are fed directly into ALB subnets, ASG subnets, and RDS subnets.
-- **Example:** Security Group IDs are automatically mapped to protect dependencies.
-- **Example:** Route 53 setup uses the ALB DNS name and Canonical Zone ID to route custom domain aliases.
+### 2. Infrastructure Domain Modules (`main.tf`, `compute.tf`, `database.tf`, `web.tf`)
+Serves as the central manifest, organized cleanly across domain-focused files within the root module to call submodules in logical dependency order and pass cross-module attributes:
+- **`main.tf`**: Foundational network infrastructure (`vpc`) and microsegmentation security rules (`security_groups`).
+- **`compute.tf`**: Workload compute instances including Auto Scaling Groups (`asg`), standalone EC2 nodes (`standalone_ec2`), and secure SSH bastions (`jumphost`).
+- **`database.tf`**: Isolated data persistence and caching layers (`rds`, `elasticache_valkey`).
+- **`web.tf`**: Web routing, edge security filtering, and DNS delegation (`alb`, `waf`, `route53`).
 
 ### 3. `variables.tf`
 Declares environmental configurations, default configurations, and input parameter structures.
@@ -7732,6 +8201,9 @@ cp terraform.tfvars.example terraform.tfvars
 ### Root main.tf (terraform/main.tf)
 *Main OpenTofu file calling network, database, compute, cache, security, and WAF submodules.*
 
+# Main OpenTofu Infrastructure Entrypoint
+# Network Foundations & Core Security Groups
+
 # VPC Module Setup
 module "vpc" {
   source = "./modules/vpc"
@@ -7752,116 +8224,6 @@ module "security_groups" {
   environment = var.environment
   http_port   = var.http_port
   db_port     = var.db_port
-}
-
-# Application Load Balancer (ALB) Setup
-module "alb" {
-  source = "./modules/alb"
-
-  environment       = var.environment
-  vpc_id            = module.vpc.vpc_id
-  public_subnet_ids = module.vpc.public_subnet_ids
-  alb_sg_id         = module.security_groups.alb_sg_id
-  http_port         = var.http_port
-}
-
-# Web Application Firewall (WAF) Setup
-module "waf" {
-  source = "./modules/waf"
-
-  environment = var.environment
-  alb_arn     = module.alb.alb_arn
-  rate_limit  = var.waf_rate_limit
-}
-
-# Auto Scaling Group (ASG) Setup
-module "asg" {
-  source = "./modules/asg"
-
-  environment            = var.environment
-  private_app_subnet_ids = module.vpc.private_app_subnet_ids
-  asg_sg_id              = module.security_groups.asg_sg_id
-  target_group_arn       = module.alb.target_group_arn
-  min_size               = var.min_size
-  max_size               = var.max_size
-  desired_capacity       = var.desired_capacity
-  instance_type          = var.instance_type
-  ami_id                 = var.ami_id
-}
-
-# Relational Database Service (RDS) Setup
-module "rds" {
-  source = "./modules/rds"
-
-  environment           = var.environment
-  private_db_subnet_ids = module.vpc.private_db_subnet_ids
-  db_sg_id              = module.security_groups.db_sg_id
-  db_engine             = var.db_engine
-  db_engine_version     = var.db_engine_version
-  db_instance_class     = var.db_instance_class
-  db_name               = var.db_name
-  db_username           = var.db_username
-  db_password           = var.db_password
-  db_port               = var.db_port
-}
-
-# Standalone EC2 Instances Module Setup
-module "standalone_ec2" {
-  count  = var.enable_standalone_ec2 ? 1 : 0
-  source = "./modules/standalone_ec2"
-
-  environment            = var.environment
-  vpc_id                 = module.vpc.vpc_id
-  private_app_subnet_ids = module.vpc.private_app_subnet_ids
-  alb_sg_id              = module.security_groups.alb_sg_id
-  instance_type          = var.standalone_ec2_instance_type
-  instance_count         = var.standalone_ec2_count
-  ami_id                 = var.standalone_ec2_ami_id
-  ubuntu_ami_filter_name = var.standalone_ubuntu_ami_filter_name
-}
-
-# Secure SSH Jumphost (Bastion) Setup (Conditional Setup)
-module "jumphost" {
-  count  = var.enable_jumphost ? 1 : 0
-  source = "./modules/jumphost"
-
-  environment       = var.environment
-  vpc_id            = module.vpc.vpc_id
-  public_subnet_ids = module.vpc.public_subnet_ids
-  instance_type     = var.jumphost_instance_type
-  allowed_ssh_cidr  = var.jumphost_allowed_ssh_cidr
-  jumphost_os       = var.jumphost_os
-  ami_id            = var.jumphost_ami_id
-  asg_sg_id         = module.security_groups.asg_sg_id
-  standalone_sg_id  = try(module.standalone_ec2[0].security_group_id, "")
-}
-
-# ElastiCache Valkey Setup (Conditional Setup)
-module "elasticache_valkey" {
-  count  = var.enable_elasticache_valkey ? 1 : 0
-  source = "./modules/elasticache"
-
-  environment           = var.environment
-  vpc_id                = module.vpc.vpc_id
-  private_db_subnet_ids = module.vpc.private_db_subnet_ids
-  asg_sg_id             = module.security_groups.asg_sg_id
-  standalone_sg_id      = try(module.standalone_ec2[0].security_group_id, "")
-  node_type             = var.valkey_node_type
-  num_cache_clusters    = var.valkey_num_cache_clusters
-  engine_version        = var.valkey_engine_version
-  parameter_group_name  = var.valkey_parameter_group_name
-}
-
-# Route 53 Module Setup (Conditional Setup)
-module "route53" {
-  count  = var.enable_route53 ? 1 : 0
-  source = "./modules/route53"
-
-  environment  = var.environment
-  domain_name  = var.domain_name
-  subdomain    = var.subdomain
-  alb_dns_name = module.alb.alb_dns_name
-  alb_zone_id  = module.alb.alb_zone_id
 }
 
 ---

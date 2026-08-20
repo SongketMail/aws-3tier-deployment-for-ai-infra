@@ -104,6 +104,7 @@ Our design is built on the **Zero-Trust Network Principle**, dividing components
 Our comprehensive documentation is compiled, auto-formatted, and deployed directly via **GitHub Pages**. Use the catalog below to navigate to specific sections:
 
 ### 1. Conceptual Alignment & Architecture
+* **[Start Here: Pragmatic Onboarding & Execution Standard](START-HERE.md):** Dual-audience onboarding standard for Human Engineers and Autonomous AI Agents (Diátaxis "learn-by-doing" ethos).
 * **[AWS Phased Adoption Roadmap & Costing Guide](docs/aws-adoption-roadmap.md):** Multi-year week-by-week and month-by-month AWS service growth plan mapped from the project Gantt chart.
 * **[Developer Design Alignment](docs/developer-design-mapping.md):** Architectural breakdown mapping fragile legacy single-VM developer architectures into enterprise-level highly available managed services.
 * **[Separation of Concerns](docs/asg-separation-of-concern.md):** Guidelines for implementing stateless ASG layers, session persistence, and comparative analysis of S3 vs. Amazon EFS.

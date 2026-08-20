@@ -9,6 +9,7 @@ topics: ["aws", "cloud", "architecture", "vpc", "alb", "asg", "rds", "waf", "ela
 # Table of contents
 
 * [Home](README.md)
+* [Start Here Guide](start-here.md)
 * [Legal Notice & Disclaimer](legal-notice.md)
 
 ## Tutorials
