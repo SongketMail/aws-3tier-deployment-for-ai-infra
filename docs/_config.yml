@@ -43,6 +43,8 @@ navbar:
     url: "/context7.html"
   - title: "Jules AI Platform"
     url: "/jules-platform-guide.html"
+  - title: "OpenTofu Simulation"
+    url: "/engineering/opentofu_aws_simulation.html"
   - title: "SPA Checklist"
     url: "/audits/security-posture-assessment.html"
   - title: "Legal Notice"
