@@ -125,6 +125,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[Output of OpenSCAP](docs/audits/openscap-output.md):** Detailed example of OpenSCAP CIS Level 2 scan evaluation rules, results, and generated remediations.
 * **[AWS Services vs. On-Premises Open-Source Stack Comparison](docs/aws-vs-onprem-stack-comparison.md):** Comprehensive 12-layer comparison guide mapping AWS services to self-hosted equivalents.
 * **[Google Jules AI Platform Guide](docs/jules-platform-guide.md):** Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.
+* **[OpenTofu AWS Simulation & Multi-Agent Collaboration Runbook](docs/engineering/opentofu_aws_simulation.md):** Comprehensive runbook detailing offline AWS deployment simulations, unit testing matrices, static HCL AST analysis, and multi-agent/multi-human branch/PR workflows.
 
 ### 2. Infrastructure Submodules
 * **[VPC Networking](docs/modules/vpc.md):** Dynamic subnetting allocation, NAT Gateway patterns, and Route Table linkages.

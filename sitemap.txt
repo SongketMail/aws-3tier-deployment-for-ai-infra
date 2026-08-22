@@ -35,3 +35,4 @@ https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/ragflow-langfuse
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/gitlab-efs-cicd.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/legal-notice.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/jules-platform-guide.html
+https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/engineering/opentofu_aws_simulation.html

@@ -60,6 +60,7 @@ Explore different sections of our infrastructure documentation:
 28. **[Output of OpenSCAP](audits/openscap-output.html):** Detailed example of OpenSCAP CIS Level 2 scan evaluation rules, results, and generated remediations.
 29. **[AWS Services vs. On-Premises Open-Source Stack Comparison](aws-vs-onprem-stack-comparison.html):** Detailed layer-by-layer architectural comparison across 12 layers mapping AWS services to self-hosted open-source counterparts.
 30. **[Google Jules AI Platform Guide](jules-platform-guide.html):** Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.
+31. **[OpenTofu AWS Simulation & Multi-Agent Collaboration Runbook](engineering/opentofu_aws_simulation.html):** Comprehensive runbook detailing offline AWS deployment simulations, unit testing matrices, static HCL AST analysis, and multi-agent/multi-human branch/PR workflows.
 
 ### Onsite On-Premises Volume
 - **[Onsite On-Premises Blueprint Portal](onprem/index.html):** Overview portal and strategic rationale for moving from AWS to rootless, open-source local on-premises deployments.
