@@ -30,7 +30,7 @@ Before executing any exploratory CLI commands, probing live AWS infrastructure, 
 
 ### Rule 30: Google Antigravity Agent Skills Enforcement
 All AI models (including Google Jules and Google Antigravity) operating in this workspace must natively recognize, use, and update the comprehensive suite of 11 Agent Skills stored under `.agents/skills/`.
-- **Complete Knowledge Enrichment:** All 11 Agent Skills are fully enriched and updated with all 52 items of Google Jules' operational and domain-specific knowledge from Day 0 until now. This bridges Google Jules' and Google Antigravity's capabilities seamlessly.
+- **Complete Knowledge Enrichment:** The 11 Agent Skills are collectively enriched and updated with all 52 items of Google Jules' operational and domain-specific knowledge from Day 0 until now. This bridges Google Jules' and Google Antigravity's capabilities seamlessly.
 - **Verification Index:** Always refer to `.agents/brain/jules_knowledge_ledger.md` to discover and verify that all Jules operational achievements are indexed in spatial memory.
 - Prioritize activating and referencing the instructions of specific skills when working on the respective domains (e.g., activate `rds-postgresql-valkey-cache` when working with database or cache configuration).
 - All created or modified skills must follow the Agent Skills standard with combined OKF metadata, name, description, and conclude with the standard Deep State of Mind (DSOM) AI Protocol footer.
@@ -88,7 +88,7 @@ When tasked with a query, troubleshooting a bug, or performing system maintenanc
 
 ## 5. Google Antigravity Enriched Agent Skills Index
 
-Below is the directory mapping of our 11 Antigravity-compatible Agent Skills, each fully enriched with Jules' 52 technical knowledge points:
+Below is the directory mapping of our 11 Antigravity-compatible Agent Skills, which are collectively enriched with all 52 ledger items:
 
 1. **[`jules-knowledge`](skills/jules-knowledge/SKILL.md):** Generic cloud engineering skill containing comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices. Also covers Wazuh SIEM & XDR deep-dive guides, legal notices, stacks comparisons, and script docstring standards.
 2. **[`aws-malaysia-defaults`](skills/aws-malaysia-defaults/SKILL.md):** Guidelines for configuring regional defaults, AWS Graviton architecture, standard instance sizes, dynamic ARM64/x86_64 AMI selection, and the global installation of OpenTofu on Ubuntu 24.04.4 LTS.

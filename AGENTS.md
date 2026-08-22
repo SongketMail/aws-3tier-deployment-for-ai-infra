@@ -39,7 +39,7 @@ Remote server execution or live telemetry collection is strictly reserved for ap
 
 To bridge the knowledge bases of Google Jules and Google Antigravity seamlessly, we have deployed a comprehensive suite of 11 Antigravity-compatible Agent Skills under `.agents/skills/`. Each skill consists of a directory with a `SKILL.md` file featuring a combined OKF/Antigravity YAML frontmatter and concludes with the standard Deep State of Mind (DSOM) AI Protocol footer.
 
-**All 11 skills have been fully enriched with all 52 items of Google Jules' operational and domain-specific knowledge from Day 0 until now.**
+**The 11 skills are collectively enriched with all 52 items of Google Jules' operational and domain-specific knowledge from Day 0 until now.**
 
 ### Enriched Agent Skills List:
 
