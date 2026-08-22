@@ -3,7 +3,7 @@ layout: "default"
 okf_version: "0.1"
 type: "Portal"
 title: "AWS 3-Tier Deployment for AI & Web Infra (with OpenTofu)"
-timestamp: 2026-08-05T21:48:38Z
+timestamp: 2026-08-22T08:15:00Z
 topics: ["aws", "cloud", "architecture", "readme", "vpc", "alb", "asg", "rds", "waf", "elasticache", "valkey", "jumphost", "bastion", "route53", "dns", "ssl", "disaster-recovery", "gitlab", "efs", "postgresql", "antigravity", "skills", "sovereignty", "compliance", "costing"]
 ---
 # AWS 3-Tier Deployment for AI & Web Infra (with OpenTofu)
@@ -67,6 +67,7 @@ Our design is built on the **Zero-Trust Network Principle**, dividing components
 │   ├── deploy.sh                 # Coordinates OpenTofu linting, format, validate, and plans
 │   ├── destroy.sh                # Graceful deletion coordinator for provisioning
 │   ├── prepare_docs.py           # Pre-build Python processor prepending front-matter
+│   ├── simulate.sh               # Offline simulation runner & AST/Pytest validator
 │   └── user_data.sh              # Cloud-init bootstrapping script
 ├── terraform/                    # Modularized Infrastructure as Code (IaC) configuration
 │   ├── modules/                  # Submodules encapsulating AWS resources
@@ -159,14 +160,15 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 ## Getting Started
 
 ### Prerequisites
-* [OpenTofu](https://opentofu.org/downloads.html) >= 1.6.0 installed on your local control node.
-* [AWS CLI](https://aws.amazon.com/cli/) configured with administrative rights targeted to `ap-southeast-5`.
-* Python >= 3.10 (to run build/prepare automation).
+* Linux OS (Ubuntu, Debian, RHEL, Fedora, Arch, Amazon Linux) or macOS with bash environment.
+* [OpenTofu](https://opentofu.org/downloads.html) >= 1.6.0 installed on your local control node (optional for offline simulation testing).
+* [AWS CLI](https://aws.amazon.com/cli/) configured with administrative rights targeted to `ap-southeast-5` (for live cloud deployment).
+* Python >= 3.10 & Pytest (to run build/prepare and simulation automation).
 
-### Local Execution Pipeline
+### Local Execution Pipeline on Any Linux System
 1. **Initialize & Sync Repository:**
    ```bash
-   git clone https://github.com/your-username/aws-3tier-deployment-for-ai-infra.git
+   git clone https://github.com/songketmail/aws-3tier-deployment-for-ai-infra.git
    cd aws-3tier-deployment-for-ai-infra
    ```
 2. **Setup Environment Variables:**
@@ -174,13 +176,18 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
    cp terraform/terraform.tfvars.example terraform/terraform.tfvars
    ```
    *Edit the tfvars configuration with your target PostgreSQL credentials and office IP ranges.*
-3. **Execute Automated Deployment Script:**
-   The `scripts/deploy.sh` handles linting, auto-formatting, syntax validation, and displays the proposed modifications:
+3. **Execute Offline Simulation Test Suite:**
+   Run the offline simulation runner to test OpenTofu code and any newly added scripts without AWS credentials:
+   ```bash
+   ./scripts/simulate.sh
+   ```
+4. **Execute Automated Deployment Script:**
+   The `scripts/deploy.sh` handles linting, auto-formatting, syntax validation, and displays proposed AWS resource creation:
    ```bash
    ./scripts/deploy.sh
    ```
-4. **Teardown Clean-up:**
-   To safely remove and de-provision resources:
+5. **Teardown Clean-up:**
+   To safely remove and de-provision AWS resources:
    ```bash
    ./scripts/destroy.sh
    ```

@@ -62,6 +62,6 @@ def test_bash_script_hardening_and_headers():
         assert "Description:" in content, f"{rel_path} is missing standard header 'Description:' metadata."
         assert "Author:" in content, f"{rel_path} is missing standard header 'Author:' metadata."
 
-        # Hardening check: deploy.sh and destroy.sh must use exit-on-error (set -e)
-        if rel_path in ['deploy.sh', 'destroy.sh']:
+        # Hardening check: deploy.sh, destroy.sh, and simulate.sh must use exit-on-error (set -e)
+        if rel_path in ['deploy.sh', 'destroy.sh', 'simulate.sh']:
             assert "set -e" in content, f"{rel_path} must have 'set -e' configured for safety."

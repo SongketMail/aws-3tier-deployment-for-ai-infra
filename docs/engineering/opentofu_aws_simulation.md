@@ -3,7 +3,7 @@ layout: "default"
 okf_version: "0.1"
 type: "Guide"
 title: "OpenTofu AWS Infrastructure Building, Simulation, & Multi-Agent Collaboration Runbook"
-timestamp: 2026-08-11T10:00:00Z
+timestamp: 2026-08-22T08:15:00Z
 topics: ["opentofu", "aws", "simulation", "testing", "multi-agent", "collaboration", "devops", "security"]
 ---
 <div class="arch-badge arch-badge-devops">
@@ -108,6 +108,9 @@ Each step in the OpenTofu code building lifecycle must be verified against simul
 ```bash
 # Run all simulation unit tests locally
 pytest tests/test_opentofu_simulation.py -v
+
+# Or use the standalone simulation runner script
+./scripts/simulate.sh
 ```
 
 ---
@@ -131,7 +134,7 @@ To ensure seamless collaboration between human software engineers and AI agents 
   okf_version: "0.1"
   type: "Guide"
   title: "Descriptive Page Title"
-  timestamp: 2026-08-11T10:00:00Z
+  timestamp: 2026-08-22T08:15:00Z
   topics: ["opentofu", "aws", "simulation", "testing"]
   ---
   ```
@@ -157,14 +160,33 @@ Before submitting a PR or merging any code:
 
 ---
 
-## 🚀 5. Deployment Simulation Walkthrough (Offline Executions)
+## 🚀 5. Deployment & Offline Simulation Walkthrough on Any Linux Environment
 
-When introducing a new OpenTofu module or parameter change, follow this step-by-step verification checklist:
+You can git clone this repository on any Linux distribution (Ubuntu, Debian, RHEL, Fedora, Arch, Amazon Linux) to begin AWS deployment or test newly added scripts and OpenTofu modules via simulation:
 
-1. **Step 1: Write Declarative HCL Code**
-   Place your configuration in the appropriate `terraform/` domain file (`compute.tf`, `database.tf`, `web.tf`, or `main.tf`) or module subdirectory.
-2. **Step 2: Run Pytest Simulation Suite**
-   Execute `pytest tests/test_opentofu_simulation.py` to ensure zero regressions in security group rules, IMDSv2 enforcement, or regional defaults.
+```bash
+# 1. Clone repository on your Linux environment
+git clone https://github.com/songketmail/aws-3tier-deployment-for-ai-infra.git
+cd aws-3tier-deployment-for-ai-infra
+
+# 2. Configure variables and credentials
+cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+
+# 3. Test configurations and custom added scripts via offline simulation
+./scripts/simulate.sh
+
+# 4. Begin live AWS deployment (when AWS credentials/CLI are configured)
+./scripts/deploy.sh
+
+# 5. Cleanly destroy deployed AWS infrastructure
+./scripts/destroy.sh
+```
+
+### Verification Checklist for New OpenTofu Modules or Custom Scripts:
+1. **Step 1: Write Declarative HCL Code or Script Changes**
+   Place your configuration in the appropriate `terraform/` domain file (`compute.tf`, `database.tf`, `web.tf`, or `main.tf`) or module subdirectory, or add custom scripts under `scripts/`.
+2. **Step 2: Run Offline Simulation Script**
+   Execute `./scripts/simulate.sh` to run pytest simulation suites (`tests/test_opentofu_simulation.py`) and static OpenTofu validation checks.
 3. **Step 3: Run Document Preparation Tool**
    Execute `python scripts/prepare_docs.py` to sync all indexes and validate OKF frontmatter across modified docs.
 4. **Step 4: Create PR & Request Review**
@@ -172,4 +194,4 @@ When introducing a new OpenTofu module or parameter change, follow this step-by-
 
 ---
 
-*Deep State of Mind (DSOM) | Harisfazillah Jamel (LinuxMalaysia) | 2026-08-11*
+*Deep State of Mind (DSOM) | Harisfazillah Jamel (LinuxMalaysia) | 2026-08-22*
