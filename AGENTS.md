@@ -31,7 +31,7 @@ To ensure token efficiency and avoid remote command errors or remote server prob
 2. Probing live staging/production standalone EC2 or active ASG nodes.
 3. Conducting external Google queries.
 
-Remote server execution or live telemetry collection is strictly reserved for applying configuration updates or inspecting dynamic live runtime state that cannot be modeled locally. Always consult the **Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`)** to instantly access Jules' 51 technical knowledge and operational milestones.
+Remote server execution or live telemetry collection is strictly reserved for applying configuration updates or inspecting dynamic live runtime state that cannot be modeled locally. Always consult the **Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`)** to instantly access Jules' 52 technical knowledge and operational milestones.
 
 ---
 
@@ -39,7 +39,7 @@ Remote server execution or live telemetry collection is strictly reserved for ap
 
 To bridge the knowledge bases of Google Jules and Google Antigravity seamlessly, we have deployed a comprehensive suite of 11 Antigravity-compatible Agent Skills under `.agents/skills/`. Each skill consists of a directory with a `SKILL.md` file featuring a combined OKF/Antigravity YAML frontmatter and concludes with the standard Deep State of Mind (DSOM) AI Protocol footer.
 
-**All 11 skills have been fully enriched with all 51 items of Google Jules' operational and domain-specific knowledge from Day 0 until now.**
+**The 11 skills are collectively enriched with all 52 items of Google Jules' operational and domain-specific knowledge from Day 0 until now.**
 
 ### Enriched Agent Skills List:
 

@@ -128,9 +128,11 @@ def create_ctx(text, optional=False):
             title = link["title"]
             desc = link["desc"]
 
-            content = get_doc_content(url)
+            # Prefix relative skills/... paths with .agents/ so links resolve from the workspace root
+            res_url = f".agents/{url}" if url.startswith("skills/") else url
+            content = get_doc_content(res_url)
 
-            xml.append(f'    <doc title="{escape_xml(title)}" url="{escape_xml(url)}" desc="{escape_xml(desc)}">')
+            xml.append(f'    <doc title="{escape_xml(title)}" url="{escape_xml(res_url)}" desc="{escape_xml(desc)}">')
             indented_content = "\n".join([f"      {line}" for line in content.split("\n")])
             xml.append(indented_content)
             xml.append("    </doc>")
@@ -167,12 +169,15 @@ def create_llms_full(text):
             title = link["title"]
             desc = link["desc"]
 
-            full_content.append(f"### {title} ({url})")
+            # Prefix relative skills/... paths with .agents/ so links resolve from the workspace root
+            res_url = f".agents/{url}" if url.startswith("skills/") else url
+
+            full_content.append(f"### {title} ({res_url})")
             if desc:
                 full_content.append(f"*{desc}*")
                 full_content.append("")
 
-            content = get_doc_content(url)
+            content = get_doc_content(res_url)
             full_content.append(content)
             full_content.append("")
             full_content.append("---")

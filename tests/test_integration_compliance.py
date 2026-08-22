@@ -1,4 +1,5 @@
 import os
+import re
 import xml.etree.ElementTree as ET
 
 def test_sitemap_txt_compliance():
@@ -66,7 +67,7 @@ def test_jekyll_config_navbar_compliance():
 def test_jules_knowledge_ledger_completeness():
     """
     Validates that the Google Jules Master Knowledge Ledger (.agents/brain/jules_knowledge_ledger.md)
-    exists and completely indexes all 51 distinct items of Jules knowledge from Day 0 until now.
+    exists and completely indexes all 52 distinct items of Jules knowledge from Day 0 until now.
     """
     workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     ledger_path = os.path.join(workspace_root, '.agents', 'brain', 'jules_knowledge_ledger.md')
@@ -76,7 +77,37 @@ def test_jules_knowledge_ledger_completeness():
     with open(ledger_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Verify that all 51 knowledge items are indexed (IDs 1 to 51)
-    for i in range(1, 52):
+    # Verify that all 52 knowledge items are indexed (IDs 1 to 52)
+    for i in range(1, 53):
         expected_id_pattern = f"| **{i}** |"
         assert expected_id_pattern in content, f"Ledger must index knowledge item ID: {i}"
+
+
+def test_generated_curation_knowledge_item_counts_match_ledger():
+    """
+    Derives the actual item count from the Master Knowledge Ledger and verifies
+    that generated files (llms.xml and llms-full.txt) do not contain stale count references.
+    """
+    workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    ledger_path = os.path.join(workspace_root, '.agents', 'brain', 'jules_knowledge_ledger.md')
+
+    with open(ledger_path, 'r', encoding='utf-8') as f:
+        ledger_content = f.read()
+
+    derived_count = len(re.findall(r'^\|\s*\*\*\d+\*\*\s*\|', ledger_content, flags=re.MULTILINE))
+    assert derived_count >= 52, f"Expected at least 52 knowledge items, found {derived_count}"
+
+    for gen_filename in ('llms.xml', 'llms-full.txt'):
+        gen_path = os.path.join(workspace_root, gen_filename)
+        assert os.path.exists(gen_path), f"{gen_filename} must exist"
+        with open(gen_path, 'r', encoding='utf-8') as f:
+            gen_content = f.read()
+
+        # Reject explicit stale count references like "51 items" or "51 engineering"
+        stale_pattern = r'\b51\s+(?:items|knowledge|engineering|operational|distinct)'
+        assert not re.search(stale_pattern, gen_content, flags=re.IGNORECASE), \
+            f"Stale 51-item knowledge count found in generated file {gen_filename}"
+
+        # Verify presence of derived count string
+        assert str(derived_count) in gen_content, \
+            f"Derived ledger count {derived_count} missing in {gen_filename}"

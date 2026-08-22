@@ -356,7 +356,7 @@
       2. Probing live staging/production standalone EC2 or active ASG nodes.
       3. Conducting external Google queries.
 
-      Remote server execution or live telemetry collection is strictly reserved for applying configuration updates or inspecting dynamic live runtime state that cannot be modeled locally. Always consult the **Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`)** to instantly access Jules' 51 technical knowledge and operational milestones.
+      Remote server execution or live telemetry collection is strictly reserved for applying configuration updates or inspecting dynamic live runtime state that cannot be modeled locally. Always consult the **Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`)** to instantly access Jules' 52 technical knowledge and operational milestones.
 
       ---
 
@@ -364,7 +364,7 @@
 
       To bridge the knowledge bases of Google Jules and Google Antigravity seamlessly, we have deployed a comprehensive suite of 11 Antigravity-compatible Agent Skills under `.agents/skills/`. Each skill consists of a directory with a `SKILL.md` file featuring a combined OKF/Antigravity YAML frontmatter and concludes with the standard Deep State of Mind (DSOM) AI Protocol footer.
 
-      **All 11 skills have been fully enriched with all 51 items of Google Jules' operational and domain-specific knowledge from Day 0 until now.**
+      **The 11 skills are collectively enriched with all 52 items of Google Jules' operational and domain-specific knowledge from Day 0 until now.**
 
       ### Enriched Agent Skills List:
 
@@ -471,11 +471,11 @@
       Before executing any exploratory CLI commands, probing live AWS infrastructure, query tools, or calling external search engines, you **MUST FIRST** search local project documentation within `.agents/brain/` and `docs/` using `grep_search` or `view_file` to understand the configuration topology, IP ranges, volume mounts, security groups, and operational constraints.
       - The local workspace is the **Single Source of Truth (SSOT)** for configuration intent.
       - Do not make assumptions or probe the environment until you have fully absorbed the local context.
-      - Leverage the **Google Jules Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`)** as the centralized index mapping Jules' 51 technical and operational accomplishments to their respective skills.
+      - Leverage the **Google Jules Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`)** as the centralized index mapping Jules' 52 technical and operational accomplishments to their respective skills.
 
       ### Rule 30: Google Antigravity Agent Skills Enforcement
       All AI models (including Google Jules and Google Antigravity) operating in this workspace must natively recognize, use, and update the comprehensive suite of 11 Agent Skills stored under `.agents/skills/`.
-      - **Complete Knowledge Enrichment:** All 11 Agent Skills are fully enriched and updated with all 51 items of Google Jules' operational and domain-specific knowledge from Day 0 until now. This bridges Google Jules' and Google Antigravity's capabilities seamlessly.
+      - **Complete Knowledge Enrichment:** The 11 Agent Skills are collectively enriched and updated with all 52 items of Google Jules' operational and domain-specific knowledge from Day 0 until now. This bridges Google Jules' and Google Antigravity's capabilities seamlessly.
       - **Verification Index:** Always refer to `.agents/brain/jules_knowledge_ledger.md` to discover and verify that all Jules operational achievements are indexed in spatial memory.
       - Prioritize activating and referencing the instructions of specific skills when working on the respective domains (e.g., activate `rds-postgresql-valkey-cache` when working with database or cache configuration).
       - All created or modified skills must follow the Agent Skills standard with combined OKF metadata, name, description, and conclude with the standard Deep State of Mind (DSOM) AI Protocol footer.
@@ -533,19 +533,19 @@
 
       ## 5. Google Antigravity Enriched Agent Skills Index
 
-      Below is the directory mapping of our 11 Antigravity-compatible Agent Skills, each fully enriched with Jules' 51 technical knowledge points:
+      Below is the directory mapping of our 11 Antigravity-compatible Agent Skills, which are collectively enriched with all 52 ledger items:
 
-      1. **[`jules-knowledge`](skills/jules-knowledge/SKILL.md):** Generic cloud engineering skill containing comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices. Also covers Wazuh SIEM & XDR deep-dive guides, legal notices, stacks comparisons, and script docstring standards.
-      2. **[`aws-malaysia-defaults`](skills/aws-malaysia-defaults/SKILL.md):** Guidelines for configuring regional defaults, AWS Graviton architecture, standard instance sizes, dynamic ARM64/x86_64 AMI selection, and the global installation of OpenTofu on Ubuntu 24.04.4 LTS.
-      3. **[`opentofu-infrastructure-design`](skills/opentofu-infrastructure-design/SKILL.md):** Standards for managing, validating, and designing the secure modular 3-tier OpenTofu architecture, including ALB-aware ASG auto-healing, IMDSv2 enforcement, and PostgreSQL db_port alignment to 5432.
-      4. **[`aws-asg-standalone-compute`](skills/aws-asg-standalone-compute/SKILL.md):** Guidelines for deploying multi-tier ASGs, pairing them with standalone EC2 instances for staging/pre-baking AMIs on hardened Ubuntu 26.04 LTS, and managing compute passwordlessly via SSM.
-      5. **[`rds-postgresql-valkey-cache`](skills/rds-postgresql-valkey-cache/SKILL.md):** Settings for Multi-AZ RDS PostgreSQL (PostgreSQL 16/17 default), secure ElastiCache Valkey caching clusters, port-level network isolation, Percona PostgreSQL, redis-vs-valkey comparison, and real-world scaling examples (Langfuse / RAGFlow).
-      6. **[`ssh-jumphost-ami-baking`](skills/ssh-jumphost-ami-baking/SKILL.md):** Guidelines for secure public SSH Jumphost (Bastion) access whitelisting Cyberjaya, protecting private keys, and baking CIS Level 2-compliant Ubuntu 26.04 AMIs with FQCN-compliant Packer & Ansible playbooks. Includes audit logs and Security Posture Assessments (SPA).
-      7. **[`aws-disaster-recovery-sovereignty`](skills/aws-disaster-recovery-sovereignty/SKILL.md):** Playbook for PDPA-compliant In-Region and Cross-Region DR, deploying AWS DRS (Strategy E) replication, and addressing generative AI sovereign workloads (RAGFlow + Langfuse).
-      8. **[`aws-infrastructure-costing`](skills/aws-infrastructure-costing/SKILL.md):** Financial management models evaluating the Baseline Cost-Optimised Plan (~$426.75 USD/mo) and High-Performance Enterprise Plan (~$1,064.46 USD/mo) inside the Malaysia region, using standard exchange rate exactly $1.00 USD = MYR 4.50, and incorporating the 1,000 VU sizing tier.
-      9. **[`gitlab-efs-cicd-automation`](skills/gitlab-efs-cicd-automation/SKILL.md):** Procedures for GitLab CI/CD pipelines, mounting shared AWS EFS storage, tuning NFS mounts, rootless Podman 5+ unprivileged deployments using systemd Quadlets, and the VIP Guest lifecycle trajectory.
-      10. **[`changelog-milestones-narrative`](skills/changelog-milestones-narrative/SKILL.md):** Procedures for maintaining standard-compliant semantic changelogs (`CHANGELOG.md`) and strategic engineering history logs (`HISTORY.md`) from Day 0, plus the AWS Adoption Roadmap chronological alignment and confidentiality declarations.
-      11. **[`jekyll-pdf-generation`](skills/jekyll-pdf-generation/SKILL.md):** Guidelines for custom responsive Jekyll sidebar themes, preventing diagram text wrapping with dynamic JavaScript scanners, print page-break overrides, and Puppeteer-based automated PDF generation.
+      1. **[`jules-knowledge`](.agents/skills/jules-knowledge/SKILL.md):** Generic cloud engineering skill containing comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices. Also covers Wazuh SIEM & XDR deep-dive guides, legal notices, stacks comparisons, and script docstring standards.
+      2. **[`aws-malaysia-defaults`](.agents/skills/aws-malaysia-defaults/SKILL.md):** Guidelines for configuring regional defaults, AWS Graviton architecture, standard instance sizes, dynamic ARM64/x86_64 AMI selection, and the global installation of OpenTofu on Ubuntu 24.04.4 LTS.
+      3. **[`opentofu-infrastructure-design`](.agents/skills/opentofu-infrastructure-design/SKILL.md):** Standards for managing, validating, and designing the secure modular 3-tier OpenTofu architecture, including ALB-aware ASG auto-healing, IMDSv2 enforcement, and PostgreSQL db_port alignment to 5432.
+      4. **[`aws-asg-standalone-compute`](.agents/skills/aws-asg-standalone-compute/SKILL.md):** Guidelines for deploying multi-tier ASGs, pairing them with standalone EC2 instances for staging/pre-baking AMIs on hardened Ubuntu 26.04 LTS, and managing compute passwordlessly via SSM.
+      5. **[`rds-postgresql-valkey-cache`](.agents/skills/rds-postgresql-valkey-cache/SKILL.md):** Settings for Multi-AZ RDS PostgreSQL (PostgreSQL 16/17 default), secure ElastiCache Valkey caching clusters, port-level network isolation, Percona PostgreSQL, redis-vs-valkey comparison, and real-world scaling examples (Langfuse / RAGFlow).
+      6. **[`ssh-jumphost-ami-baking`](.agents/skills/ssh-jumphost-ami-baking/SKILL.md):** Guidelines for secure public SSH Jumphost (Bastion) access whitelisting Cyberjaya, protecting private keys, and baking CIS Level 2-compliant Ubuntu 26.04 AMIs with FQCN-compliant Packer & Ansible playbooks. Includes audit logs and Security Posture Assessments (SPA).
+      7. **[`aws-disaster-recovery-sovereignty`](.agents/skills/aws-disaster-recovery-sovereignty/SKILL.md):** Playbook for PDPA-compliant In-Region and Cross-Region DR, deploying AWS DRS (Strategy E) replication, and addressing generative AI sovereign workloads (RAGFlow + Langfuse).
+      8. **[`aws-infrastructure-costing`](.agents/skills/aws-infrastructure-costing/SKILL.md):** Financial management models evaluating the Baseline Cost-Optimised Plan (~$426.75 USD/mo) and High-Performance Enterprise Plan (~$1,064.46 USD/mo) inside the Malaysia region, using standard exchange rate exactly $1.00 USD = MYR 4.50, and incorporating the 1,000 VU sizing tier.
+      9. **[`gitlab-efs-cicd-automation`](.agents/skills/gitlab-efs-cicd-automation/SKILL.md):** Procedures for GitLab CI/CD pipelines, mounting shared AWS EFS storage, tuning NFS mounts, rootless Podman 5+ unprivileged deployments using systemd Quadlets, and the VIP Guest lifecycle trajectory.
+      10. **[`changelog-milestones-narrative`](.agents/skills/changelog-milestones-narrative/SKILL.md):** Procedures for maintaining standard-compliant semantic changelogs (`CHANGELOG.md`) and strategic engineering history logs (`HISTORY.md`) from Day 0, plus the AWS Adoption Roadmap chronological alignment and confidentiality declarations.
+      11. **[`jekyll-pdf-generation`](.agents/skills/jekyll-pdf-generation/SKILL.md):** Guidelines for custom responsive Jekyll sidebar themes, preventing diagram text wrapping with dynamic JavaScript scanners, print page-break overrides, and Puppeteer-based automated PDF generation.
 
       ---
 
@@ -560,14 +560,14 @@
 
       ## 1. Active Session Context & Objectives
 
-      - **Primary Goal:** Adopt and codify the Local Knowledge-First Discovery Protocol and Rule 29.
-      - **Agent Skills & Brain Integration:** Add and organize all Google Jules knowledge from Day 0 until now into Google Antigravity-compatible skills under `.agents/skills/` and create a comprehensive index/ledger in `.agents/brain/` (as per DSOM Protocol).
-      - **Architectural Context:** Ensure all architectural, operational, costing, and compliance decisions are resolved via local `.md` documents first, before querying external systems or running live cloud probes.
+      - **Primary Goal:** Adopt and codify the Deep State of Mind (DSOM) For My AI Framework (`https://linuxmalaysia.github.io/deep-state-of-mind-for-my-ai/START-HERE/`).
+      - **Agent Skills & Brain Integration:** Incorporate DSOM's 19 entry points, Tri-Phasic Mind cognitive architecture (Active, Twilight, Deep states), 4 functional subsystems, and initialization sequences into Jules spatial memory (`.agents/brain/jules_knowledge_ledger.md` Item 52) and Google Antigravity Agent Skills (`.agents/skills/jules-knowledge/SKILL.md`).
+      - **Architectural Context:** Ensure all operational, cognitive, and governance decisions align with DSOM Sovereign AI Engine standards.
       - **Completed Milestones:**
         - Codified Rule 29 in `.agents/AGENTS.md` (the Sovereign Constitution).
         - Created standard operating procedures in `docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md`.
-        - Created the Google Jules Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`) organizing all 51 items of Jules knowledge.
-        - Systematically enriched all 11 existing Antigravity Agent Skills under `.agents/skills/` with the 51 compiled Jules knowledge items.
+        - Created the Google Jules Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`) organizing all 52 items of Jules knowledge.
+        - Systematically enriched all 11 existing Antigravity Agent Skills under `.agents/skills/` with compiled Jules knowledge items including DSOM framework adoption.
 
       ---
 
@@ -581,7 +581,7 @@
       | `.agents/AGENTS.md` | Agent Operating Instructions | Sovereign Constitution containing Rule 29 |
       | `docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md` | SOP | Standard Operating Procedure detailing the 4-step Discovery Flow |
       | `.agents/brain/active_context_manifest.md` | Spatial Memory | This file; tracks active session and checkpoints |
-      | `.agents/brain/jules_knowledge_ledger.md` | Spatial Memory | Master Ledger indexing all 51 items of Jules knowledge from Day 0 until now |
+      | `.agents/brain/jules_knowledge_ledger.md` | Spatial Memory | Master Ledger indexing all 52 items of Jules knowledge from Day 0 until now |
       | `.agents/skills/jules-knowledge/SKILL.md` | Skill | Compiled engineering knowledge, constraints, and architecture mappings |
 
       ---
@@ -6166,7 +6166,7 @@
       ### Milestone 4: Deep State of Mind (DSOM) Governance Protocol Implementation
       To guarantee that AI models produce deterministic, region-aligned, and policy-compliant code, we implemented the **Deep State of Mind (DSOM) for My AI** framework:
       - **Spatial Memory (`.agents/brain/`):**
-        - `.agents/brain/jules_knowledge_ledger.md`: Centralized spatial memory ledger indexing all 51 engineering and operational milestones.
+        - `.agents/brain/jules_knowledge_ledger.md`: Centralized spatial memory ledger indexing all 52 engineering and operational milestones.
         - `.agents/brain/active_context_manifest.md`: Dynamic active context tracker preserving conversation state and architectural decisions.
       - **Modular Agent Skills (`.agents/skills/`):** Created 11 enriched skill packages (`jules-knowledge`, `aws-malaysia-defaults`, `opentofu-infrastructure-design`, `rds-postgresql-valkey-cache`, etc.) combining OKF YAML front matter and DSOM footers.
       - **Sovereign Constitution (`.agents/AGENTS.md`):** Enforced Rule 29 (Local Knowledge-First Discovery) and Rule 6 (OKF Metadata Standard).
