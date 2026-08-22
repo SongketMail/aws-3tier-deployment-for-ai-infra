@@ -3,16 +3,16 @@ layout: "default"
 okf_version: "0.1"
 type: "Spatial Memory"
 title: "Google Jules Master Knowledge Ledger (.agents/brain/jules_knowledge_ledger.md)"
-timestamp: 2026-08-05T22:15:00Z
+timestamp: 2026-08-14T10:00:00Z
 topics: ["agents", "jules", "knowledge", "ledger", "brain", "okf", "dsom"]
 ---
 # Google Jules Master Knowledge Ledger
 
-This ledger acts as the definitive Single Source of Truth (SSOT) and spatial memory indexing all fifty-one (51) distinct items of Google Jules' operational, technical, and domain-specific knowledge compiled from Day 0 until now. It satisfies the Deep State of Mind (DSOM) AI Protocol by organizing all architectural, operational, costing, and compliance decisions into local memory so they are instantly discoverable and interchangeable between Google Jules and Google Antigravity.
+This ledger acts as the definitive Single Source of Truth (SSOT) and spatial memory indexing all fifty-two (52) distinct items of Google Jules' operational, technical, and domain-specific knowledge compiled from Day 0 until now. It satisfies the Deep State of Mind (DSOM) AI Protocol by organizing all architectural, operational, costing, and compliance decisions into local memory so they are instantly discoverable and interchangeable between Google Jules and Google Antigravity.
 
 ---
 
-## 🧠 Master Index of Jules Knowledge (51 Items)
+## 🧠 Master Index of Jules Knowledge (52 Items)
 
 The table below maps each technical accomplishment and operational milestone of Jules to the specific Antigravity Agent Skill(s) located in `.agents/skills/` where the detailed instructions are natively codified:
 
@@ -69,6 +69,7 @@ The table below maps each technical accomplishment and operational milestone of 
 | **49** | The AWS costing guide (`docs/costing.md`) includes detailed monthly costing calculations in both USD and MYR for AWS-native enterprise-grade alternatives (Amazon Bedrock, Amazon Cognito, AWS End User Messaging, and AWS Lambda/API Gateway) to external SaaS integrations. | `aws-infrastructure-costing` |
 | **50** | A comprehensive Technology Stack Comparison Guide is documented at `docs/tech-stack-comparison.md` and integrated into Jekyll navigation and indexes (`docs/index.md`, `README.md`, `llms.txt`), comparing the local containerized developer stack (Spring Boot, React, React Native, Redis, PostgreSQL, RAGFlow, Twilio, Meta) against AWS equivalents. | `jules-knowledge` & `rds-postgresql-valkey-cache` |
 | **51** | The pre-build Python script (`scripts/prepare_docs.py`) recursively scans and formats all `.md` files in the repository to ensure strict Open Knowledge Format (OKF) v0.1 compliance. It parses and serializes front matter starting on line 1, column 1, wraps strings containing special characters (colons, emojis, brackets, etc.) in double quotes, and preserves timestamps, arrays, layout configurations, and inline dictionaries intact. | `jekyll-pdf-generation` |
+| **52** | Adoption of the Deep State of Mind (DSOM) For My AI framework (`https://linuxmalaysia.github.io/deep-state-of-mind-for-my-ai/START-HERE/`), incorporating its 19 entry points, Tri-Phasic Mind cognitive architecture (Active, Twilight, and Deep states), 4 core functional subsystems (Cognitive Architecture, Memory Stratification, Dreaming & Consolidation, Metacognition & Guardrails), AI Initialization Sequence, and OpenWiki/FastMCP integration natively into spatial memory (`.agents/brain/`) and Agent Skills (`.agents/skills/`). | `jules-knowledge` |
 
 ---
 

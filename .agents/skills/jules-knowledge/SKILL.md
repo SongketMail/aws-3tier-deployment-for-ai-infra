@@ -53,14 +53,30 @@ This skill embeds the full engineering knowledge, context, standards, and constr
 
 ---
 
-## 5. Script Hardening, Testing & Formatting Compliance
+## 5. Deep State of Mind (DSOM) Framework & Sovereign AI Topology
 
-20. **Bash Script Navigation & Input Checks:** Bash scripts (`scripts/deploy.sh` and `scripts/destroy.sh`) are hardened to enforce success checks on directory navigation (`cd ... || exit 1`), quote variables consistently, and use standard `read -r -p` flag options for user input (as per **Item 2**).
-21. **Python Codebase Formatting Cleanup:** Codebase formatting is cleaned up by removing unused `pytest` imports from all test files and correcting an extraneous `f` prefix on a log statement in `scripts/prepare_docs.py`, verified with `ruff check` and the `pytest` suite (as per **Item 4**).
-22. **Complete Script Docstrings:** All major script files in the repository are updated with complete docstrings: PEP-257-compliant docstrings for `scripts/prepare_docs.py`, JSDoc-compliant comments for `scripts/generate_pdf.js`, and comprehensive header documentation with inline explanations for Bash scripts `scripts/deploy.sh`, `scripts/destroy.sh`, and `scripts/user_data.sh` (as per **Item 5**).
-23. **Automated Pytest Suite:** The project features a comprehensive `pytest` test suite under the `tests/` directory containing 11 tests that validate: document preparation utilities (`test_prepare_docs.py`), FQCN-compliance and privilege separation in embedded Ansible playbooks (`test_ansible_playbooks.py`), valid systemd INI syntax and unprivileged user namespace mappings (`UserNS=keep-id:uid=2001,gid=2001`) in Podman Quadlet specifications (`test_podman_quadlets.py`), and OKF front matter / DSOM footer compliance across Markdown files (`test_md_compliance.py`) (as per **Item 6**).
-24. **DRY Script Refactoring:** The pre-build Python script `scripts/prepare_docs.py` was refactored to eliminate a severe DRY violation (code duplication) by extracting duplicate string-unescaping and quote-stripping code blocks from `parse_yaml()` into a single, clean helper function `unescape_string(val)`. This refactoring preserved full operational parity and strict OKF parsing behavior (as per **Item 34**).
-25. **Root Caches & IaC Exclusions:** The root `.gitignore` file includes exclusions for standard Python compilation and caching bytecode (`__pycache__/`, `*.py[cod]`, `*$py.class`) alongside standard OpenTofu/Terraform state and system configurations to ensure the git workspace remains clean during documentation preparation or test runs (as per **Item 35**).
+20. **DSOM Adoption & Entry Points:** Adopted the Deep State of Mind (DSOM) For My AI framework (`https://linuxmalaysia.github.io/deep-state-of-mind-for-my-ai/START-HERE/`). Navigated via Diátaxis principles across 19 entry points (scaffolding, cognitive persona, crawlers, daily operations, MCP integration, subagents, skills, LLM WIKI, defensive GitOps, token efficiency, knowledge-first discovery, boot sequences, state sync, tri-phasic mind, OpenWiki, legal risk, OKF engine, guardrails, and episodic anchors) (as per **Item 52**).
+21. **Tri-Phasic Mind Cognitive Model:** Cognition is split into 3 execution states:
+    - **Active State (Conscious):** Low-latency MCP server (`tools/mcp/server.py`) interface for real-time task execution.
+    - **Twilight State (Subconscious):** Near-real-time inline checks, token usage calculations, pre-flight audits (`tools/audit-pre-flight.sh`), and state compaction.
+    - **Deep State (Unconscious/Dream):** Out-of-band scheduled rituals (SOD/EOD palace sync) for semantic consolidation and repository synchronization.
+22. **Four Core Functional Subsystems:**
+    - **Cognitive Architecture:** System 1 (reactive skills execution) vs System 2 (reflective discovery monologue).
+    - **Memory Stratification:** Stratified storage across Token Buffer, Active Context (`.agents/brain/active_context_manifest.md`), Episodic Memory (`.agents/brain/walkthrough.md`), and Semantic Memory (`.agents/brain/wings/`).
+    - **Dreaming & Consolidation:** EOD semantic pruning, synthetic failure test generation, and concept linking.
+    - **Metacognition & Guardrails:** Self-audit via pytest compliance suites, alignment drift prevention, and immutable constitutional anchors (`.agents/AGENTS.md`).
+23. **AI Boot & Initialization Sequence:** Upon reanimation, the AI follows a strict 5-step boot sequence: (1) Genesis Read (`.agents/AGENTS.md`), (2) Memory Restoration (`.agents/brain/`), (3) Master Onboarding Map (`START-HERE.md`), (4) Governance Topography (`docs/governance/`), and (5) Procedural Automation (`.agents/skills/`).
+
+---
+
+## 6. Script Hardening, Testing & Formatting Compliance
+
+24. **Bash Script Navigation & Input Checks:** Bash scripts (`scripts/deploy.sh` and `scripts/destroy.sh`) are hardened to enforce success checks on directory navigation (`cd ... || exit 1`), quote variables consistently, and use standard `read -r -p` flag options for user input (as per **Item 2**).
+25. **Python Codebase Formatting Cleanup:** Codebase formatting is cleaned up by removing unused `pytest` imports from all test files and correcting an extraneous `f` prefix on a log statement in `scripts/prepare_docs.py`, verified with `ruff check` and the `pytest` suite (as per **Item 4**).
+26. **Complete Script Docstrings:** All major script files in the repository are updated with complete docstrings: PEP-257-compliant docstrings for `scripts/prepare_docs.py`, JSDoc-compliant comments for `scripts/generate_pdf.js`, and comprehensive header documentation with inline explanations for Bash scripts `scripts/deploy.sh`, `scripts/destroy.sh`, and `scripts/user_data.sh` (as per **Item 5**).
+27. **Automated Pytest Suite:** The project features a comprehensive `pytest` test suite under the `tests/` directory containing 11 tests that validate: document preparation utilities (`test_prepare_docs.py`), FQCN-compliance and privilege separation in embedded Ansible playbooks (`test_ansible_playbooks.py`), valid systemd INI syntax and unprivileged user namespace mappings (`UserNS=keep-id:uid=2001,gid=2001`) in Podman Quadlet specifications (`test_podman_quadlets.py`), and OKF front matter / DSOM footer compliance across Markdown files (`test_md_compliance.py`) (as per **Item 6**).
+28. **DRY Script Refactoring:** The pre-build Python script `scripts/prepare_docs.py` was refactored to eliminate a severe DRY violation (code duplication) by extracting duplicate string-unescaping and quote-stripping code blocks from `parse_yaml()` into a single, clean helper function `unescape_string(val)`. This refactoring preserved full operational parity and strict OKF parsing behavior (as per **Item 34**).
+29. **Root Caches & IaC Exclusions:** The root `.gitignore` file includes exclusions for standard Python compilation and caching bytecode (`__pycache__/`, `*.py[cod]`, `*$py.class`) alongside standard OpenTofu/Terraform state and system configurations to ensure the git workspace remains clean during documentation preparation or test runs (as per **Item 35**).
 
 ---
 

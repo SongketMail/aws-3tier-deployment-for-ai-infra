@@ -560,14 +560,14 @@
 
       ## 1. Active Session Context & Objectives
 
-      - **Primary Goal:** Adopt and codify the Local Knowledge-First Discovery Protocol and Rule 29.
-      - **Agent Skills & Brain Integration:** Add and organize all Google Jules knowledge from Day 0 until now into Google Antigravity-compatible skills under `.agents/skills/` and create a comprehensive index/ledger in `.agents/brain/` (as per DSOM Protocol).
-      - **Architectural Context:** Ensure all architectural, operational, costing, and compliance decisions are resolved via local `.md` documents first, before querying external systems or running live cloud probes.
+      - **Primary Goal:** Adopt and codify the Deep State of Mind (DSOM) For My AI Framework (`https://linuxmalaysia.github.io/deep-state-of-mind-for-my-ai/START-HERE/`).
+      - **Agent Skills & Brain Integration:** Incorporate DSOM's 19 entry points, Tri-Phasic Mind cognitive architecture (Active, Twilight, Deep states), 4 functional subsystems, and initialization sequences into Jules spatial memory (`.agents/brain/jules_knowledge_ledger.md` Item 52) and Google Antigravity Agent Skills (`.agents/skills/jules-knowledge/SKILL.md`).
+      - **Architectural Context:** Ensure all operational, cognitive, and governance decisions align with DSOM Sovereign AI Engine standards.
       - **Completed Milestones:**
         - Codified Rule 29 in `.agents/AGENTS.md` (the Sovereign Constitution).
         - Created standard operating procedures in `docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md`.
-        - Created the Google Jules Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`) organizing all 51 items of Jules knowledge.
-        - Systematically enriched all 11 existing Antigravity Agent Skills under `.agents/skills/` with the 51 compiled Jules knowledge items.
+        - Created the Google Jules Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`) organizing all 52 items of Jules knowledge.
+        - Systematically enriched all 11 existing Antigravity Agent Skills under `.agents/skills/` with compiled Jules knowledge items including DSOM framework adoption.
 
       ---
 
@@ -581,7 +581,7 @@
       | `.agents/AGENTS.md` | Agent Operating Instructions | Sovereign Constitution containing Rule 29 |
       | `docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md` | SOP | Standard Operating Procedure detailing the 4-step Discovery Flow |
       | `.agents/brain/active_context_manifest.md` | Spatial Memory | This file; tracks active session and checkpoints |
-      | `.agents/brain/jules_knowledge_ledger.md` | Spatial Memory | Master Ledger indexing all 51 items of Jules knowledge from Day 0 until now |
+      | `.agents/brain/jules_knowledge_ledger.md` | Spatial Memory | Master Ledger indexing all 52 items of Jules knowledge from Day 0 until now |
       | `.agents/skills/jules-knowledge/SKILL.md` | Skill | Compiled engineering knowledge, constraints, and architecture mappings |
 
       ---
