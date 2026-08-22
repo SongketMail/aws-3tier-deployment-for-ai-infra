@@ -22,7 +22,7 @@ Due to security policies and isolation requirements, all OpenTofu module changes
 
 When direct AWS access is restricted for security, cost control, or compliance reasons, OpenTofu code quality and cloud compatibility are maintained through a multi-layer **Offline Cloud Simulation Framework**:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    Developer & Agent Workspace                          │
 │  ┌──────────────────────┐  ┌────────────────────┐  ┌─────────────────┐ │
@@ -48,7 +48,7 @@ When direct AWS access is restricted for security, cost control, or compliance r
 
 ### Core Simulation Principles:
 1. **Zero Cloud Credential Requirement:** No `AWS_ACCESS_KEY_ID` or active internet connection to AWS API endpoints is required during local simulation and unit testing.
-2. **Provider Offline Schema Validation:** Standard provider blocks utilize static AWS provider definitions (`hashicorp/aws` >= 5.0) which validate configuration structure locally.
+2. **Provider Offline Schema Validation:** Standard provider blocks utilize static AWS provider definitions (`hashicorp/aws` >= 5.0) which validate configuration structure locally. In air-gapped or offline environments, initialize the OpenTofu working directory using `tofu -chdir=terraform init -backend=false` (with local provider mirror/cache configured) before running `tofu -chdir=terraform validate`.
 3. **AST & Pattern Testing:** Pytest unit tests analyze the Abstract Syntax Tree (AST) and regex structure of `.tf` files to enforce strict security constraints (e.g. IMDSv2, isolated security groups, Graviton `t4g.*` sizing).
 
 ---
@@ -57,7 +57,7 @@ When direct AWS access is restricted for security, cost control, or compliance r
 
 All OpenTofu configurations must follow a modular 3-Tier architecture design under the `terraform/` directory:
 
-```
+```text
 terraform/
 ├── main.tf                 # Network foundations & core security group calls
 ├── compute.tf              # Auto Scaling Group (ASG) & Standalone compute definitions
@@ -81,7 +81,7 @@ terraform/
 
 ### Standard Module Rules:
 - **IMDSv2 Strict Enforcement:** Launch templates (`modules/asg/main.tf` and `modules/standalone_ec2/main.tf`) must specify `metadata_options` with `http_tokens = "required"` and `http_put_response_hop_limit = 1`.
-- **Zero-Trust Network Isolation:** Database security groups must only allow ingress on port 5432 originating from compute tier security groups (`security_groups = [aws_security_group.app.id]`). Direct CIDR ingress (`0.0.0.0/0`) to DB or App subnets is prohibited.
+- **Zero-Trust Network Isolation:** Database security groups must only allow ingress on port 5432 originating from compute tier security groups (`security_groups = [aws_security_group.asg_sg.id]`). Direct CIDR ingress (`0.0.0.0/0`) to DB or App subnets is prohibited.
 - **ALB-Aware Auto-Healing:** ASG modules must enforce `health_check_type = "ELB"` to synchronize instance lifecycles with ALB target group status.
 - **Regional Architecture Defaults:** Default region is pinned to `ap-southeast-5` (Malaysia), utilizing Graviton instances (`t4g.micro` / `t4g.medium` / `db.t4g.micro`) and Valkey caching (`cache.t4g.micro`).
 
@@ -143,8 +143,10 @@ Before submitting a PR or merging any code:
 1. **Format & Validate OpenTofu Code (if OpenTofu CLI is installed):**
    ```bash
    tofu fmt -recursive terraform/
-   tofu validate
+   tofu -chdir=terraform init -backend=false
+   tofu -chdir=terraform validate
    ```
+   *(Note: For air-gapped or offline use without AWS access, configure a local provider mirror/cache).*
 2. **Execute Full Test Suite:**
    ```bash
    pytest
