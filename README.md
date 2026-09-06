@@ -163,7 +163,7 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 ### Prerequisites
 * Linux OS (Ubuntu, Debian, RHEL, Fedora, Arch, Amazon Linux) or macOS with bash environment.
 * [OpenTofu](https://opentofu.org/downloads.html) >= 1.6.0 installed on your local control node (optional for offline simulation testing).
-* [AWS CLI](https://aws.amazon.com/cli/) configured with administrative rights targeted to `ap-southeast-5` (for live cloud deployment).
+* [AWS CLI](https://aws.amazon.com/cli/) configured with a least-privilege deployment role targeted to `ap-southeast-5` covering only declared VPC, EC2, IAM, RDS, ElastiCache, ALB, WAF, and Route 53 operations (with narrowly scoped `iam:PassRole` permissions for instance profiles required by `scripts/deploy.sh`). Role credentials must be validated (`aws sts get-caller-identity`) prior to deployment.
 * Python >= 3.10 & Pytest (to run build/prepare and simulation automation).
 
 ### Local Execution Pipeline on Any Linux System
@@ -172,11 +172,11 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
    git clone https://github.com/songketmail/aws-3tier-deployment-for-ai-infra.git
    cd aws-3tier-deployment-for-ai-infra
    ```
-2. **Setup Environment Variables:**
+2. **Setup Environment Variables & Remote State:**
    ```bash
    cp terraform/terraform.tfvars.example terraform/terraform.tfvars
    ```
-   *Edit the tfvars configuration with your target PostgreSQL credentials and office IP ranges.*
+   *Edit the tfvars configuration with protected credentials and office IP ranges (`*.tfvars` is gitignored). Prior to live deployment, operators must configure an encrypted, access-controlled remote state backend (S3 bucket with SSE-KMS encryption and DynamoDB state locking as declared in `terraform/providers.tf`), as local state files (`terraform.tfstate`) retain sensitive database credentials in plaintext.*
 3. **Execute Offline Simulation Test Suite:**
    Run the offline simulation runner to test OpenTofu code and any newly added scripts without AWS credentials:
    ```bash

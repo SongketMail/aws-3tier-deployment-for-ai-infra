@@ -293,7 +293,7 @@
       ### Prerequisites
       * Linux OS (Ubuntu, Debian, RHEL, Fedora, Arch, Amazon Linux) or macOS with bash environment.
       * [OpenTofu](https://opentofu.org/downloads.html) >= 1.6.0 installed on your local control node (optional for offline simulation testing).
-      * [AWS CLI](https://aws.amazon.com/cli/) configured with administrative rights targeted to `ap-southeast-5` (for live cloud deployment).
+      * [AWS CLI](https://aws.amazon.com/cli/) configured with a least-privilege deployment role targeted to `ap-southeast-5` covering only declared VPC, EC2, IAM, RDS, ElastiCache, ALB, WAF, and Route 53 operations (with narrowly scoped `iam:PassRole` permissions for instance profiles required by `scripts/deploy.sh`). Role credentials must be validated (`aws sts get-caller-identity`) prior to deployment.
       * Python >= 3.10 & Pytest (to run build/prepare and simulation automation).
 
       ### Local Execution Pipeline on Any Linux System
@@ -302,11 +302,11 @@
          git clone https://github.com/songketmail/aws-3tier-deployment-for-ai-infra.git
          cd aws-3tier-deployment-for-ai-infra
          ```
-      2. **Setup Environment Variables:**
+      2. **Setup Environment Variables & Remote State:**
          ```bash
          cp terraform/terraform.tfvars.example terraform/terraform.tfvars
          ```
-         *Edit the tfvars configuration with your target PostgreSQL credentials and office IP ranges.*
+         *Edit the tfvars configuration with protected credentials and office IP ranges (`*.tfvars` is gitignored). Prior to live deployment, operators must configure an encrypted, access-controlled remote state backend (S3 bucket with SSE-KMS encryption and DynamoDB state locking as declared in `terraform/providers.tf`), as local state files (`terraform.tfstate`) retain sensitive database credentials in plaintext.*
       3. **Execute Offline Simulation Test Suite:**
          Run the offline simulation runner to test OpenTofu code and any newly added scripts without AWS credentials:
          ```bash
@@ -377,14 +377,14 @@
 
       ### Enriched Agent Skills List:
 
-      1. **[`jules-knowledge`](.agents/skills/jules-knowledge/SKILL.md):** Generic cloud engineering skill containing comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices. Includes Wazuh SIEM/XDR guides, legal notices, stacks comparisons, and script docstring standards.
-      2. **[`aws-malaysia-defaults`](.agents/skills/aws-malaysia-defaults/SKILL.md):** Guidelines for configuring regional defaults, AWS Graviton architecture, standard instance sizes, dynamic ARM64/x86_64 AMI selection, and OpenTofu global installations on Ubuntu 24.04.4 LTS.
-      3. **[`opentofu-infrastructure-design`](.agents/skills/opentofu-infrastructure-design/SKILL.md):** Standards for managing, validating, and designing the secure modular 3-tier OpenTofu architecture, incorporating ALB-aware auto-healing, IMDSv2 enforcement, and PostgreSQL db_port alignment to 5432.
+      1. **[`jules-knowledge`](.agents/skills/jules-knowledge/SKILL.md):** Generic cloud engineering skill containing comprehensive workspace instructions, architectural mappings, security boundaries, and automation practices. Also covers Wazuh SIEM & XDR deep-dive guides, legal notices, stacks comparisons, and script docstring standards.
+      2. **[`aws-malaysia-defaults`](.agents/skills/aws-malaysia-defaults/SKILL.md):** Guidelines for configuring regional defaults, AWS Graviton architecture, standard instance sizes, dynamic ARM64/x86_64 AMI selection, and the global installation of OpenTofu on Ubuntu 24.04.4 LTS.
+      3. **[`opentofu-infrastructure-design`](.agents/skills/opentofu-infrastructure-design/SKILL.md):** Standards for managing, validating, and designing the secure modular 3-tier OpenTofu architecture, including ALB-aware ASG auto-healing, IMDSv2 enforcement, and PostgreSQL db_port alignment to 5432.
       4. **[`aws-asg-standalone-compute`](.agents/skills/aws-asg-standalone-compute/SKILL.md):** Guidelines for deploying multi-tier ASGs, pairing them with standalone EC2 instances for staging/pre-baking AMIs on hardened Ubuntu 26.04 LTS, and managing compute passwordlessly via SSM.
-      5. **[`rds-postgresql-valkey-cache`](.agents/skills/rds-postgresql-valkey-cache/SKILL.md):** Settings for Multi-AZ RDS PostgreSQL (PostgreSQL 16/17 default), secure ElastiCache Valkey caching clusters, port-level network isolation, Percona PostgreSQL, redis-vs-valkey comparison, and real-world scaling benchmarks (Langfuse / RAGFlow).
+      5. **[`rds-postgresql-valkey-cache`](.agents/skills/rds-postgresql-valkey-cache/SKILL.md):** Settings for Multi-AZ RDS PostgreSQL (PostgreSQL 16/17 default), secure ElastiCache Valkey caching clusters, port-level network isolation, Percona PostgreSQL, redis-vs-valkey comparison, and real-world scaling examples (Langfuse / RAGFlow).
       6. **[`ssh-jumphost-ami-baking`](.agents/skills/ssh-jumphost-ami-baking/SKILL.md):** Guidelines for secure public SSH Jumphost (Bastion) access whitelisting Cyberjaya, protecting private keys, and baking CIS Level 2-compliant Ubuntu 26.04 AMIs with FQCN-compliant Packer & Ansible playbooks. Includes audit logs and Security Posture Assessments (SPA).
       7. **[`aws-disaster-recovery-sovereignty`](.agents/skills/aws-disaster-recovery-sovereignty/SKILL.md):** Playbook for PDPA-compliant In-Region and Cross-Region DR, deploying AWS DRS (Strategy E) replication, and addressing generative AI sovereign workloads (RAGFlow + Langfuse).
-      8. **[`aws-infrastructure-costing`](.agents/skills/aws-infrastructure-costing/SKILL.md):** Financial management models evaluating the Baseline Cost-Optimised Plan (~$426.75 USD/mo) and High-Performance Enterprise Plan (~$1,064.46 USD/mo) inside the Malaysia region, utilizing exchange rate exactly $1.00 USD = MYR 4.50 and the 1,000 VU sizing tier.
+      8. **[`aws-infrastructure-costing`](.agents/skills/aws-infrastructure-costing/SKILL.md):** Financial management models evaluating the Baseline Cost-Optimised Plan (~$426.75 USD/mo) and High-Performance Enterprise Plan (~$1,064.46 USD/mo) inside the Malaysia region, using standard exchange rate exactly $1.00 USD = MYR 4.50, and incorporating the 1,000 VU sizing tier.
       9. **[`gitlab-efs-cicd-automation`](.agents/skills/gitlab-efs-cicd-automation/SKILL.md):** Procedures for GitLab CI/CD pipelines, mounting shared AWS EFS storage, tuning NFS mounts, rootless Podman 5+ unprivileged deployments using systemd Quadlets, and the VIP Guest lifecycle trajectory.
       10. **[`changelog-milestones-narrative`](.agents/skills/changelog-milestones-narrative/SKILL.md):** Procedures for maintaining standard-compliant semantic changelogs (`CHANGELOG.md`) and strategic engineering history logs (`HISTORY.md`) from Day 0, plus the AWS Adoption Roadmap chronological alignment and confidentiality declarations.
       11. **[`jekyll-pdf-generation`](.agents/skills/jekyll-pdf-generation/SKILL.md):** Guidelines for custom responsive Jekyll sidebar themes, preventing diagram text wrapping with dynamic JavaScript scanners, print page-break overrides, and Puppeteer-based automated PDF generation.
@@ -6521,7 +6521,7 @@
       | **5. Valkey Open-Source Caching** | ElastiCache Module | Caching engine set to `valkey` with default port `6379` | `test_opentofu_valkey_caching_config` |
       | **6. Jumphost Cyberjaya Whitelisting**| Jumphost SG | SSH ingress restricted to office CIDR (`103.188.0.0/16` or custom) | `test_opentofu_jumphost_whitelisting` |
       | **7. Multi-AZ Network Topology** | VPC Module | 2+ Availability Zones (`ap-southeast-5a`, `ap-southeast-5b`) spanned | `test_opentofu_vpc_multi_az_layout` |
-      | **8. Module Completeness** | Root Terraform Modules | All 10 modules (`vpc`, `sg`, `alb`, `asg`, `rds`, `valkey`, etc.) present | `test_opentofu_module_structure_completeness` |
+      | **8. Module Completeness** | Root Terraform Modules | All 10 modules (`vpc`, `security_groups`, `alb`, `asg`, `rds`, `elasticache`, etc.) present | `test_opentofu_module_structure_completeness` |
 
       ### Executing Local Simulation Unit Tests:
       ```bash
@@ -6626,19 +6626,19 @@
       To adapt this enterprise blueprint for public deployment and general industry adoption, all specific public-sector identifiers have been replaced with standard organizational agency designations and internal domain endpoints:
       * **Enterprise Environmental Data Platform:** Formerly legacy BDA infrastructure.
       * **Internal Endpoints:** Standardized to `https://bda.enterprise.internal` and `https://dashboard.enterprise.internal`.
-      * **Departmental Domains:**
-        * **Department of Wildlife Conservation (DWC):** Handles wildlife encounters, species monitoring, and spatial movement corridors.
-        * **Department of Mineral & Geoscience (DMG):** Maps hydrogeological borehole reserves and calculates landslide hazard stability.
-        * **Department of Forestry (DOF):** Tracks forest fire incidents, biomass susceptibility, and concession boundaries.
-        * **National Water & Climate Institute (NWCI):** Models hydrological vulnerability and climate adaptation indices.
-        * **Meteorological Services Department (MSD):** Serves precipitation curves and weather telemetry feeds.
-        * **Global Satellite Thermal Sensing Network (GSTRN):** Streams thermal anomaly and hotspot telemetry.
+      * **Six (6) Departmental Domains:**
+        1. **Department of Wildlife Conservation (DWC):** Handles wildlife encounters, species monitoring, and spatial movement corridors.
+        2. **Department of Mineral & Geoscience (DMG - Hydrogeology):** Maps hydrogeological borehole reserves and groundwater potential.
+        3. **Department of Mineral & Geoscience (DMG - Geotechnical Landslides):** Calculates slope stability risks and landslide hazard thresholds.
+        4. **Department of Forestry (DOF):** Tracks forest fire incidents, biomass susceptibility, and concession boundaries.
+        5. **National Water & Climate Institute (NWCI):** Models hydrological vulnerability and climate adaptation indices.
+        6. **Meteorological Services Department (MSD) & Global Satellite Thermal Sensing Network (GSTRN):** Serves precipitation curves, weather telemetry feeds, and thermal hotspot alerts.
 
       ---
 
       ## Architectural Deconstruction of the Legacy BDA Environment
 
-      The legacy Big Data Analytics (BDA) platform operated as a early-generation big data deployment characterized by tightly coupled compute and storage architectures, unmanaged database proliferation, fragile point-to-point data ingestion methods, and proprietary visualization systems.
+      The legacy Big Data Analytics (BDA) platform operated as an early-generation big data deployment characterized by tightly coupled compute and storage architectures, unmanaged database proliferation, fragile point-to-point data ingestion methods, and proprietary visualization systems.
 
       ### Legacy Technical Bottlenecks
       * **Ingestion Tier:** Dependent on fractured integration pathways. Precipitation data entered via unmonitored local network folder shares; thermal hotspot alerts arrived through unparsed automated emails; geological hazard boundaries were retrieved via point APIs; and departmental datasets were manually transferred over SSH File Transfer Protocol (SFTP) or raw file uploads. Pre-ingestion schema validation, data contracts, and automated provenance tracking were absent.
@@ -6667,7 +6667,9 @@
       The modern data lakehouse pattern physically and logically decouples persistent storage from distributed compute engines. HDFS and GlusterFS are replaced with S3-compatible object storage clusters governed by an open table format.
 
       ### Architectural Foundations
-      1. **Persistent Object Storage & WORM Immutability:** Uses Ceph (via RADOS Gateway) or MinIO Enterprise Object Store. Configuring object buckets with S3 Object Lock in Compliance Mode establishes hardware-grade Write-Once-Read-Many (WORM) immutability, ensuring master records cannot be overwritten or prematurely purged.
+      1. **Persistent Object Storage & Immutability Contract:** Uses Ceph (via RADOS Gateway), MinIO Enterprise Object Store, or AWS S3.
+         * **Object Lock Retention Contract:** S3 Object Lock enforces documented software guarantees rather than physical/hardware locks. Buckets require **Bucket Versioning** to be enabled. Tier 0 evidence storage enforces a defined retention policy (e.g. 7-year statutory compliance or 365-day operational compliance) in **Compliance Mode** alongside legal-hold toggles for regulatory holds. Tested, equivalent Object Lock retention behaviors are documented and validated across AWS S3, Ceph RADOS Gateway (RGW), and MinIO Enterprise Object Store.
+         * **Iceberg Maintenance Separation:** Immutable source/evidence storage is separated from mutable analytical lakehouse tables. Apache Iceberg tables reside in dedicated buckets or partitions configured with **Governance Mode** Object Lock or un-locked object paths, allowing Iceberg catalog maintenance jobs (such as snapshot compaction, orphan file purging, and snapshot expiration) to execute without violating WORM retention rules.
       2. **Universal Open Table Format (Apache Iceberg):** Replaces relational sprawl and file directories with Apache Iceberg backed by columnar Parquet files. Iceberg provides ACID transactions, in-place schema evolution, hidden partitioning, and snapshot time-travel querying.
       3. **Open Catalog (Apache Polaris / Project Nessie):** Manages table registration and commit resolution via an open Iceberg REST catalog.
       4. **Decoupled Distributed Compute:**
@@ -6677,7 +6679,7 @@
 
       | Architectural Layer | Legacy BDA Infrastructure | Modern Open-Source Replacement | Core Architectural Capabilities |
       | :--- | :--- | :--- | :--- |
-      | **Distributed Object Storage** | Hadoop HDFS, GlusterFS. | Ceph Object Storage / MinIO Object Store. | Horizontal scale-out; unified S3 API; hardware-grade WORM S3 Object Lock immutability; small-file bottleneck elimination. |
+      | **Distributed Object Storage** | Hadoop HDFS, GlusterFS. | Ceph Object Storage / MinIO Object Store / AWS S3. | Horizontal scale-out; unified S3 API; software-enforced WORM S3 Object Lock retention; small-file bottleneck elimination. |
       | **Open Table Format** | Unstructured CSV/JSON files, uncoordinated DB tables. | Apache Iceberg (backed by Apache Parquet). | Serialized ACID transactions; schema and partition evolution without data restructuring; snapshot time-travel. |
       | **Lakehouse Catalog** | Custom MariaDB schemas, local directories. | Apache Polaris (Incubating) / Project Nessie. | Open REST catalog standard; centralized table metadata; cross-engine concurrency arbitration; credential vending. |
       | **Analytical Query Engine** | WildFly application servers, local SQL engines. | Trino Distributed SQL Query Engine. | In-memory massively parallel processing; sub-second analytical SQL execution; multi-catalog federation; CBO optimization. |
@@ -6693,7 +6695,7 @@
       ### Three-Tier Physical & Logical Classification
       ```
       Tier 0: Golden Human Truth (Authoritative SSoT)
-      └── Immutable storage on MinIO/Ceph with S3 Object Lock (Compliance Mode)
+      └── Immutable storage on MinIO/Ceph/S3 with S3 Object Lock (Compliance Mode)
       └── Requires human cryptographic signatures and ODCS contract validation
       └── Strictly zero unvalidated AI-generated records permitted
 
@@ -6703,8 +6705,9 @@
       └── Pre-ingestion validation via Data Contract CLI; human audit required for promotion
 
       Tier 2: AI Operational and Analytical Sandbox (Isolated Quarantine)
-      └── Isolated object buckets with automated 30-day Time-To-Live (TTL) expiration
+      └── Isolated object buckets with automated 30-day S3 Lifecycle expiration policy
       └── Ephemeral storage for LLM intermediate runs, synthetic models, and MCP outputs
+      └── Scheduled CronJob cleanup controller with secure-deletion rules for local volumes
       └── Strict access barriers preventing automated writing or promotion to Tier 0
       ```
 
@@ -6715,7 +6718,7 @@
       | Governance Parameter | Tier 0: Golden Human SSoT | Tier 1: Machine & Sensor Telemetry | Tier 2: AI Sandbox & Analytics |
       | :--- | :--- | :--- | :--- |
       | **Primary Institutional Purpose** | Authoritative national truth, statutory policy formulation, certified legal record. | Empirical environmental observation, telemetry aggregation, baseline monitoring. | Exploratory modelling, scenario simulation, predictive risk computation. |
-      | **Storage Technology & WORM Mode** | Distributed Object Store; S3 Object Lock in Compliance Mode. | Distributed Object Store; S3 Object Lock in Governance Mode. | Standard Object Store bucket; lifecycle rule with 30-day auto-purge TTL. |
+      | **Storage Technology & Retention** | Distributed Object Store; S3 Object Lock in Compliance Mode (Versioning enabled). | Distributed Object Store; S3 Object Lock in Governance Mode. | S3-compatible bucket with 30-day S3 Lifecycle purge + CronJob volume cleanup. |
       | **Allowable Ingestion Sources** | Certified human domain surveys, gazetted boundaries, signed enterprise records. | Direct telemetry streams: MSD rain gauges, NWCI water sensors, GSTRN hotspots. | Model outputs, MCP pipeline agents, synthetic climate projections. |
       | **AI Role & Permissions** | Read-only access via certified tools. Zero automated AI write access permitted. | Machine learning models execute cleansing, deduplication, and anomaly detection. | Unrestricted generative and predictive computation within sandboxed perimeter. |
       | **Lineage & Validation Standard** | Mandatory ODCS v3.1.0 contract validation + OpenLineage `enterprise_provenance` signing. | Automated ODCS contract validation + deterministic quality assertion checks. | OpenLineage job execution tracking; outputs permanently tagged as `AI_GENERATED`. |
@@ -6731,7 +6734,7 @@
       * **Resources:** Read-only access to OpenMetadata data dictionaries, schema definitions, and sanitized database views.
       * **Tools:** Restricted to stateless operational utilities (SQL linting, contract validation, DAG monitoring). Write verbs (`INSERT`, `UPDATE`, `DELETE`, `DROP`, Iceberg commits) are blocked at the API gateway.
       * **Prompts:** Structured, version-controlled interaction templates enforcing governance rules.
-      * **Security Boundaries:** MCP servers run in isolated containers within a dedicated DMZ. Database connections operate with `SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY`. Outputs are written strictly to Tier 2 scratch storage and tagged with `ai_generated_data: true`.
+      * **Security Boundaries:** MCP servers run in isolated containers within a dedicated DMZ. Database connections operate with `SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY`. Outputs are written strictly to Tier 2 scratch storage (S3-compatible buckets with 30-day S3 Lifecycle expiration rules) and tagged with `ai_generated_data: true`.
 
       | MCP Server Identifier | Business Domain Alignment | Operational Capability | Primitive Scope | Access Permissions & Safeguards |
       | :--- | :--- | :--- | :--- | :--- |
@@ -6762,7 +6765,7 @@
 
       * **Ingestion (Apache NiFi + Apache Airflow):** NiFi handles streaming ingestion, protocol translation, and boundary polling (MSD rainfall, GSTRN thermal satellites). Airflow orchestrates batch processing, contract verification gates, and Iceberg table maintenance.
       * **Web Portal Modernization:** Replaces legacy CMS and monoliths with a decoupled **Next.js / React** microfrontend application deployed behind Apache APISIX and Keycloak.
-      * **Visualization Overhaul (Apache Superset + deck.gl):** Replaces proprietary Tableau Server with Apache Superset. Connects to Trino via SQLAlchemy, leveraging deck.gl for hardware-accelerated 3D geospatial rendering and Keycloak Row-Level Security (RLS).
+      * **Visualization Overhaul (Apache Superset + deck.gl):** Replaces proprietary Tableau Server with Apache Superset. Connects to Trino via SQLAlchemy, leveraging deck.gl for hardware-accelerated 3D geospatial rendering. Keycloak centralizes user identity and issues JWT tokens containing role and departmental claims. When users authenticate to Apache Superset, Keycloak claims map to Superset roles and Security Manager user profiles, which select and apply dataset Row-Level Security (RLS) SQL filter predicates directly in Superset to restrict query results based on user administrative scope.
 
       | Platform Component | Legacy BDA Architecture | Modern Open-Source Replacement | Core Functional Capabilities |
       | :--- | :--- | :--- | :--- |
@@ -6818,18 +6821,18 @@
 
       #### Core Components & Cloud Services Mapping
       1. **Persistent Cloud Storage (Tier 0, 1, 2):**
-         * **Tier 0 SSoT:** Amazon S3 Buckets configured with **S3 Object Lock in Compliance Mode** (WORM), ensuring hardware-grade immutability for golden datasets.
+         * **Tier 0 SSoT:** Amazon S3 Buckets configured with **S3 Object Lock in Compliance Mode** (Versioning enabled), ensuring software-enforced immutability for golden evidence datasets under defined retention periods (e.g., 7 years).
          * **Tier 1 Telemetry:** Amazon S3 Buckets with S3 Object Lock in Governance Mode for MSD telemetry and satellite data.
          * **Tier 2 AI Sandbox:** Amazon S3 Scratch Buckets with automated S3 Lifecycle Rules configured for 30-day object expiration/auto-purge.
       2. **Lakehouse Catalog & Metadata:**
-         * **AWS Glue Data Catalog** or **Apache Polaris REST Catalog** hosted on Amazon EKS, managing Apache Iceberg table commits and Parquet file manifests.
+         * **AWS Glue Data Catalog** or **Apache Polaris REST Catalog** hosted on Amazon EKS, managing Apache Iceberg table commits and Parquet file manifests in dedicated buckets.
          * **OpenMetadata** hosted on Amazon EKS (backed by Amazon Aurora PostgreSQL and AWS OpenSearch Service) for enterprise data cataloging and column-level lineage.
       3. **Distributed Query & Processing Engines:**
          * **Amazon EMR Serverless (Apache Spark + Apache Sedona):** Executes distributed GeoParquet processing, spatial joins, and batch ETL transformations without server provisioning.
          * **Amazon Athena / Amazon EMR Trino:** Distributed massively parallel SQL query engine over Iceberg tables via Glue/Polaris REST catalog.
          * **Amazon Aurora PostgreSQL (Multi-AZ with PostGIS):** Serves as high-concurrency spatial serving store and low-latency cache for interactive dashboards.
       4. **Ingestion & Pipeline Orchestration:**
-         * **Amazon Managed Workflows for Apache Airflow (MWAA):** Orchestrates batch pipelines, ODCS data contract CLI validation, and OpenLineage events.
+         * **Amazon Managed Workflows for Apache Airflow (MWAA):** Orchestrates batch pipelines, ODCS data contract CLI validation, and OpenLineage events across all six departmental domains.
          * **Apache NiFi on ECS / EKS:** Handles streaming protocol translations and real-time API polling from external sensor sources.
       5. **Perimeter Security, Ingress & Identity:**
          * **AWS WAFv2 + Application Load Balancer (ALB) + AWS CloudFront:** Perimeter protection with rate-limiting and OWASP rules.
@@ -6870,10 +6873,10 @@
          * **Local AI Inference Engine:** **Ollama**, **vLLM**, or **RAGFlow** running in rootless Podman containers or local Kubernetes, serving local LLMs (Qwen, Llama 3, DeepSeek) for natural language processing, vector embedding generation, and dynamic hazard prediction.
          * **Local Vector Caching:** Valkey / Qdrant instance for ultra-fast local vector search.
       3. **Hybrid Secure Connectivity & MCP Integration:**
-         * **AWS Direct Connect / Dedicated IPsec VPN:** Low-latency 10GbE / 1GbE encrypted tunnel connecting the on-premises GPU cluster directly to the AWS VPC.
+         * **AWS Direct Connect / Dedicated IPsec VPN:** AWS Direct Connect provides a dedicated 1GbE/10GbE private physical circuit (unencrypted by default; MACsec at Layer 2 or an IPsec overlay at Layer 3 can be configured when encryption in transit is selected) or a dedicated IPsec VPN tunnel connecting the on-premises GPU cluster directly to the AWS VPC.
          * **On-Premises MCP Servers:** MCP servers (`mcp-trino-query-gen`, `mcp-catalog-context`) run locally inside the on-prem GPU cluster.
          * **Read-Only Cloud Access Gateways:** On-prem MCP tools query the Cloud Glue/Polaris Catalog and Cloud Trino engine using read-only database credentials over mTLS via Apache APISIX.
-         * **Data Quarantine Enforcement:** All AI inferencing occurs on-premises. Model intermediate outputs are stored on local S3-compatible storage (MinIO) marked as Tier 2 Scratch. AI models have zero write permissions back to Cloud Tier 0 SSoT.
+         * **Data Quarantine Enforcement:** All AI inferencing occurs on-premises. Model intermediate outputs are stored on local S3-compatible storage (MinIO) configured with a 30-day S3 Lifecycle expiration rule marked as Tier 2 Scratch. AI models have zero write permissions back to Cloud Tier 0 SSoT.
 
       ---
 
@@ -6902,7 +6905,7 @@
       |                 +---------------------------+---------------------------+                     |
       |                 v                                                       v                     |
       |  +----------------------------------------+           +------------------------------------+  |
-      |  | RKE2 MAIN CLUSTER (14 NODES)           |           | K3S SUPPORTING CLUSTER (5 NODES)   |  |
+      |  | RKE2 MAIN CLUSTER (14 VM NODES)        |           | K3S SUPPORTING CLUSTER (5 VM NODES)|  |
       |  | - 3x Control Plane (HA etcd)           |           | - 3x Control Plane                 |  |
       |  | - 4x AI GPU Nodes (Ollama/RAGFlow)     |           | - 2x Worker Nodes                  |  |
       |  | - 4x App Nodes (NiFi/Airflow/Superset)  |           | - Prometheus, Grafana, Loki        |  |
@@ -6912,29 +6915,30 @@
       ```
 
       #### 1. Hypervisor & Compute Infrastructure (Proxmox VE)
-      * **Proxmox VE Cluster:** High-density enterprise hypervisor cluster with 100GbE data plane and 10GbE out-of-band management plane.
-      * **PCIe GPU Passthrough:** Direct hardware assignment of NVIDIA H100/A100/L40S GPUs to virtualized AI worker nodes, bypassing hypervisor overhead for maximum matrix math performance.
+      * **Proxmox VE Cluster Sizing & Host Topology:** High-density enterprise hypervisor cluster comprising **11 physical Proxmox VE hosts** (4x AI/GPU hosts, 4x Application hosts, 3x Database/Stateful hosts) with a 100GbE data plane and 10GbE out-of-band management plane.
+      * **VM Sizing & Anti-Affinity Rules:** The 14 virtualized RKE2 production nodes and 5 virtualized K3s management nodes execute as Virtual Machines (VMs) provisioned across the 11 physical PVE hosts. Strict Proxmox VE VM anti-affinity rules are enforced across physical hosts to prevent single points of failure (SPOFs) (e.g. no two RKE2/K3s control-plane VMs or Patroni DB VMs reside on the same physical PVE host), reserving host CPU/RAM capacity to guarantee high availability.
+      * **PCIe GPU Passthrough:** Direct hardware assignment of NVIDIA H100/A100/L40S GPUs to virtualized AI worker VMs, bypassing hypervisor overhead for maximum matrix math performance.
 
       #### 2. Dual-Cluster Open-Source Kubernetes Architecture (RKE2 & K3s)
-      * **Cluster A: Main Production Cluster (14 Nodes - RKE2):**
-        * Built on Rancher Kubernetes Engine 2 (RKE2 v1.30 LTS) with Cilium eBPF CNI, FIPS compliance readiness, containerd runtime, and SELinux/AppArmor enforcement.
-        * **3x Control Plane / Server Nodes:** High-Availability etcd quorum (`rke2-cp-01` to `03`).
-        * **4x AI / GPU Worker Nodes:** Executes Ollama, vLLM, RAGFlow, and Spark/Sedona distributed spatial workloads (`rke2-worker-ai-01` to `04`).
-        * **4x Application / Microservices Worker Nodes:** Hosts Apache NiFi, Airflow, APISIX, Keycloak, Superset, Next.js, and Trino engines (`rke2-worker-app-01` to `04`).
-        * **3x Database & Stateful Worker Nodes:** Hosts PostgreSQL Patroni nodes and local Ceph OSD storage daemons (`rke2-worker-db-01` to `03`).
-      * **Cluster B: Supporting Services Cluster (5 Nodes - K3s):**
-        * Built on lightweight K3s (v1.30 LTS) with embedded etcd.
-        * **3x Control Plane Nodes** (`k3s-mgmt-01` to `03`).
-        * **2x Dedicated Worker Agent Nodes** (`k3s-worker-01` to `02`) hosting Prometheus, Grafana, Loki, HashiCorp Vault, and local CI/CD runners.
+      * **Cluster A: Main Production Cluster (14 VM Nodes - RKE2):**
+        * Built on Rancher Kubernetes Engine 2 (RKE2 v1.30.x series, e.g. v1.30.4+rke2r1, following upstream Kubernetes 1.30 ~12-month support window). When FIPS 140-2 compliance is required, RKE2 is deployed using its bundled Canal CNI with FIPS-validated cryptographic modules; when eBPF performance and advanced networking are required, Cilium CNI is selected.
+        * **3x Control Plane / Server VM Nodes:** High-Availability etcd quorum (`rke2-cp-01` to `03`).
+        * **4x AI / GPU Worker VM Nodes:** Executes Ollama, vLLM, RAGFlow, and Spark/Sedona distributed spatial workloads (`rke2-worker-ai-01` to `04`).
+        * **4x Application / Microservices Worker VM Nodes:** Hosts Apache NiFi, Airflow, APISIX, Keycloak, Superset, Next.js, and Trino engines (`rke2-worker-app-01` to `04`).
+        * **3x Database & Stateful Worker VM Nodes:** Hosts PostgreSQL Patroni nodes and local Ceph OSD storage daemons (`rke2-worker-db-01` to `03`).
+      * **Cluster B: Supporting Services Cluster (5 VM Nodes - K3s):**
+        * Built on lightweight K3s (v1.30.x series, e.g. v1.30.4+k3s1).
+        * **3x Control Plane VM Nodes** (`k3s-mgmt-01` to `03`).
+        * **2x Dedicated Worker Agent VM Nodes** (`k3s-worker-01` to `02`) hosting Prometheus, Grafana, Loki, HashiCorp Vault, and local CI/CD runners.
 
       #### 3. Distributed Software-Defined Storage (Ceph SDS)
       * **Integrated Ceph Cluster:** Deployed via Proxmox VE / Rook-Ceph across dedicated NVMe/SSD storage pools.
-      * **RADOS Gateway (S3 Object Storage):** Supplies S3-compatible APIs. Buckets configured with **S3 Object Lock in Compliance Mode** provide hardware-grade WORM storage for Tier 0 Golden SSoT records.
+      * **RADOS Gateway (S3 Object Storage):** Supplies S3-compatible APIs. Buckets configured with **S3 Object Lock in Compliance Mode** (Versioning enabled) provide software-enforced WORM storage for Tier 0 SSoT records under defined retention periods (e.g., 7 years). Tested, equivalent Object Lock retention behavior is validated across AWS S3, Ceph RGW, and MinIO.
       * **Storage Provisioning Types:**
         * **Ceph CSI (`rbd.csi.ceph.com`):** High-IOPS dynamic block storage (ReadWriteOnce / RWO) for PostgreSQL databases, vector indices, and stateful pods.
         * **CephFS (`cephfs.csi.ceph.com`):** Distributed filesystem (ReadWriteMany / RWX) for shared media assets and queue spools.
         * **NFS External Provisioner (`nfs-subdir-external-provisioner`):** Secondary ReadWriteMany (RWX) storage array for legacy shared assets.
-        * **Local Path Provisioner:** Ultra-low latency node-local NVMe storage for ephemeral Tier 2 AI scratchpads.
+        * **Local Path Provisioner:** Ultra-low latency node-local NVMe storage for ephemeral Tier 2 AI scratchpads, managed with an automated CronJob cleanup controller enforcing secure-deletion rules.
 
       #### 4. Complete On-Premises Open-Source Software Stack
       * **Object Store & Catalog:** Ceph RADOS Gateway / MinIO + Apache Polaris / Project Nessie REST Catalog on RKE2.
@@ -6964,7 +6968,7 @@
 
       Phase 2: Compute Modernization & Data Contract Enforcement (Months 4–6)
       └── Deploy Trino, Apache Spark, and Apache Sedona compute clusters
-      └── Formalize ODCS v3.1.0 data contracts across all five business domains
+      └── Formalize ODCS v3.1.0 data contracts across all six departmental domains
       └── Execute parallel Spark jobs to migrate legacy data into Apache Iceberg format
       └── Integrate OpenLineage runtime emission across Airflow DAGs
 
@@ -6977,16 +6981,16 @@
       Phase 4: Presentation Cutover & Legacy Decommissioning (Months 10–12)
       └── Deploy Apache Superset and migrate Tableau dashboards to deck.gl views
       └── Launch containerized Next.js web application behind APISIX and Keycloak
-      └── Validate 30-day parallel operational run across all five business cases
+      └── Validate 30-day parallel operational run across all six departmental domains
       └── Decommission Hadoop, GlusterFS, MariaDB, WildFly, Joomla, and Tableau
       ```
 
       | Implementation Phase | Target Legacy Subsystems | Modern Open-Source Replacements | Operational Risk Factors | Technical Mitigation & Fallback Procedures |
       | :--- | :--- | :--- | :--- | :--- |
       | **Phase 1: Foundation & Dual Ingestion (Months 1–3)** | Point-to-point SFTP, local folder shares, manual email ingestion. | Ceph / MinIO (WORM), Apache Polaris, OpenMetadata, Apache NiFi. | Upstream format modifications during mirroring; network saturation at boundary. | Operate NiFi in non-intrusive listening mode; legacy production paths remain authoritative; allocate isolated NICs. |
-      | **Phase 2: Compute & Contract Migration (Months 4–6)** | Hadoop HDFS, GlusterFS, MariaDB/Postgres project stores, WildFly. | Apache Iceberg, Trino, Apache Spark + Sedona, Data Contract CLI. | Data truncation or encoding errors during historical Iceberg Parquet conversions. | Execute automated row-count and partition checksum verifications; preserve raw source stores in read-only mode. |
+      | **Phase 2: Compute & Contract Migration (Months 4–6)** | Hadoop HDFS, GlusterFS, MariaDB/Postgres project stores, WildFly. | Apache Iceberg, Trino, Apache Spark + Sedona, Data Contract CLI. | Data truncation or encoding errors during historical Iceberg Parquet conversions. | Execute automated row-count and partition checksum verifications; preserve raw source stores in read-only mode across all 6 domains. |
       | **Phase 3: AI Sandboxing & MCP Deploy (Months 7–9)** | Unmonitored administrative scripts, ad-hoc Python workflows. | Model Context Protocol servers, Keycloak IAM, Tier 2 Sandbox. | Over-privileged AI agents attempting schema adjustments or unauthorized queries. | Enforce read-only database connections; block write verbs at API gateway; isolate MCP network routes. |
-      | **Phase 4: Cutover & Decommissioning (Months 10–12)** | Tableau Server cluster, legacy CMS, custom application portals. | Apache Superset (deck.gl), Next.js / React portal, Apache APISIX. | Discrepancies between Tableau and Superset spatial maps; user resistance to new UI. | Run 30-day side-by-side verification runs; validate geospatial rendering against PostGIS base layers; conduct agency training. |
+      | **Phase 4: Cutover & Decommissioning (Months 10–12)** | Tableau Server cluster, legacy CMS, custom application portals. | Apache Superset (deck.gl), Next.js / React portal, Apache APISIX. | Discrepancies between Tableau and Superset spatial maps; user resistance to new UI. | Run 30-day side-by-side verification runs across all 6 departmental domains; validate geospatial rendering against PostGIS base layers; conduct agency training. |
 
       ---
 
@@ -6996,7 +7000,7 @@
 
       ### Key Architectural Takeaways
       1. **Complete Compute-Storage Decoupling:** Moving to S3-compatible object storage (Ceph/MinIO/AWS S3) and distributed engines (Trino/Spark/Sedona) eliminates Hadoop NameNode memory limits, POSIX file locking overhead, and relational database sprawl.
-      2. **Absolute Data Integrity & Immutability:** Apache Iceberg delivers serialized ACID transactions, snapshot time-travel, and schema evolution. S3 Object Lock in Compliance Mode guarantees physical WORM immutability for Tier 0 golden records.
+      2. **Absolute Data Integrity & Immutability:** Apache Iceberg delivers serialized ACID transactions, snapshot time-travel, and schema evolution. Software-enforced S3 Object Lock in Compliance Mode guarantees WORM retention for Tier 0 golden records.
       3. **Strict Human-to-AI Quarantine:** The architecture enforces a rigid separation between certified human knowledge (Tier 0) and AI outputs (Tier 2). Artificial intelligence operates strictly as operational tooling via Model Context Protocol (MCP) servers with read-only database roles, preventing automated AI pollution of master datasets.
       4. **Flexible Deployment Topologies:** Organizations can deploy via **Solution 1 (All in Cloud on AWS)**, **Solution 2 (Hybrid Cloud Core + On-Prem GPU Cluster)**, or **Solution 3 (100% Sovereign On-Premises via Proxmox VE, RKE2, and Ceph SDS)** without changing data models or application interfaces.
       5. **Zero Vendor Lock-In:** Replacing proprietary tools (Tableau, proprietary CMS) with Apache Superset, Next.js, Keycloak, and Apache APISIX eliminates recurring seat licensing, ensures compliance with open standards (Bitol ODCS, OpenLineage, OGC/ISO 19115:2003), and provides full operational autonomy.

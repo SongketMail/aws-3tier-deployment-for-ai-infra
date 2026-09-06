@@ -95,5 +95,5 @@ Explore different sections of our infrastructure documentation:
 Before deploying the infrastructure, ensure you have the following tools installed and configured:
 
 - **[OpenTofu](https://opentofu.org/) >= 1.6.0** (Recommended) or **Terraform >= 1.5.0**
-- **[AWS CLI](https://aws.amazon.com/cli/)** configured with admin-level credentials for `ap-southeast-5`
+- **[AWS CLI](https://aws.amazon.com/cli/)** configured with a least-privilege deployment role targeted to `ap-southeast-5` covering declared VPC, EC2, IAM, RDS, ElastiCache, ALB, WAF, and Route 53 operations (with narrowly scoped `iam:PassRole` permissions for instance profiles required by `scripts/deploy.sh`). Role credentials must be validated (`aws sts get-caller-identity`) prior to deployment.
 - **Git** for repository and revision tracking

@@ -102,7 +102,7 @@ Each step in the OpenTofu code building lifecycle must be verified against simul
 | **5. Valkey Open-Source Caching** | ElastiCache Module | Caching engine set to `valkey` with default port `6379` | `test_opentofu_valkey_caching_config` |
 | **6. Jumphost Cyberjaya Whitelisting**| Jumphost SG | SSH ingress restricted to office CIDR (`103.188.0.0/16` or custom) | `test_opentofu_jumphost_whitelisting` |
 | **7. Multi-AZ Network Topology** | VPC Module | 2+ Availability Zones (`ap-southeast-5a`, `ap-southeast-5b`) spanned | `test_opentofu_vpc_multi_az_layout` |
-| **8. Module Completeness** | Root Terraform Modules | All 10 modules (`vpc`, `sg`, `alb`, `asg`, `rds`, `valkey`, etc.) present | `test_opentofu_module_structure_completeness` |
+| **8. Module Completeness** | Root Terraform Modules | All 10 modules (`vpc`, `security_groups`, `alb`, `asg`, `rds`, `elasticache`, etc.) present | `test_opentofu_module_structure_completeness` |
 
 ### Executing Local Simulation Unit Tests:
 ```bash
