@@ -61,6 +61,7 @@ Explore different sections of our infrastructure documentation:
 29. **[AWS Services vs. On-Premises Open-Source Stack Comparison](aws-vs-onprem-stack-comparison.html):** Detailed layer-by-layer architectural comparison across 12 layers mapping AWS services to self-hosted open-source counterparts.
 30. **[Google Jules AI Platform Guide](jules-platform-guide.html):** Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.
 31. **[OpenTofu AWS Simulation & Multi-Agent Collaboration Runbook](engineering/opentofu_aws_simulation.html):** Comprehensive runbook detailing offline AWS deployment simulations, unit testing matrices, static HCL AST analysis, and multi-agent/multi-human branch/PR workflows.
+32. **[Big Data Analytics Lakehouse Architecture](bda-lakehouse-architecture.html):** Modernizing Big Data Analytics into a 100% open-source Lakehouse with S3 WORM Object Lock, Iceberg, Polaris, Trino, Spark/Sedona, MCP AI quarantine sandboxing, and 3 distinct infrastructure solution blueprints (Cloud, Hybrid, On-Prem Proxmox/RKE2/Ceph).
 
 ### Onsite On-Premises Volume
 - **[Onsite On-Premises Blueprint Portal](onprem/index.html):** Overview portal and strategic rationale for moving from AWS to rootless, open-source local on-premises deployments.
