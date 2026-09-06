@@ -563,13 +563,13 @@
     <doc title=".agents/brain/active_context_manifest.md" url=".agents/brain/active_context_manifest.md" desc="Persistent spatial memory manifest mapping active conversation threads and checkpoints.">
       # Active Context Session Manifest (.agents/brain/active_context_manifest.md)
 
-      This active context manifest serves as our agent spatial memory checkpoint. It maps the active session's scope, key files, and completed milestones to preserve semantic context across different conversation threads.
+      This active context manifest serves as our agent spatial memory checkpoint. It maps the active session's scope, key files, and completed milestones to preserve semantic context across different conversation threads under the **Deep State of Mind (DSOM)** Protocol.
 
       ---
 
       ## 1. Active Session Context & Objectives
 
-      - **Primary Goal:** Adopt and codify the Deep State of Mind (DSOM) For My AI Framework (`https://linuxmalaysia.github.io/deep-state-of-mind-for-my-ai/START-HERE/`).
+      - **Primary Goal:** Adopt and codify the Deep State of Mind (DSOM) For My AI Framework (`https://linuxmalaysia.github.io/deep-state-of-mind-for-my-ai/START-HERE/`) and deploy the Big Data Analytics (BDA) Lakehouse Architecture across 3 infrastructure solutions.
       - **Agent Skills & Brain Integration:** Incorporate DSOM's 19 entry points, Tri-Phasic Mind cognitive architecture (Active, Twilight, Deep states), 4 functional subsystems, and initialization sequences into Jules spatial memory (`.agents/brain/jules_knowledge_ledger.md` Item 52) and Google Antigravity Agent Skills (`.agents/skills/jules-knowledge/SKILL.md`).
       - **Architectural Context:** Ensure all operational, cognitive, and governance decisions align with DSOM Sovereign AI Engine standards.
       - **Completed Milestones:**
@@ -577,6 +577,7 @@
         - Created standard operating procedures in `docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md`.
         - Created the Google Jules Master Knowledge Ledger (`.agents/brain/jules_knowledge_ledger.md`) organizing all 52 items of Jules knowledge.
         - Systematically enriched all 11 existing Antigravity Agent Skills under `.agents/skills/` with compiled Jules knowledge items including DSOM framework adoption.
+        - Modernized the Big Data Analytics (BDA) Lakehouse Architecture (`docs/bda-lakehouse-architecture.md`) with 3 infrastructure solutions, OKF v0.2 trust signals, Proxmox host capacity reserves, Direct Connect MACsec speed qualifications, and created the `.agents/skills/bda-lakehouse-architecture/SKILL.md` Agent Skill.
 
       ---
 
@@ -592,6 +593,8 @@
       | `.agents/brain/active_context_manifest.md` | Spatial Memory | This file; tracks active session and checkpoints |
       | `.agents/brain/jules_knowledge_ledger.md` | Spatial Memory | Master Ledger indexing all 52 items of Jules knowledge from Day 0 until now |
       | `.agents/skills/jules-knowledge/SKILL.md` | Skill | Compiled engineering knowledge, constraints, and architecture mappings |
+      | `docs/bda-lakehouse-architecture.md` | Reference | Modernized BDA Lakehouse Architecture Guide (3 Infra Solutions) |
+      | `.agents/skills/bda-lakehouse-architecture/SKILL.md` | Skill | Dedicated Agent Skill for BDA Lakehouse Architecture |
 
       ---
 
@@ -600,6 +603,16 @@
       1. **Gatekeepers Updated:** Update the root `AGENTS.md` and document indices (`docs/index.md`, `README.md`, `llms.txt`) to refer to `.agents/AGENTS.md`, `docs/SOP-KNOWLEDGE-FIRST-DISCOVERY.md`, and the newly added Skills and Master Ledger.
       2. **OKF Metadata Validation:** Execute `scripts/prepare_docs.py` to auto-format and apply OKF-compliant headers to newly created/edited files.
       3. **Execution Safety Check:** Maintain strict local context lookup before executing any remote OpenTofu validation or server verification.
+
+      ```
+      [DSOM EPISODIC RECORD]
+      Timestamp: 2026-08-20T00:00:00+08:00
+      Project: AWS 3-Tier Deployment for AI & Web Infra (BDA Lakehouse Expansion)
+      State: In Sync / Green / Pushed
+      Test Suite: 99/99 passed (100%)
+      Active Remotes: origin @ jules-bda-lakehouse-architecture
+      Mental Anchor: Big Data Analytics Lakehouse Architecture modernized into 3 infrastructure solutions, sanitized for public enterprise deployment, configured with OKF v0.2 trust signals, verified with 99 passing tests, and synchronized across Agent Skills and spatial memory.
+      ```
     </doc>
     <doc title="HISTORY.md" url="HISTORY.md" desc="Detailed background narrative on the project&#x27;s inception, engineering decisions, and architecture evolution from Day 0.">
       # Project History: AWS 3-Tier Deployment for AI & Web Infra
