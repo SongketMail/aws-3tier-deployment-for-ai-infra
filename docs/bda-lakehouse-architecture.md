@@ -1,12 +1,14 @@
 ---
 layout: "default"
-okf_version: "0.1"
+okf_version: "0.2"
 type: "reference"
 title: "Modernizing Big Data Analytics Architecture: 3-Tier Infra Deployment Blueprint"
-timestamp: "2026-08-20T00:00:00Z"
+timestamp: 2026-08-20T00:00:00Z
 topics: ["bda", "lakehouse", "aws", "hybrid", "proxmox", "rke2", "ceph", "mcp"]
+sources: ["docs/bda-lakehouse-architecture.md"]
+status: "active"
+verified: "true"
 ---
-
 # Modernizing Big Data Analytics Architecture: Establishing an Authoritative Open-Source Single Source of Truth
 
 ## Executive Overview & Architectural Context

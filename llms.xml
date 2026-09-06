@@ -10027,8 +10027,9 @@
           if 'layout' not in data:
               data['layout'] = 'default'
 
-          # 2. okf_version
-          data['okf_version'] = '0.1'
+          # 2. okf_version (preserve existing version if set, default to 0.2)
+          if 'okf_version' not in data:
+              data['okf_version'] = '0.2'
 
           # 3. title
           if 'title' not in data:
