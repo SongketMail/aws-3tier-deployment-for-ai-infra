@@ -45,6 +45,7 @@ This index is curated specifically for AI agents, Large Language Models (LLMs), 
 - [AWS Services vs. On-Premises Open-Source Stack Comparison](docs/aws-vs-onprem-stack-comparison.md) : Comprehensive 12-layer comparison guide mapping AWS services to self-hosted equivalents.
 - [Google Jules AI Platform Guide](docs/jules-platform-guide.md) : Comprehensive technical showcase documenting our end-to-end development workflow, PR review collaboration, DSOM governance, and Google Antigravity integration.
 - [OpenTofu AWS Simulation Runbook](docs/engineering/opentofu_aws_simulation.md) : Engineering runbook for offline AWS deployment simulation, unit testing matrices, and multi-agent/multi-human collaboration workflows.
+- [Big Data Analytics Lakehouse Architecture](docs/bda-lakehouse-architecture.md) : Modernizing Big Data Analytics into a 100% open-source Lakehouse with S3 WORM Object Lock, Iceberg, Polaris, Trino, Spark/Sedona, MCP AI quarantine sandboxing, and 3 distinct infrastructure solution blueprints (Cloud, Hybrid, On-Prem Proxmox/RKE2/Ceph).
 
 ## Documentation Framework & Project Utilities
 

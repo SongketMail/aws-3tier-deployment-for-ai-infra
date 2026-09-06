@@ -104,8 +104,8 @@ def test_markdown_okf_front_matter_compliance():
         for key in required_keys:
             assert key in metadata, f"OKF Compliance Error in {rel_path}: Missing mandatory key '{key}'"
 
-        # 3. Assert correct OKF version specification
-        assert metadata['okf_version'].strip('"\'') == '0.1', f"OKF Version mismatch in {rel_path}: expected '0.1'"
+        # 3. Assert correct OKF version specification (supports v0.1 and v0.2)
+        assert metadata['okf_version'].strip('"\'') in ['0.1', '0.2'], f"OKF Version mismatch in {rel_path}: expected '0.1' or '0.2'"
 
         # 4. Assert strict double-quoting standard for strings with special characters
         for key, val in metadata.items():
