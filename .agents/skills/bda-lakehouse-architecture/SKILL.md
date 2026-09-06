@@ -46,13 +46,13 @@ This skill provides step-by-step procedures, architectural guardrails, and imple
 ### Solution 2: Hybrid - AI On-Premises
 * **Cloud Core Lakehouse:** Core lakehouse storage (S3 WORM Tier 0), Glue/Polaris catalog, Athena/EMR query engine, and MWAA Airflow hosted in AWS Cloud.
 * **On-Premises Dedicated GPU Infrastructure:** Bare-metal GPU servers (NVIDIA H100/A100) running local Ollama, vLLM, or RAGFlow inside an on-premises data centre (e.g. Cyberjaya).
-* **Hybrid Connectivity:** AWS Direct Connect (1GbE/10GbE private physical circuit; MACsec or IPsec overlay for transit encryption) or IPsec VPN tunnel.
+* **Hybrid Connectivity:** AWS Direct Connect (unencrypted by default; Layer 2 MACsec available for dedicated 10, 100, and 400 Gbps circuits at selected locations, or a Layer 3 IPsec VPN overlay for 1 Gbps connections or non-MACsec locations) or dedicated IPsec VPN tunnel.
 * **On-Prem MCP Servers:** Local MCP tools query Cloud Glue/Polaris and Cloud Trino using read-only database credentials over mTLS via Apache APISIX, enforcing Tier 0 write protection.
 
 ### Solution 3: Everything On-Premises (Proxmox VE + RKE2 + Ceph SDS)
 * **Proxmox VE Hypervisor Fabric:** 11 physical Proxmox VE hosts (4x AI/GPU, 4x App, 3x DB/Stateful) with PCIe GPU Passthrough for AI worker VMs.
 * **Dual-Cluster Kubernetes Architecture:**
-  * **RKE2 Production Cluster (14 VM Nodes):** 3x CP (`rke2-cp-01`..`03`), 4x AI GPU worker (`rke2-worker-ai-01`..`04`), 4x App worker (`rke2-worker-app-01`..`04`), 3x DB worker (`rke2-worker-db-01`..`03`). RKE2 v1.30.x release train. Canal CNI for FIPS 140-2 compliance, or Cilium CNI for eBPF performance. Proxmox VE VM anti-affinity rules enforced across physical hosts.
+  * **RKE2 Production Cluster (14 VM Nodes):** 3x CP (`rke2-cp-01`..`03`), 4x AI GPU worker (`rke2-worker-ai-01`..`04`), 4x App worker (`rke2-worker-app-01`..`04`), 3x DB worker (`rke2-worker-db-01`..`03`). RKE2 v1.30.x release train. When FIPS 140-2 compliance is required, RKE2 is deployed using its bundled Canal CNI with FIPS-validated cryptographic modules; when eBPF performance and advanced networking are required, Cilium CNI is selected. Proxmox VE VM anti-affinity rules enforced across physical hosts.
   * **K3s Supporting Cluster (5 VM Nodes):** 3x CP (`k3s-mgmt-01`..`03`), 2x Worker (`k3s-worker-01`..`02`) hosting Prometheus, Grafana, Loki, Vault, and CI/CD runners.
 * **Distributed Software-Defined Storage (Ceph SDS):** Ceph RADOS Gateway (S3 Object Storage WORM), Ceph CSI RBD (high-IOPS block storage RWO), CephFS (shared filesystem RWX), NFS external provisioner, and Local Path Provisioner (with CronJob cleanup controller).
 * **On-Prem Open-Source Stack:** Ceph RGW/MinIO, Apache Polaris, Trino MPP + Spark/Sedona, PostgreSQL 17 + Patroni + PostGIS, NiFi + Airflow, APISIX + Keycloak, Next.js + Apache Superset with deck.gl spatial maps.

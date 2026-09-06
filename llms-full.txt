@@ -6818,7 +6818,7 @@ The modern data lakehouse pattern physically and logically decouples persistent 
 ### Architectural Foundations
 1. **Persistent Object Storage & Immutability Contract:** Uses Ceph (via RADOS Gateway), MinIO Enterprise Object Store, or AWS S3.
    * **Object Lock Retention Contract:** S3 Object Lock enforces documented software guarantees rather than physical/hardware locks. Buckets require **Bucket Versioning** to be enabled. Tier 0 evidence storage enforces a defined retention policy (e.g. 7-year statutory compliance or 365-day operational compliance) in **Compliance Mode** alongside legal-hold toggles for regulatory holds. Tested, equivalent Object Lock retention behaviors are documented and validated across AWS S3, Ceph RADOS Gateway (RGW), and MinIO Enterprise Object Store.
-   * **Iceberg Maintenance Separation:** Immutable source/evidence storage is separated from mutable analytical lakehouse tables. Apache Iceberg tables reside in dedicated buckets or partitions configured with **Governance Mode** Object Lock or un-locked object paths, allowing Iceberg catalog maintenance jobs (such as snapshot compaction, orphan file purging, and snapshot expiration) to execute without violating WORM retention rules.
+   * **Iceberg Maintenance Separation:** Immutable source/evidence storage is separated from mutable analytical lakehouse tables. Apache Iceberg tables reside in dedicated buckets or partitions configured with **Governance Mode** Object Lock or unlocked object paths. Catalog maintenance jobs (such as snapshot compaction, orphan file purging, and snapshot expiration) operate either on unlocked object paths or via a narrowly scoped maintenance service role authorized with `s3:BypassGovernanceRetention` permission sending the `x-amz-bypass-governance-retention: true` request header. Retention compatibility is verified via automated validation tests prior to production compaction execution.
 2. **Universal Open Table Format (Apache Iceberg):** Replaces relational sprawl and file directories with Apache Iceberg backed by columnar Parquet files. Iceberg provides ACID transactions, in-place schema evolution, hidden partitioning, and snapshot time-travel querying.
 3. **Open Catalog (Apache Polaris / Project Nessie):** Manages table registration and commit resolution via an open Iceberg REST catalog.
 4. **Decoupled Distributed Compute:**
@@ -6953,6 +6953,8 @@ To provide maximum operational flexibility, this architecture is divided into th
 
 Solution 1 deploys the entire Big Data Analytics platform natively within the AWS Cloud infrastructure (specifically optimized for AWS Asia Pacific regions such as `ap-southeast-5` Malaysia).
 
+*Portability Qualification:* Solution 1 leverages open-source data specifications (Apache Iceberg tables and Apache Parquet files) alongside selected open-source applications (Keycloak, Apache APISIX, OpenMetadata, Apache Superset), but replaces self-hosted platform components with AWS-managed cloud services (AWS Glue Data Catalog, AWS MWAA Airflow, Amazon Bedrock, Amazon Athena, and Amazon EMR Serverless). Consequently, Solution 1 is cloud-dependent and AWS-managed rather than fully vendor-neutral. Organizations requiring complete vendor neutrality and portability should deploy Solution 3 (100% On-Premises) or self-host all components on Amazon EKS.
+
 ```
 +-----------------------------------------------------------------------------------------------+
 |                               SOLUTION 1: ALL IN CLOUD (AWS NATIVE)                           |
@@ -7022,7 +7024,7 @@ Solution 2 retains the core data lakehouse, storage, and batch processing in the
    * **Local AI Inference Engine:** **Ollama**, **vLLM**, or **RAGFlow** running in rootless Podman containers or local Kubernetes, serving local LLMs (Qwen, Llama 3, DeepSeek) for natural language processing, vector embedding generation, and dynamic hazard prediction.
    * **Local Vector Caching:** Valkey / Qdrant instance for ultra-fast local vector search.
 3. **Hybrid Secure Connectivity & MCP Integration:**
-   * **AWS Direct Connect / Dedicated IPsec VPN:** AWS Direct Connect provides a dedicated 1GbE/10GbE private physical circuit (unencrypted by default; MACsec at Layer 2 or an IPsec overlay at Layer 3 can be configured when encryption in transit is selected) or a dedicated IPsec VPN tunnel connecting the on-premises GPU cluster directly to the AWS VPC.
+   * **AWS Direct Connect / Dedicated IPsec VPN:** AWS Direct Connect provides a dedicated private physical circuit (unencrypted by default; Layer 2 MACsec encryption is available for dedicated 10 Gbps, 100 Gbps, and 400 Gbps connections at selected Direct Connect locations, whereas 1 Gbps connections or non-MACsec locations require a Layer 3 IPsec VPN overlay when encryption in transit is required) or a dedicated IPsec VPN tunnel connecting the on-premises GPU cluster directly to the AWS VPC.
    * **On-Premises MCP Servers:** MCP servers (`mcp-trino-query-gen`, `mcp-catalog-context`) run locally inside the on-prem GPU cluster.
    * **Read-Only Cloud Access Gateways:** On-prem MCP tools query the Cloud Glue/Polaris Catalog and Cloud Trino engine using read-only database credentials over mTLS via Apache APISIX.
    * **Data Quarantine Enforcement:** All AI inferencing occurs on-premises. Model intermediate outputs are stored on local S3-compatible storage (MinIO) configured with a 30-day S3 Lifecycle expiration rule marked as Tier 2 Scratch. AI models have zero write permissions back to Cloud Tier 0 SSoT.
@@ -7064,8 +7066,11 @@ Solution 3 provides complete operational sovereignty and zero vendor lock-in by 
 ```
 
 #### 1. Hypervisor & Compute Infrastructure (Proxmox VE)
-* **Proxmox VE Cluster Sizing & Host Topology:** High-density enterprise hypervisor cluster comprising **11 physical Proxmox VE hosts** (4x AI/GPU hosts, 4x Application hosts, 3x Database/Stateful hosts) with a 100GbE data plane and 10GbE out-of-band management plane.
-* **VM Sizing & Anti-Affinity Rules:** The 14 virtualized RKE2 production nodes and 5 virtualized K3s management nodes execute as Virtual Machines (VMs) provisioned across the 11 physical PVE hosts. Strict Proxmox VE VM anti-affinity rules are enforced across physical hosts to prevent single points of failure (SPOFs) (e.g. no two RKE2/K3s control-plane VMs or Patroni DB VMs reside on the same physical PVE host), reserving host CPU/RAM capacity to guarantee high availability.
+* **Proxmox VE Cluster Sizing & Host Topology:** High-density enterprise hypervisor cluster comprising **11 physical Proxmox VE hosts** (4x AI/GPU hosts, 4x Application hosts, 3x Database/Stateful hosts) with a 100GbE data plane and 10GbE out-of-band management plane. Minimum per-host hardware capacity requirements:
+  * **4x AI/GPU Compute Hosts:** Dual 32-core CPUs (e.g. AMD EPYC / Intel Xeon), 512GB RAM, 8TB NVMe storage, and 2x NVIDIA H100/A100 GPUs per physical host.
+  * **4x Application Compute Hosts:** Dual 24-core CPUs, 256GB RAM, 4TB NVMe storage per physical host.
+  * **3x Database / Stateful Hosts:** Dual 24-core CPUs, 256GB RAM, 4TB NVMe storage per physical host.
+* **VM Sizing, Anti-Affinity & N+1 Headroom:** The 14 virtualized RKE2 production nodes and 5 virtualized K3s management nodes execute as Virtual Machines (VMs) provisioned across the 11 physical PVE hosts. Strict Proxmox VE VM anti-affinity rules are enforced across physical hosts to prevent single points of failure (SPOFs) (e.g. no two RKE2/K3s control-plane VMs or Patroni DB VMs reside on the same physical PVE host). Each host tier maintains an N+1 capacity reservation (reserving 15–20% CPU/RAM headroom per tier) so that upon any single physical host failure, affected virtualized cluster VMs automatically restart on remaining physical hosts, guaranteeing high availability.
 * **PCIe GPU Passthrough:** Direct hardware assignment of NVIDIA H100/A100/L40S GPUs to virtualized AI worker VMs, bypassing hypervisor overhead for maximum matrix math performance.
 
 #### 2. Dual-Cluster Open-Source Kubernetes Architecture (RKE2 & K3s)
