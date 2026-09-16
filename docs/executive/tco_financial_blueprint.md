@@ -27,7 +27,7 @@ Our financial projection spans **2 years of active development (24 months)** and
 | **Year 3 (Months 25–36)** | $11,343.60 | RM 51,046.20 | $14,100.00 | RM 63,450.00 | $25,443.60 | RM 114,496.20 |
 | **Grand Total** | **$47,709.78** | **RM 214,694.01** | **$44,800.00** | **RM 201,600.00** | **$92,509.78** | **RM 416,294.01** |
 
-*Note: All currency conversions utilize our standardized baseline exchange rate of exactly $1.00 USD = MYR 4.50.*
+*Note: All currency conversions utilize our standardized baseline exchange rate of exactly $1.00 USD = MYR 4.50. For empirical validation, our 12-month Cost Explorer telemetry for AWS Malaysia (`ap-southeast-5`) across active load-test & AI workload execution reached **$61,400.47 USD** (≈ **RM 276,302.12 MYR**), fully detailed in [**Estimated Costing**](../costing.html).*
 
 ---
 
