@@ -207,7 +207,12 @@ Granular daily tracking across June 2026 shows extreme operational consistency a
 - **Elastic File System (EFS):** $19.40 – $42.02 / day (Scales with temporary AI vector cache growth)
 - **CloudWatch & VPC:** ~$2.65 / day and ~$2.72 / day respectively
 
-This empirical telemetry confirms that our architectural cost models accurately mirror live enterprise AWS behavior in Malaysia, providing rock-solid confidence for financial planning and executive budget approvals.
+*Note on Basis and Scope:*
+- **June 2026 Dataset (Table D & June 2026 Monthly Line):** Represents a 30-day aggregate gross accrual dataset ($19,174.98 USD cumulative daily total; $6,113.60 USD net monthly bill line after account-level volume discount allocations) for active multi-node load testing across the account scope.
+- **August 2026 Dataset (Table C & August 2026 Monthly Line):** Represents an active production instance allocation dataset ($6,505.72 USD gross compute allocation total across hardware families; $4,533.82 USD net monthly bill line after post-audit credit adjustments of -$249.98 USD and account-level discounts).
+- **12-Month Dataset (Table A):** Displays the cumulative 12-month net service total ($61,400.47 USD) calculated across all 12 monthly net billing periods.
+
+This reference telemetry serves as an external benchmark baseline to perform price and load estimations for our 3-tier architecture, ensuring that component choices and resource configurations remain within project budget parameters.
 
 ---
 
