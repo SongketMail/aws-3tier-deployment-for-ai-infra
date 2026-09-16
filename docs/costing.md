@@ -131,9 +131,9 @@ A comparison with real-world billings from a highly similar production deploymen
 └─────────────────────────────────┴─────────────────────────────┴────────────────────────────────────────────────────────┘
 ```
 
-### 3.1 Empirical Telemetry Data: AWS Region Malaysia (`ap-southeast-5`)
+### 3.1 Reference Telemetry Data for Price & Load Estimation: AWS Region Malaysia (`ap-southeast-5`)
 
-To ground our financial forecasting in empirical production data, the following tables detail actual AWS Cost Explorer telemetry extracted for the **AWS Malaysia (`ap-southeast-5`) region** spanning the 12-month lifecycle from **September 2025 to August 2026**.
+To ground our financial forecasting in realistic pricing and workload profiles, the following tables detail AWS Cost Explorer reference data from an external benchmark project in the **AWS Malaysia (`ap-southeast-5`) region** spanning a 12-month lifecycle (September 2025 to August 2026). **Note:** This dataset is utilized strictly as a reference baseline to perform price and load estimations for our 3-tier architecture to ensure resource sizing stays strictly within project budget guardrails.
 
 #### A. 12-Month Historical Service Spend (Sept 2025 – Aug 2026)
 Across the 12-month evaluation window, total regional cloud expenditure reached **$61,400.47 USD** (≈ **RM 276,302.12 MYR** at 1 USD = 4.50 MYR).
