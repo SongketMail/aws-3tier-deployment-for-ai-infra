@@ -4546,7 +4546,7 @@ Because AWS hypervisors cannot inspect guest operating system memory or filesyst
           "drop_out"
         ],
         "resources": [
-          "*"
+          "eth0"
         ]
       }
     }
@@ -4554,10 +4554,10 @@ Because AWS hypervisors cannot inspect guest operating system memory or filesyst
 }
 ```
 
-*Note on Network Interface Target:* The `"resources": ["*"]` wildcard automatically discovers primary network interfaces across both Nitro/Graviton AMIs (which expose `ens5` / `ens6`) and legacy AMIs (which expose `eth0`).
+*Note on Network Interface Target:* The agent configuration above explicitly targets the primary interface (`"resources": ["eth0"]` on standard Linux AMIs, or `"ens5"` on AWS Nitro/Graviton AMIs). If wildcard discovery (`"resources": ["*"]`) is used, the agent exposes separate dimensioned metric streams for every active network interface (including virtual loopbacks and secondary vNICs), scaling metric volume accordingly.
 
 ### Metric Volume & Host Metric Sizing
-The configuration above collects 8 custom metric streams per instance (`mem_used_percent`, `mem_available`, `disk_used_percent`, `disk_free`, `bytes_sent`, `bytes_recv`, `drop_in`, `drop_out`). For a 15-node production cluster:
+Configuring primary network interface monitoring as specified above emits 8 custom metric streams per EC2 host (`mem_used_percent`, `mem_available`, `disk_used_percent`, `disk_free`, `bytes_sent`, `bytes_recv`, `drop_in`, `drop_out`). For a 15-node production cluster:
 - **Total Custom Metrics:** 15 instances × 8 metrics = 120 custom metrics.
 - **Billable Metrics:** 120 metrics − 10 free tier metrics = 110 billable custom metrics.
 - **Monthly Host Metric Cost:** 110 metrics × $0.30/metric/month = **$33.00 USD/month (~RM 148.50 MYR)**.
@@ -4590,7 +4590,39 @@ To complete the replacement of on-premise Dynatrace agents in AWS, **Amazon Clou
 
 ## 4. CloudWatch Real User Monitoring (RUM)
 
-Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a lightweight asynchronous JavaScript client (`aws-rum-web`) into front-end templates.
+Client-Side Monitoring is handled natively by **CloudWatch RUM**, which embeds the asynchronous `aws-rum-web` JavaScript client into front-end application templates.
+
+### Frontend Web Integration Snippet (`aws-rum-web`)
+
+```javascript
+import { AwsRum } from 'aws-rum-web';
+
+try {
+  const config = {
+    sessionSampleRate: 1.0,
+    guestRoleArn: "arn:aws:iam::123456789012:role/RUM-Guest-Role",
+    identityPoolId: "ap-southeast-5:example-pool-id",
+    endpoint: "https://dataplane.rum.ap-southeast-5.amazonaws.com",
+    telemetries: ["errors", "performance", "http"],
+    allowCookies: true,
+    enableXRay: true,
+    addXRayTraceIdHeader: true
+  };
+
+  const APPLICATION_ID = 'example-rum-app-id';
+  const APPLICATION_VERSION = '1.0.0';
+  const APPLICATION_REGION = 'ap-southeast-5';
+
+  const awsRum = new AwsRum(
+    APPLICATION_ID,
+    APPLICATION_VERSION,
+    APPLICATION_REGION,
+    config
+  );
+} catch (error) {
+  // Ignore RUM initialization errors in client
+}
+```
 
 ```text
 [ End-User Browser ]
@@ -4606,8 +4638,7 @@ Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a
 ### Client-Side Observability Capabilities
 - **Core Web Vitals (CWV):** Measures Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) across Malaysian ISPs and browsers.
 - **JavaScript & HTTP Error Tracking:** Automatically captures unhandled exceptions, stack traces, and 4xx/5xx API failures.
-- **W3C Distributed Trace Correlation:** Injects standard trace context headers into API calls, linking user web sessions directly to backend AWS X-Ray traces.
-  - *Prerequisites for End-to-End Trace Linking:* Requires enabling X-Ray session tracing in `aws-rum-web`, declaring target API domains in `telemetry: ['tracer']`, instrumenting backend services with AWS X-Ray SDK or OTel, and whitelisting the `X-Amzn-Trace-Id` header in CORS policies.
+- **W3C Distributed Trace Correlation:** Setting `enableXRay: true`, including `"http"` in `telemetries`, and enabling `addXRayTraceIdHeader: true` (or specifying allowed API target domains) injects standard `X-Amzn-Trace-Id` headers into client HTTP requests. This links client web sessions directly to backend AWS X-Ray server traces across the Application Load Balancer and application services.
 
 ---
 
@@ -4617,22 +4648,25 @@ Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a
 
 ### 5.1 CloudWatch Pricing Dimensions
 - **Custom Metrics (Host Agent):** $0.30 per custom metric/month (First 10 metrics free).
-- **Application Signals (Golden Metrics):** $1.50 per 1 million signals for the first 100M signals/month.
-- **Transaction Search / Trace Ingestion:** $0.35 per GB trace data ingested.
+- **Application Signals Billing Modes:**
+  1. **Transaction Search Mode (Golden Signals + Trace Spans):** Billed per Golden Signal ($1.50 per 1M signals) AND per GB trace span ingested ($0.35 per GB).
+  2. **Golden-Metrics-Only Mode (Trace Ingestion Disabled):** Billed strictly per Golden Signal ($1.50 per 1M signals), with trace span ingestion disabled.
 - **CloudWatch RUM Events:** $1.00 per 100,000 data events (~20 events per complete user session = ~$0.20 per 1,000 user sessions).
 
 ### 5.2 Application Signals & RUM Workload Scenarios
-- **Baseline APM Workload:** 5,000,000 signals ($7.50) + 10 GB trace ingestion ($3.50) = **$11.00 USD/month (~RM 49.50 MYR)**.
-- **Moderate APM Workload:** 20,000,000 signals ($30.00) + 40 GB trace ingestion ($14.00) = **$44.00 USD/month (~RM 198.00 MYR)**.
-- **Baseline RUM Workload:** 250,000 monthly sessions × 20 events/session = 5,000,000 events = **$50.00 USD/month (~RM 225.00 MYR)**.
-- **Moderate RUM Workload:** 1,000,000 monthly sessions × 20 events/session = 20,000,000 events = **$200.00 USD/month (~RM 900.00 MYR)**.
+- **Baseline APM Workload (Transaction Search Mode):** 5,000,000 signals ($7.50) + 10 GB trace ingestion ($3.50) = **$11.00 USD/month (~RM 49.50 MYR)**.
+- **Moderate APM Workload (Transaction Search Mode):** 20,000,000 signals ($30.00) + 40 GB trace ingestion ($14.00) = **$44.00 USD/month (~RM 198.00 MYR)**.
+- **Baseline APM Workload (Golden-Metrics-Only Mode):** 5,000,000 signals = **$7.50 USD/month (~RM 33.75 MYR)**.
+- **Moderate APM Workload (Golden-Metrics-Only Mode):** 20,000,000 signals = **$30.00 USD/month (~RM 135.00 MYR)**.
+- **Baseline RUM Workload:** 250,000 monthly sessions × 20 events/session = 5,000,000 events = **$50.00 USD/month steady-state (~RM 225.00 MYR)** *(Note: Initial trial period cost with 1M-event free trial is $40.00 USD / RM 180.00 MYR)*.
+- **Moderate RUM Workload:** 1,000,000 monthly sessions × 20 events/session = 20,000,000 events = **$200.00 USD/month steady-state (~RM 900.00 MYR)** *(Note: Initial trial period cost with 1M-event free trial is $190.00 USD / RM 855.00 MYR)*.
 
 ### 5.3 Consolidated Observability Sizing (15-Node Production Cluster)
 
 | Component | Scope / Function | Monthly Cost (USD) | Monthly Cost (MYR @ 4.50) |
 | --- | --- | --- | --- |
-| **CloudWatch RUM** | Client-side Core Web Vitals, JS errors (250k–1M sessions) | $50.00 – $200.00 | RM 225.00 – RM 900.00 |
-| **Application Signals (APM)** | OTel distributed traces, Service Maps, SLOs (5M/10GB baseline to 20M/40GB moderate) | $11.00 – $44.00 | RM 49.50 – RM 198.00 |
+| **CloudWatch RUM** | Client-side Core Web Vitals, JS errors (250k–1M sessions, steady-state) | $50.00 – $200.00 | RM 225.00 – RM 900.00 |
+| **Application Signals (APM)** | OTel distributed traces, Service Maps, SLOs (Transaction Search Mode: 5M/10GB to 20M/40GB) | $11.00 – $44.00 | RM 49.50 – RM 198.00 |
 | **Host Metrics (CloudWatch Agent)** | 15 EC2 nodes × 8 custom metrics (120 total, 110 billable @ $0.30) | $33.00 | RM 148.50 |
 | **Native AWS Metrics** | RDS PostgreSQL, ElastiCache Valkey, EFS, ALB | **$0.00** (Included) | **RM 0.00** |
 | **Alarms & Operational Dashboards** | Operational alerts, status screens, Composite Alarms | $5.00 | RM 22.50 |
@@ -4645,23 +4679,26 @@ Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a
 
 ## 6. High-Volume / Payment-Critical Cost Risk Analysis
 
-For high-throughput or payment-critical transaction paths (e.g. core banking switches or gateway processors), sustained request rates require explicit sampling controls to prevent unexpected trace ingestion charges.
+For high-throughput or payment-critical transaction paths (e.g. core banking switches or gateway processors), sustained request rates require selecting the appropriate Application Signals billing mode to prevent unexpected trace ingestion charges.
 
-### Cost Scaling Matrix for High-Throughput Services
+### Cost Scaling Comparison: Transaction Search Mode vs. Golden-Metrics-Only Mode
 
-Application Signals pricing combines Golden Signal metering ($1.50/1M signals) and Trace Span Ingestion ($0.35/GB trace data assuming ~2 downstream spans per transaction @ ~1.8 KB/trace span):
+Below is the cost scaling comparison across throughput levels under **Transaction Search Mode** (Golden Signals @ $1.50/1M + Trace Span Ingestion @ $0.35/GB assuming ~2 downstream spans per transaction @ ~1.8 KB/span) versus **Golden-Metrics-Only Mode** (Trace Span Ingestion disabled):
 
-| Sustained Load | Signals / month | Trace Ingestion | Monthly APM Cost (USD) | Monthly APM Cost (MYR) |
+| Sustained Load | Signals / month | Trace Ingestion | Transaction Search Cost (USD) | Golden-Metrics-Only Cost (USD) |
 | --- | --- | --- | --- | --- |
-| **1,000 req/min** | 131,000,000 | ~246 GB | **$259.79** | **RM 1,169.00** |
-| **5,000 req/min** | 657,000,000 | ~1.23 TB | **$998.92** | **RM 4,495.00** |
-| **10,000 req/min** | 1,310,000,000 | ~2.46 TB | **$1,781.51** | **RM 8,017.00** |
-| **25,000 req/min** | 3,290,000,000 | ~6.16 TB | **$3,666.29** | **RM 16,498.00** |
+| **1,000 req/min** | 131,000,000 | ~246 GB | **$259.79** | **$196.50** |
+| **5,000 req/min** | 657,000,000 | ~1.23 TB | **$998.92** | **$702.75** |
+| **10,000 req/min** | 1,310,000,000 | ~2.46 TB | **$1,781.51** | **$1,194.00** |
+| **25,000 req/min** | 3,290,000,000 | ~6.16 TB | **$3,666.29** | **$2,385.00** |
 
-*Note: At ~10,000 req/min sustained, un-sampled APM ingestion exceeds fixed host-unit Dynatrace licensing. To prevent cost escalation:*
-1. **Apply Intelligent Sampling:** Maintain 5% steady-state trace sampling, ramping up to 100% capture strictly on 5xx errors and latency anomalies.
-2. **Audit Pipeline Separation:** Route compliance transaction logs to CloudWatch Logs or S3, keeping Application Signals in golden-metrics-only mode for normal transactions.
-3. **Leverage Free Trial:** Utilize the 3-month CloudWatch Application Signals free trial (up to 100 GB trace data ingestion or 100M signals) to measure exact throughput before full cutover.
+*Note: At ~10,000 req/min sustained under Transaction Search Mode, un-sampled APM span ingestion ($1,781.51 USD / RM 8,017 MYR) exceeds fixed host-unit Dynatrace licensing ($870–$1,110 USD). To prevent cost escalation:*
+1. **Apply Intelligent Trace Sampling:** In Transaction Search Mode, maintain 5% steady-state trace sampling, ramping up to 100% capture strictly on 5xx errors and latency anomalies.
+2. **Switch to Golden-Metrics-Only Mode for Payment Gateway:** Disable span ingestion for the payment service path to cap costs strictly at Golden Signals ($1.50/1M signals).
+3. **Audit Pipeline Separation:** Route compliance audit trails to CloudWatch Logs or S3, avoiding APM span ingestion for compliance retention.
+4. **Leverage Free Trial:** Utilize the 3-month CloudWatch Application Signals free trial:
+   - When **Transaction Search Mode** is enabled: 3 months up to **100 GB of data ingestion** or **1 million spans indexed as X-Ray trace summaries** (whichever comes first).
+   - When **Transaction Search Mode** is disabled (Golden Metrics only): 3 months up to **100 million signals**.
 
 ---
 
@@ -4729,11 +4766,17 @@ For a representative 15-node production cluster, the fully consolidated CloudWat
 
 ## 4. How CloudWatch Application Signals Is Priced
 
-Two billing dimensions apply in tandem when transaction span ingestion is active:
+CloudWatch Application Signals supports two distinct account-level operational modes:
 
-- **Golden metrics (Application Signals):** $1.50 per 1M signals for the first 100M signals/month, then $0.75 per 1M up to 1B, then $0.30 per 1M beyond that.
-- **Transaction Search / trace span ingestion:** $0.35 per GB for the first 10 TB/month, then $0.20 per GB up to 30 TB, then $0.15 per GB beyond that.
-- **Free Trial Window:** New accounts receive 3 months free allowance. The 100 GB ingestion limit applies when transaction spans are enabled, whereas the 100M-signal cap applies when transaction-span ingestion is disabled (whichever threshold is reached first).
+1. **Transaction Search Mode (Golden Signals + Trace Span Ingestion):**
+   - Golden Signals: $1.50 per 1M signals for the first 100M signals/month.
+   - Trace Span Ingestion: $0.35 per GB for the first 10 TB/month.
+2. **Golden-Metrics-Only Mode (Trace Span Ingestion Disabled):**
+   - Golden Signals: $1.50 per 1M signals for the first 100M signals/month.
+   - Trace Span Ingestion: $0.00 (span ingestion disabled).
+3. **Free Trial Window:** New accounts receive a 3-month free trial:
+   - When **Transaction Search Mode** is enabled: 3 months up to **100 GB of trace data ingestion** or **1 million spans indexed as X-Ray trace summaries** (whichever comes first).
+   - When **Transaction Search Mode** is disabled (Golden Metrics only): 3 months up to **100 million signals**.
 
 ---
 
@@ -4741,31 +4784,31 @@ Two billing dimensions apply in tandem when transaction span ingestion is active
 
 ### 5.1 Application Signals — Workload Scenarios
 
-Application Signals billing combines Golden Signal metering ($1.50/1M signals) and Trace Span Ingestion ($0.35/GB trace data):
+Below are cost estimates calculated under **Transaction Search Mode** (Golden Signals + Trace Ingestion) and **Golden-Metrics-Only Mode** (Trace Ingestion disabled):
 
-| Workload Profile | Signals / month | Trace Ingestion | Monthly Cost (USD) | Monthly Cost (MYR @ 4.50) |
-| --- | --- | --- | --- | --- |
-| **Baseline** | 5,000,000 | 10 GB | **$11.00** | **RM 49.50** |
-| **Moderate Production** | 20,000,000 | 40 GB | **$44.00** | **RM 198.00** |
-| **High-Volume Tier** | 80,000,000 | 150 GB | **$172.50** | **RM 776.25** |
+| Workload Profile | Signals / month | Trace Ingestion | Transaction Search Cost (USD) | Golden-Metrics-Only Cost (USD) | Equivalent MYR (Transaction Search) |
+| --- | --- | --- | --- | --- | --- |
+| **Baseline** | 5,000,000 | 10 GB | **$11.00** | **$7.50** | **RM 49.50** |
+| **Moderate Production** | 20,000,000 | 40 GB | **$44.00** | **$30.00** | **RM 198.00** |
+| **High-Volume Tier** | 80,000,000 | 150 GB | **$172.50** | **$120.00** | **RM 776.25** |
 
-*(Exact Math: Baseline = 5M × $1.50/1M + 10GB × $0.35 = $7.50 + $3.50 = $11.00 USD; Moderate = 20M × $1.50/1M + 40GB × $0.35 = $30.00 + $14.00 = $44.00 USD).*
+*(Exact Math under Transaction Search Mode: Baseline = 5M × $1.50/1M + 10GB × $0.35 = $7.50 + $3.50 = $11.00 USD; Moderate = 20M × $1.50/1M + 40GB × $0.35 = $30.00 + $14.00 = $44.00 USD).*
 
 ### 5.2 CloudWatch RUM (Client-Side)
 
 Official CloudWatch RUM pricing is $1.00 per 100,000 events (~20 events per complete user session):
 
-| Monthly Sessions | Est. Events (@20/session) | Monthly Cost (USD) | Monthly Cost (MYR @ 4.50) |
-| --- | --- | --- | --- |
-| **250,000** | 5,000,000 | **$50.00** | **RM 225.00** |
-| **1,000,000** | 20,000,000 | **$200.00** | **RM 900.00** |
+| Monthly Sessions | Est. Events (@20/session) | Steady-State Cost (USD) | Initial Trial Period Cost (USD) | Monthly Cost (MYR @ 4.50) |
+| --- | --- | --- | --- | --- |
+| **250,000** | 5,000,000 | **$50.00** | **$40.00** | **RM 225.00** |
+| **1,000,000** | 20,000,000 | **$200.00** | **$190.00** | **RM 900.00** |
 
 ### 5.3 Consolidated CloudWatch Observability Stack (15-node cluster)
 
 | Component | Scope | Monthly (USD) | Monthly (MYR @ 4.50) |
 | --- | --- | --- | --- |
-| **CloudWatch RUM** | Client-side vitals, JS errors (250k–1M sessions) | $50 – $200 | RM 225 – RM 900 |
-| **Application Signals (APM)** | OTel traces, service map, SLOs (5M/10GB to 20M/40GB) | $11 – $44 | RM 49.50 – RM 198 |
+| **CloudWatch RUM** | Client-side vitals, JS errors (250k–1M sessions, steady-state) | $50 – $200 | RM 225 – RM 900 |
+| **Application Signals (APM)** | OTel traces, service map, SLOs (Transaction Search Mode: 5M/10GB to 20M/40GB) | $11 – $44 | RM 49.50 – RM 198 |
 | **Host metrics** | EC2 CPU / memory / disk / net (120 custom metrics, 110 billable) | $33.00 | RM 148.50 |
 | **Native AWS metrics** | RDS, ElastiCache Valkey, ALB, EFS | **$0.00** | **RM 0.00** |
 | **Alarms & dashboards** | Operational alerts, exec dashboards | $5.00 | RM 22.50 |
@@ -4777,18 +4820,19 @@ Official CloudWatch RUM pricing is $1.00 per 100,000 events (~20 events per comp
 
 A payment-transfer service carries a unique risk profile: high transaction throughput and strict audit trace requirements push against trace ingestion billing.
 
-| Sustained Load | Signals / month | Trace Ingestion | APM Cost (USD/mo) | APM Cost (MYR/mo) |
+| Sustained Load | Signals / month | Trace Ingestion | Transaction Search Cost (USD/mo) | Golden-Metrics-Only Cost (USD/mo) |
 | --- | --- | --- | --- | --- |
-| **1,000 req/min** | 131M | ~246 GB | **$259.79** | **RM 1,169** |
-| **5,000 req/min** | 657M | ~1.23 TB | **$998.92** | **RM 4,495** |
-| **10,000 req/min** | 1.31B | ~2.46 TB | **$1,781.51** | **RM 8,017** |
-| **25,000 req/min** | 3.29B | ~6.16 TB | **$3,666.29** | **RM 16,498** |
+| **1,000 req/min** | 131M | ~246 GB | **$259.79** | **$196.50** |
+| **5,000 req/min** | 657M | ~1.23 TB | **$998.92** | **$702.75** |
+| **10,000 req/min** | 1.31B | ~2.46 TB | **$1,781.51** | **$1,194.00** |
+| **25,000 req/min** | 3.29B | ~6.16 TB | **$3,666.29** | **$2,385.00** |
 
 ### Critical Finding & Recommendations
-At roughly **10,000 req/min sustained**, APM trace ingestion alone (≈RM 8,000/month) exceeds the entire 15-host Dynatrace host-unit estimate (RM 3,915–4,995/month). To mitigate cost risks:
-1. **Enforce Sampling Controls:** Deploy 5% steady-state sampling with 100% capture only on errors and 5xx responses.
-2. **Decouple Compliance Audits:** Route compliance audit trails to CloudWatch Logs or S3, keeping Application Signals in golden-metrics-only mode.
-3. **Pilot during Free Trial:** Measure exact transaction signal/span rates on the payment service during the 3-month free trial before final cutover.
+At roughly **10,000 req/min sustained** under Transaction Search Mode, un-sampled trace span ingestion ($1,781.51 USD / RM 8,017 MYR) exceeds fixed host-unit Dynatrace licensing ($870–$1,110 USD / RM 3,915–4,995 MYR). To mitigate cost risks:
+1. **Apply Intelligent Sampling:** Under Transaction Search Mode, enforce 5% steady-state sampling with 100% capture only on 5xx errors and latency anomalies.
+2. **Switch Payment Path to Golden-Metrics-Only Mode:** Disable trace span ingestion for the payment service path to cap APM costs strictly at Golden Signals ($1.50/1M signals).
+3. **Decouple Compliance Audits:** Route compliance audit trails to CloudWatch Logs or S3, avoiding APM span ingestion for audit retention.
+4. **Pilot during Free Trial:** Measure exact signal and trace span volumes during the 3-month free trial before final cutover.
 
 ---
 
