@@ -236,16 +236,17 @@ To finalize the deprecation and total replacement of on-premise Dynatrace agents
   * **Service Map & Golden Signals:** Live dependency topologies tracking latency, throughput, error rates, and availability across microservices, ElastiCache, and RDS.
   * **Service Level Objectives (SLOs):** Automated error budget tracking and burn-rate alerting for mission-critical endpoints.
 * **APM Cost Calibration (AWS Malaysia ap-southeast-5):**
-  * **Signals Pricing:** $1.50 per 1M signals (requests, errors, latency, saturation).
-  * **Transaction Search / Spans:** $0.35 per GB ingested trace data.
-  * **Estimated APM Monthly Run-Rate:** ~$11.00 USD (~RM 49.50 MYR) for baseline 5M signals / 10 GB traces, up to ~$44.00 USD (~RM 198.00 MYR) for moderate production 20M signals / 40 GB traces.
+  * **Golden-Metrics-Only Mode:** Billed strictly per Golden Signal using the tiered marginal schedule ($1.50/1M first 100M; $0.75/1M 100M-1B; $0.30/1M >1B). Monthly cost: ~$7.50 USD (5M signals) to ~$30.00 USD (20M signals).
+  * **Transaction Search Mode:** Billed per GB trace span ingested ($0.35/GB) PLUS X-Ray Trace Summaries indexed spans ($0.005 per 1,000 indexed spans). Monthly cost: ~$28.50 USD (10GB / 5M spans) to ~$114.00 USD (40GB / 20M spans).
 * **Consolidated Full-Stack Observability Footprint (15-Node Cluster):**
   * **Client RUM:** $50.00 – $200.00 USD/month.
-  * **Application Signals (APM):** $11.00 – $44.00 USD/month.
+  * **Application Signals (APM - Transaction Search):** $28.50 – $114.00 USD/month.
+  * **Application Signals (APM - Golden Metrics Only):** *$7.50 – $30.00 USD/month*.
   * **Host Compute Metrics (120 metrics / 110 billable):** $33.00 USD/month.
   * **Native Services (RDS/Valkey/EFS):** $0.00 USD.
   * **Operational Alarms & Dashboards:** ~$5.00 USD/month.
-  * **Combined Run-Rate:** **~$99.00 – $282.00 USD/month (~RM 445.50 – RM 1,269.00 MYR)** vs. ~$870.00 – $1,110.00+ USD/month (~RM 3,915.00 – RM 4,995.00+ MYR) for legacy Dynatrace OneAgent list pricing.
+  * **Combined Run-Rate (Transaction Search):** **~$116.50 – $352.00 USD/month (~RM 524.25 – RM 1,584.00 MYR)** vs. ~$870.00 – $1,110.00+ USD/month (~RM 3,915.00 – RM 4,995.00+ MYR) for legacy Dynatrace OneAgent list pricing.
+  * **Combined Run-Rate (Golden Metrics Only):** **~$95.50 – $268.00 USD/month (~RM 429.75 – RM 1,206.00 MYR)**.
 
 ---
 
