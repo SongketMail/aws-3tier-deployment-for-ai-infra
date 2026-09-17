@@ -22,12 +22,12 @@ Amazon CloudWatch serves as the single pane of glass for operational monitoring,
 
 ## 1. Capability & Infrastructure Telemetry Matrix
 
-Amazon CloudWatch natively collects performance telemetry across all operational tiers. Managed services emit hypervisor-level metrics automatically at no additional charge, while guest EC2 instances utilize the open-source **Unified CloudWatch Agent (`amazon-cloudwatch-agent`)** to expose internal OS-level memory and storage metrics.
+Amazon CloudWatch natively collects performance telemetry across all operational tiers. Managed services emit hypervisor-level metrics automatically at no additional charge, while guest EC2 instances utilize the open-source **Unified CloudWatch Agent (`amazon-cloudwatch-agent`)** to expose internal OS-level memory, storage, and network interface metrics.
 
 | Infrastructure Tier | CPU Telemetry | Memory Telemetry | Network I/O | Disk Space / IOPS | Implementation Mechanism | Metric Billing Category |
 | --- | --- | --- | --- | --- | --- | --- |
-| **EC2 Instances** | `CPUUtilization` | `mem_used_percent` | `NetworkIn` / `NetworkOut` | `disk_used_percent` | Unified CloudWatch Agent (RPM/DEB package) | Basic metrics **Free**; OS memory/disk are **Custom Metrics** (~$0.30/metric) |
-| **Amazon RDS PostgreSQL** | `CPUUtilization` | `FreeableMemory` | `NetworkReceiveThroughput` | `FreeStorageSpace` / `ReadIOPS` | Native Hypervisor Telemetry (Enhanced Monitoring) | **100% Free** (Standard 1-min / 5-min intervals) |
+| **EC2 Instances** | `CPUUtilization` | `mem_used_percent` | `bytes_sent`, `bytes_recv`, `drop_in`, `drop_out` | `disk_used_percent` | Unified CloudWatch Agent (RPM/DEB package) | Basic hypervisor metrics **Free**; OS memory/disk/net are **Custom Metrics** ($0.30/metric/mo) |
+| **Amazon RDS PostgreSQL** | `CPUUtilization` | `FreeableMemory` | `NetworkReceiveThroughput` | `FreeStorageSpace` / `ReadIOPS` | Native Hypervisor Telemetry | Standard 1-min/5-min metrics **Free**; OS Enhanced Monitoring logs billed via CloudWatch Logs ingestion |
 | **ElastiCache (Valkey / Redis)** | `CPUUtilization` / `EngineCPUUtilization` | `BytesUsedForCache` / `DatabaseMemoryUsagePercentage` | `NetworkBytesIn` / `NetworkBytesOut` | In-memory eviction tracking / swap usage | Native Engine Telemetry | **100% Free** (Emitted natively into CloudWatch) |
 | **Amazon EFS** | N/A (Serverless) | N/A (Serverless) | `DataReadIOBytes` / `DataWriteIOBytes` | `StorageBytes` / `PercentIOLimit` | Native EFS Storage Controller | **100% Free** (Standard metrics) |
 | **Application Load Balancers (ALB)** | N/A (L7 Layer) | N/A (L7 Layer) | `ProcessedBytes` / `ActiveConnectionCount` | N/A (HTTP target response time) | Native Load Balancing Ingress | **100% Free** (Standard metrics) |
@@ -76,7 +76,7 @@ Because AWS hypervisors cannot inspect guest operating system memory or filesyst
           "drop_out"
         ],
         "resources": [
-          "eth0"
+          "*"
         ]
       }
     }
@@ -84,9 +84,13 @@ Because AWS hypervisors cannot inspect guest operating system memory or filesyst
 }
 ```
 
-### Key Operational Features
-- **Zero Proprietary Lock-In:** Replaces Dynatrace OneAgent with a lightweight daemon consuming less than 15 MB of RAM and ~0.1% CPU.
-- **Automated Rollout:** Injected seamlessly via EC2 User Data, Systems Manager (SSM) Run Command, or Ansible playbooks.
+*Note on Network Interface Target:* The `"resources": ["*"]` wildcard automatically discovers primary network interfaces across both Nitro/Graviton AMIs (which expose `ens5` / `ens6`) and legacy AMIs (which expose `eth0`).
+
+### Metric Volume & Host Metric Sizing
+The configuration above collects 8 custom metric streams per instance (`mem_used_percent`, `mem_available`, `disk_used_percent`, `disk_free`, `bytes_sent`, `bytes_recv`, `drop_in`, `drop_out`). For a 15-node production cluster:
+- **Total Custom Metrics:** 15 instances × 8 metrics = 120 custom metrics.
+- **Billable Metrics:** 120 metrics − 10 free tier metrics = 110 billable custom metrics.
+- **Monthly Host Metric Cost:** 110 metrics × $0.30/metric/month = **$33.00 USD/month (~RM 148.50 MYR)**.
 
 ---
 
@@ -118,7 +122,7 @@ To complete the replacement of on-premise Dynatrace agents in AWS, **Amazon Clou
 
 Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a lightweight asynchronous JavaScript client (`aws-rum-web`) into front-end templates.
 
-```
+```text
 [ End-User Browser ]
          │
          ▼  (Lightweight snippet: ~10-20 events/session)
@@ -133,30 +137,39 @@ Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a
 - **Core Web Vitals (CWV):** Measures Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) across Malaysian ISPs and browsers.
 - **JavaScript & HTTP Error Tracking:** Automatically captures unhandled exceptions, stack traces, and 4xx/5xx API failures.
 - **W3C Distributed Trace Correlation:** Injects standard trace context headers into API calls, linking user web sessions directly to backend AWS X-Ray traces.
+  - *Prerequisites for End-to-End Trace Linking:* Requires enabling X-Ray session tracing in `aws-rum-web`, declaring target API domains in `telemetry: ['tracer']`, instrumenting backend services with AWS X-Ray SDK or OTel, and whitelisting the `X-Amzn-Trace-Id` header in CORS policies.
 
 ---
 
 ## 5. Comprehensive Cost Model & Financial Sizing (AWS Malaysia `ap-southeast-5`)
 
+*Official Pricing Reference: Rates verified against Official AWS CloudWatch Pricing (`aws.amazon.com/cloudwatch/pricing`) for AWS Malaysia (`ap-southeast-5`) region as of September 2026 (1 USD = 4.50 MYR).*
+
 ### 5.1 CloudWatch Pricing Dimensions
-- **Custom Metrics (Host Agent):** $0.30 per custom metric/month (First 10 metrics free). Standard 4 metrics/node (`mem_used_percent`, `mem_available`, `disk_used_percent`, `disk_free`) = **$1.20 USD / instance / month**.
+- **Custom Metrics (Host Agent):** $0.30 per custom metric/month (First 10 metrics free).
 - **Application Signals (Golden Metrics):** $1.50 per 1 million signals for the first 100M signals/month.
 - **Transaction Search / Trace Ingestion:** $0.35 per GB trace data ingested.
 - **CloudWatch RUM Events:** $1.00 per 100,000 data events (~20 events per complete user session = ~$0.20 per 1,000 user sessions).
 
-### 5.2 Consolidated Observability Sizing (15-Node Production Cluster)
+### 5.2 Application Signals & RUM Workload Scenarios
+- **Baseline APM Workload:** 5,000,000 signals ($7.50) + 10 GB trace ingestion ($3.50) = **$11.00 USD/month (~RM 49.50 MYR)**.
+- **Moderate APM Workload:** 20,000,000 signals ($30.00) + 40 GB trace ingestion ($14.00) = **$44.00 USD/month (~RM 198.00 MYR)**.
+- **Baseline RUM Workload:** 250,000 monthly sessions × 20 events/session = 5,000,000 events = **$50.00 USD/month (~RM 225.00 MYR)**.
+- **Moderate RUM Workload:** 1,000,000 monthly sessions × 20 events/session = 20,000,000 events = **$200.00 USD/month (~RM 900.00 MYR)**.
+
+### 5.3 Consolidated Observability Sizing (15-Node Production Cluster)
 
 | Component | Scope / Function | Monthly Cost (USD) | Monthly Cost (MYR @ 4.50) |
 | --- | --- | --- | --- |
 | **CloudWatch RUM** | Client-side Core Web Vitals, JS errors (250k–1M sessions) | $50.00 – $200.00 | RM 225.00 – RM 900.00 |
-| **Application Signals (APM)** | OTel distributed traces, Service Maps, SLOs (20M signals, 40GB traces) | $11.00 – $44.00 | RM 49.50 – RM 198.00 |
-| **Host Metrics (CloudWatch Agent)** | 15 EC2 nodes custom memory & disk metrics (60 metrics total) | $10.00 – $20.00 | RM 45.00 – RM 90.00 |
+| **Application Signals (APM)** | OTel distributed traces, Service Maps, SLOs (5M/10GB baseline to 20M/40GB moderate) | $11.00 – $44.00 | RM 49.50 – RM 198.00 |
+| **Host Metrics (CloudWatch Agent)** | 15 EC2 nodes × 8 custom metrics (120 total, 110 billable @ $0.30) | $33.00 | RM 148.50 |
 | **Native AWS Metrics** | RDS PostgreSQL, ElastiCache Valkey, EFS, ALB | **$0.00** (Included) | **RM 0.00** |
 | **Alarms & Operational Dashboards** | Operational alerts, status screens, Composite Alarms | $5.00 | RM 22.50 |
-| **Total CloudWatch Suite** | **Full-Stack Enterprise Cloud-Native Observability** | **~$76.00 – $269.00** | **~RM 342.00 – RM 1,210.50** |
-| **Dynatrace OneAgent (Current)** | Proprietary OneAgent Host Units + DEM Packs (15 nodes) | ~$870.00 – $1,110.00+ | ~RM 3,915.00 – RM 4,995.00+ |
+| **Total CloudWatch Suite** | **Full-Stack Enterprise Cloud-Native Observability** | **~$99.00 – $282.00** | **~RM 445.50 – RM 1,269.00** |
+| **Dynatrace OneAgent (Current)** | Proprietary OneAgent Host Units + DEM Packs (15 host units list price) | ~$870.00 – $1,110.00+ | ~RM 3,915.00 – RM 4,995.00+ |
 
-**Net Financial Savings:** Migrating full-stack observability to native Amazon CloudWatch yields a recurring monthly savings of **~RM 2,700 to RM 3,800 MYR** (~$600 to $840 USD/month).
+**Net Financial Savings:** Comparing the full CloudWatch observability stack ($99.00–$282.00 USD) against Dynatrace list pricing ($870.00–$1,110.00+ USD) yields recurring monthly operational savings of **~$588.00 to $1,011.00 USD/month (~RM 2,646.00 to RM 4,549.50 MYR/month)** depending on session volume and Dynatrace memory tiering.
 
 ---
 
@@ -165,6 +178,8 @@ Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a
 For high-throughput or payment-critical transaction paths (e.g. core banking switches or gateway processors), sustained request rates require explicit sampling controls to prevent unexpected trace ingestion charges.
 
 ### Cost Scaling Matrix for High-Throughput Services
+
+Application Signals pricing combines Golden Signal metering ($1.50/1M signals) and Trace Span Ingestion ($0.35/GB trace data assuming ~2 downstream spans per transaction @ ~1.8 KB/trace span):
 
 | Sustained Load | Signals / month | Trace Ingestion | Monthly APM Cost (USD) | Monthly APM Cost (MYR) |
 | --- | --- | --- | --- | --- |
@@ -176,7 +191,7 @@ For high-throughput or payment-critical transaction paths (e.g. core banking swi
 *Note: At ~10,000 req/min sustained, un-sampled APM ingestion exceeds fixed host-unit Dynatrace licensing. To prevent cost escalation:*
 1. **Apply Intelligent Sampling:** Maintain 5% steady-state trace sampling, ramping up to 100% capture strictly on 5xx errors and latency anomalies.
 2. **Audit Pipeline Separation:** Route compliance transaction logs to CloudWatch Logs or S3, keeping Application Signals in golden-metrics-only mode for normal transactions.
-3. **Leverage Free Trial:** Utilize the 3-month CloudWatch Application Signals free trial (up to 100 GB trace data or 100M signals) to measure exact throughput before full cutover.
+3. **Leverage Free Trial:** Utilize the 3-month CloudWatch Application Signals free trial (up to 100 GB trace data ingestion or 100M signals) to measure exact throughput before full cutover.
 
 ---
 

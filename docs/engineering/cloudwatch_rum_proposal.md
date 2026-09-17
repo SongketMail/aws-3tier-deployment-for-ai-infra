@@ -65,7 +65,7 @@ With this deployment model:
 
 * **Core Web Vitals Telemetry:** Directly records Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) across end-user devices, browsers, and local ISPs within Malaysia.
 * **JavaScript & HTTP Error Tracking:** Automatically aggregates unhandled exceptions, stack traces, and 4xx/5xx asynchronous API payload failures.
-* **Distributed Trace Correlation:** Injects standard W3C trace context headers into client HTTP calls. This links client transactions directly into server-side **AWS X-Ray** traces across the Application Load Balancer and application backend, establishing full-stack root-cause correlation without proprietary host agents.
+* **Distributed Trace Correlation:** Injects standard W3C trace context headers into client HTTP calls. End-to-end trace correlation requires enabling X-Ray session tracing in `aws-rum-web`, configuring allowed request targets (`telemetry: ['tracer']`), instrumenting the application backend with AWS X-Ray SDK / OTel, and permitting the `X-Amzn-Trace-Id` header in downstream CORS rules before decommissioning Dynatrace.
 
 ---
 
@@ -76,7 +76,7 @@ With this deployment model:
 CloudWatch RUM uses purely consumption-based billing with no minimum commitments, fixed host fees, or base subscription floors:
 
 * **Unit Pricing:** **$1.00 USD per 100,000 data events** ($0.00001 per event).
-* **Free Tier Allocation:** First **1,000,000 events/month** free (introductory evaluation window).
+* **Free Trial Allocation:** First **1,000,000 events** free as a one-time initial free trial per account (standard $1.00 / 100,000 event charges apply after trial exhaustion).
 * **Event Composition:** Standard page navigation produces approximately **10 to 20 events** per complete user session (Page Load, Navigation Timing, Web Vitals, API calls, and Errors).
 * **Effective Session Unit Cost:** ~$0.10 to $0.20 USD per 1,000 user sessions.
 
