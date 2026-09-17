@@ -33,6 +33,8 @@ navbar:
     url: "/postgresql-comparison.html"
   - title: "Redis vs Valkey"
     url: "/redis-vs-valkey.html"
+  - title: "CloudWatch Observability"
+    url: "/cloudwatch.html"
   - title: "Wazuh SIEM & XDR"
     url: "/wazuh-detailed.html"
   - title: "Tech Stack"

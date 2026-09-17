@@ -148,6 +148,9 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[AMI Hardening Compliance](docs/ami-design.md):** Pre-baked Ubuntu 26.04 LTS AMIs using Packer, Ansible, and the ASIMP security hardening framework.
 * **[GitLab CI/CD & Persistent EFS Storage](docs/gitlab-efs-cicd.md):** GitLab pipeline automation mounting EFS, tuning performance with `open_file_cache`, and managing dynamic Nginx paths.
 * **[Route 53 & Dynamic DNS Troubleshooting](docs/route53.md):** Domain names matching, certificate auto-validation, and extensive research on ASG dynamic resolver cache issues.
+* **[Amazon CloudWatch Full-Stack Observability Platform](docs/cloudwatch.md):** Comprehensive guide on Amazon CloudWatch metrics, Unified CloudWatch Agent OS telemetry, Application Signals APM, Real User Monitoring (RUM), AWS X-Ray, and Dynatrace replacement strategy.
+* **[CloudWatch APM Dynatrace Replacement Paperwork](docs/engineering/cloudwatch_apm_dynatrace_replacement.md):** Board-level technical paperwork `PAP-APM-2026-CW-02` justifying CloudWatch Application Signals APM and payment service risk mitigations.
+* **[CloudWatch RUM Proposal](docs/engineering/cloudwatch_rum_proposal.md):** Technical proposal `PROP-OBS-2026-RUM-01` for CloudWatch RUM integration, Core Web Vitals, and client-side observability consolidation.
 * **[Wazuh Standalone Cloud Installation & Costing](docs/wazuh.md):** Architectural guide outlining the cheapest standalone Wazuh cloud deployment strategies, security whitelisting, and isolated USD/MYR costing plans.
 * **[Wazuh SIEM & XDR Deep-Dive Guide](docs/wazuh-detailed.md):** In-depth functional breakdown of Wazuh SIEM & XDR capabilities, deployment modes (cloud/on-prem), and critical operational guidance regarding Antivirus coexistence, passive mode configuration, and Windows Defender integration.
 

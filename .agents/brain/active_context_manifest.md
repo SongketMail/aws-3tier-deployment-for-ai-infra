@@ -5,11 +5,10 @@ type: "Spatial Memory"
 title: "Active Context Session Manifest (.agents/brain/active_context_manifest.md)"
 timestamp: 2026-08-14T10:05:00Z
 topics: ["agents", "context", "manifest", "memory", "brain", "okf", "dsom"]
-verified: true
 sources: [".agents/brain/active_context_manifest.md"]
 status: "active"
+verified: "true"
 ---
-
 # Active Context Session Manifest (.agents/brain/active_context_manifest.md)
 
 This active context manifest serves as our agent spatial memory checkpoint. It maps the active session's scope, key files, and completed milestones to preserve semantic context across different conversation threads under the **Deep State of Mind (DSOM)** Protocol.

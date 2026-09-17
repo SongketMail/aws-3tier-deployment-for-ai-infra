@@ -7,6 +7,24 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/cloudwatch.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/engineering/cloudwatch_apm_dynatrace_replacement.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/engineering/cloudwatch_rum_proposal.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/wazuh.html</loc>
     <lastmod>2026-08-05</lastmod>
     <changefreq>monthly</changefreq>

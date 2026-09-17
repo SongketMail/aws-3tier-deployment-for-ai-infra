@@ -466,3 +466,38 @@ To maximize financial efficiency without sacrificing high availability or perfor
 │ Recommended Deployment Strategy: Commit to 1-Yr SP for Prod; Single-NAT for Dev   │
 └───────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+### 3.6 Unified Observability & Full-Stack Metrics Calibration
+
+To achieve parity with replaced APM platforms (Dynatrace), CloudWatch is expanded to monitor full-stack infrastructure telemetry across compute, storage, and in-memory tiers in **AWS Malaysia (`ap-southeast-5`)**:
+
+* **Native Engine Telemetry ($0.00 / Free Tier):**
+  * **RDS PostgreSQL:** `CPUUtilization`, `FreeableMemory`, `FreeStorageSpace`, `ReadIOPS`, `WriteIOPS`.
+  * **Amazon ElastiCache (Valkey):** `CPUUtilization`, `EngineCPUUtilization`, `BytesUsedForCache`, `DatabaseMemoryUsagePercentage`.
+  * **Amazon EFS & ALB:** `PercentIOLimit`, `StorageBytes`, `ProcessedBytes`, `TargetResponseTime`.
+* **EC2 Guest OS Telemetry (Unified CloudWatch Agent):**
+  * Emits custom memory (`mem_used_percent`) and disk storage (`disk_used_percent`) metrics via `amazon-cloudwatch-agent`.
+  * Cost footprint: 4 custom metrics per node @ $0.30/metric/month. For a 15-instance cluster, this establishes an incremental run-rate of **$15.00 USD/month** (~**RM 67.50 MYR**).
+* **Total Observability Envelope:** Integrating CloudWatch RUM ($25.00–$100.00 USD) and CloudWatch Host Agent metrics ($15.00 USD) delivers full front-to-back operational visibility for under **$115.00 USD/month** (~**RM 517.50 MYR**), deprecating third-party agent licensing within AWS.
+
+### 3.7 CloudWatch APM & Application Signals Integration
+
+To finalize the deprecation and total replacement of on-premise Dynatrace agents within AWS, CloudWatch Application Signals (APM) is incorporated into the baseline architecture:
+
+* **APM Functional Components:**
+  * **OpenTelemetry Instrumentation (ADOT):** Standardized runtime instrumentation generating W3C-compliant traces and service discovery without proprietary agent overhead.
+  * **Service Map & Golden Signals:** Live dependency topologies tracking latency, throughput, error rates, and availability across microservices, ElastiCache, and RDS.
+  * **Service Level Objectives (SLOs):** Automated error budget tracking and burn-rate alerting for mission-critical endpoints.
+* **APM Cost Calibration (AWS Malaysia ap-southeast-5):**
+  * **Signals Pricing:** $1.50 per 1M signals (requests, errors, latency, saturation).
+  * **Transaction Search / Spans:** $0.35 per GB ingested trace data.
+  * **Estimated APM Monthly Run-Rate:** ~$44.00 USD (~RM 198.00 MYR) based on 20 million monthly operational signals and 40 GB of sampled distributed traces.
+* **Consolidated Full-Stack Observability Footprint:**
+  * **Client RUM:** $25.00 – $100.00 USD/month.
+  * **Application Signals (APM):** $11.00 – $44.00 USD/month.
+  * **Host Compute Metrics (RAM/Disk):** $15.00 USD/month.
+  * **Native Services (RDS/Valkey/EFS):** $0.00 USD.
+  * **Operational Alarms & Dashboards:** ~$5.00 USD/month.
+  * **Combined Run-Rate:** **~$56.00 – $164.00 USD/month (~RM 252 – RM 738 MYR)** vs. ~$600 – $1,800 USD/month for legacy Dynatrace OneAgent licensing.

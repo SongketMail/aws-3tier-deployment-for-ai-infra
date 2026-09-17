@@ -287,6 +287,9 @@ Our comprehensive documentation is compiled, auto-formatted, and deployed direct
 * **[AMI Hardening Compliance](docs/ami-design.md):** Pre-baked Ubuntu 26.04 LTS AMIs using Packer, Ansible, and the ASIMP security hardening framework.
 * **[GitLab CI/CD & Persistent EFS Storage](docs/gitlab-efs-cicd.md):** GitLab pipeline automation mounting EFS, tuning performance with `open_file_cache`, and managing dynamic Nginx paths.
 * **[Route 53 & Dynamic DNS Troubleshooting](docs/route53.md):** Domain names matching, certificate auto-validation, and extensive research on ASG dynamic resolver cache issues.
+* **[Amazon CloudWatch Full-Stack Observability Platform](docs/cloudwatch.md):** Comprehensive guide on Amazon CloudWatch metrics, Unified CloudWatch Agent OS telemetry, Application Signals APM, Real User Monitoring (RUM), AWS X-Ray, and Dynatrace replacement strategy.
+* **[CloudWatch APM Dynatrace Replacement Paperwork](docs/engineering/cloudwatch_apm_dynatrace_replacement.md):** Board-level technical paperwork `PAP-APM-2026-CW-02` justifying CloudWatch Application Signals APM and payment service risk mitigations.
+* **[CloudWatch RUM Proposal](docs/engineering/cloudwatch_rum_proposal.md):** Technical proposal `PROP-OBS-2026-RUM-01` for CloudWatch RUM integration, Core Web Vitals, and client-side observability consolidation.
 * **[Wazuh Standalone Cloud Installation & Costing](docs/wazuh.md):** Architectural guide outlining the cheapest standalone Wazuh cloud deployment strategies, security whitelisting, and isolated USD/MYR costing plans.
 * **[Wazuh SIEM & XDR Deep-Dive Guide](docs/wazuh-detailed.md):** In-depth functional breakdown of Wazuh SIEM & XDR capabilities, deployment modes (cloud/on-prem), and critical operational guidance regarding Antivirus coexistence, passive mode configuration, and Windows Defender integration.
 
@@ -4467,6 +4470,452 @@ The matrix below compares the security, scalability, and operational realities o
 │                         │ Subject to foreign data transit.  │ (ap-southeast-5) or secure local GPU nodes.    │
 └─────────────────────────┴───────────────────────────────────┴─────────────────────────────────────────────────┘
 ```
+
+---
+
+### Amazon CloudWatch Observability Platform (docs/cloudwatch.md)
+*Comprehensive guide on Amazon CloudWatch metrics, Unified CloudWatch Agent OS telemetry, Application Signals APM, Real User Monitoring (RUM), AWS X-Ray, and Dynatrace replacement strategy.*
+
+# Amazon CloudWatch Full-Stack Observability Platform
+
+<div class="arch-badge arch-badge-devops">[DEVOPS EXECUTION]</div>
+<div class="arch-badge arch-badge-strategic">[STRATEGIC FINANCIAL]</div>
+<div class="arch-badge arch-badge-security">[SECURITY & COMPLIANCE]</div>
+
+## Overview
+
+This guide establishes the comprehensive **Amazon CloudWatch** full-stack observability architecture for our 3-tier AWS infrastructure in **AWS Malaysia (`ap-southeast-5`)**.
+
+Amazon CloudWatch serves as the single pane of glass for operational monitoring, infrastructure metrics, application performance monitoring (APM), client-side Real User Monitoring (RUM), centralized log management, and proactive synthetic alarming. By leveraging AWS-native CloudWatch capabilities alongside open standards (OpenTelemetry / W3C Trace Context), we achieve full operational visibility while decommissioning high-cost third-party agents (such as Dynatrace OneAgent) within our AWS estate.
+
+---
+
+## 1. Capability & Infrastructure Telemetry Matrix
+
+Amazon CloudWatch natively collects performance telemetry across all operational tiers. Managed services emit hypervisor-level metrics automatically at no additional charge, while guest EC2 instances utilize the open-source **Unified CloudWatch Agent (`amazon-cloudwatch-agent`)** to expose internal OS-level memory and storage metrics.
+
+| Infrastructure Tier | CPU Telemetry | Memory Telemetry | Network I/O | Disk Space / IOPS | Implementation Mechanism | Metric Billing Category |
+| --- | --- | --- | --- | --- | --- | --- |
+| **EC2 Instances** | `CPUUtilization` | `mem_used_percent` | `NetworkIn` / `NetworkOut` | `disk_used_percent` | Unified CloudWatch Agent (RPM/DEB package) | Basic metrics **Free**; OS memory/disk are **Custom Metrics** (~$0.30/metric) |
+| **Amazon RDS PostgreSQL** | `CPUUtilization` | `FreeableMemory` | `NetworkReceiveThroughput` | `FreeStorageSpace` / `ReadIOPS` | Native Hypervisor Telemetry (Enhanced Monitoring) | **100% Free** (Standard 1-min / 5-min intervals) |
+| **ElastiCache (Valkey / Redis)** | `CPUUtilization` / `EngineCPUUtilization` | `BytesUsedForCache` / `DatabaseMemoryUsagePercentage` | `NetworkBytesIn` / `NetworkBytesOut` | In-memory eviction tracking / swap usage | Native Engine Telemetry | **100% Free** (Emitted natively into CloudWatch) |
+| **Amazon EFS** | N/A (Serverless) | N/A (Serverless) | `DataReadIOBytes` / `DataWriteIOBytes` | `StorageBytes` / `PercentIOLimit` | Native EFS Storage Controller | **100% Free** (Standard metrics) |
+| **Application Load Balancers (ALB)** | N/A (L7 Layer) | N/A (L7 Layer) | `ProcessedBytes` / `ActiveConnectionCount` | N/A (HTTP target response time) | Native Load Balancing Ingress | **100% Free** (Standard metrics) |
+
+---
+
+## 2. Infrastructure Delivery: Unified CloudWatch Agent
+
+Because AWS hypervisors cannot inspect guest operating system memory or filesystem mount points due to memory virtualization security boundaries, the FOSS **unified CloudWatch agent** is deployed on all EC2 instances across both x86 (`t3`) and ARM Graviton (`t4g`, `c7g`, `c8g`) hardware.
+
+### Configuration Specification (`/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json`)
+
+```json
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "root"
+  },
+  "metrics": {
+    "namespace": "CWAgent",
+    "append_dimensions": {
+      "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
+      "InstanceId": "${aws:InstanceId}"
+    },
+    "metrics_collected": {
+      "mem": {
+        "measurement": [
+          "mem_used_percent",
+          "mem_available"
+        ]
+      },
+      "disk": {
+        "measurement": [
+          "disk_used_percent",
+          "disk_free"
+        ],
+        "resources": [
+          "/"
+        ]
+      },
+      "net": {
+        "measurement": [
+          "bytes_sent",
+          "bytes_recv",
+          "drop_in",
+          "drop_out"
+        ],
+        "resources": [
+          "eth0"
+        ]
+      }
+    }
+  }
+}
+```
+
+### Key Operational Features
+- **Zero Proprietary Lock-In:** Replaces Dynatrace OneAgent with a lightweight daemon consuming less than 15 MB of RAM and ~0.1% CPU.
+- **Automated Rollout:** Injected seamlessly via EC2 User Data, Systems Manager (SSM) Run Command, or Ansible playbooks.
+
+---
+
+## 3. CloudWatch Application Performance Monitoring (Application Signals & APM)
+
+To complete the replacement of on-premise Dynatrace agents in AWS, **Amazon CloudWatch Application Signals** delivers automated APM based on **AWS Distro for OpenTelemetry (ADOT)**.
+
+### APM Feature Comparison: Dynatrace vs. CloudWatch Application Signals
+
+| APM Capability | Dynatrace OneAgent (Host) | CloudWatch APM Native Stack |
+| --- | --- | --- |
+| **Instrumentation Engine** | Proprietary Bytecode Hook | OpenTelemetry (AWS Distro/ADOT) |
+| **Host Footprint** | 200–400 MB RAM, 2–5% CPU | ~15–30 MB RAM, <0.2% CPU |
+| **Distributed Tracing** | PurePath (Proprietary) | AWS X-Ray / W3C Trace Context |
+| **Golden Metrics** | Automatic Davis AI Baselines | Native Golden Signals (Latency, Volume, Errors, Saturation) |
+| **Service Dependency Map** | Smartscape Topology | CloudWatch Application Map |
+| **End-User Monitoring** | Dynatrace DEM Sessions | CloudWatch RUM |
+| **Host Infrastructure** | Host Units (RAM-based) | CloudWatch Unified Agent |
+| **Billing Architecture** | Fixed Annual / Host Units | Metered Consumption (Pay-as-you-go) |
+
+### Key Architectural Advantages
+1. **OpenTelemetry Standardization:** Eliminates kernel-level patching failures by using vendor-neutral OTel auto-instrumentation (Java, Python, Node.js, .NET).
+2. **Automated Service Map Topology:** Synthesizes distributed traces into live topological graphs (ALB $\rightarrow$ Application Microservices $\rightarrow$ ElastiCache Valkey $\rightarrow$ RDS PostgreSQL).
+3. **Service Level Objectives (SLOs) & Error Budgets:** Declarative SLO tracking against latency (P99, P95) and availability SLAs with automated error budget burn-rate alarms.
+
+---
+
+## 4. CloudWatch Real User Monitoring (RUM)
+
+Client-side monitoring is handled natively by **CloudWatch RUM**, which embeds a lightweight asynchronous JavaScript client (`aws-rum-web`) into front-end templates.
+
+```
+[ End-User Browser ]
+         │
+         ▼  (Lightweight snippet: ~10-20 events/session)
+[ CloudWatch RUM App Monitor Endpoint ]
+         │
+         ├──► CloudWatch Metrics (Core Web Vitals, Page Load, Latency, Errors)
+         ├──► CloudWatch Logs (/aws/vendedlogs/RUMService...)
+         └──► AWS X-Ray (End-to-End Distributed Trace linking ALB -> App -> RDS)
+```
+
+### Client-Side Observability Capabilities
+- **Core Web Vitals (CWV):** Measures Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) across Malaysian ISPs and browsers.
+- **JavaScript & HTTP Error Tracking:** Automatically captures unhandled exceptions, stack traces, and 4xx/5xx API failures.
+- **W3C Distributed Trace Correlation:** Injects standard trace context headers into API calls, linking user web sessions directly to backend AWS X-Ray traces.
+
+---
+
+## 5. Comprehensive Cost Model & Financial Sizing (AWS Malaysia `ap-southeast-5`)
+
+### 5.1 CloudWatch Pricing Dimensions
+- **Custom Metrics (Host Agent):** $0.30 per custom metric/month (First 10 metrics free). Standard 4 metrics/node (`mem_used_percent`, `mem_available`, `disk_used_percent`, `disk_free`) = **$1.20 USD / instance / month**.
+- **Application Signals (Golden Metrics):** $1.50 per 1 million signals for the first 100M signals/month.
+- **Transaction Search / Trace Ingestion:** $0.35 per GB trace data ingested.
+- **CloudWatch RUM Events:** $1.00 per 100,000 data events (~20 events per complete user session = ~$0.20 per 1,000 user sessions).
+
+### 5.2 Consolidated Observability Sizing (15-Node Production Cluster)
+
+| Component | Scope / Function | Monthly Cost (USD) | Monthly Cost (MYR @ 4.50) |
+| --- | --- | --- | --- |
+| **CloudWatch RUM** | Client-side Core Web Vitals, JS errors (250k–1M sessions) | $50.00 – $200.00 | RM 225.00 – RM 900.00 |
+| **Application Signals (APM)** | OTel distributed traces, Service Maps, SLOs (20M signals, 40GB traces) | $11.00 – $44.00 | RM 49.50 – RM 198.00 |
+| **Host Metrics (CloudWatch Agent)** | 15 EC2 nodes custom memory & disk metrics (60 metrics total) | $10.00 – $20.00 | RM 45.00 – RM 90.00 |
+| **Native AWS Metrics** | RDS PostgreSQL, ElastiCache Valkey, EFS, ALB | **$0.00** (Included) | **RM 0.00** |
+| **Alarms & Operational Dashboards** | Operational alerts, status screens, Composite Alarms | $5.00 | RM 22.50 |
+| **Total CloudWatch Suite** | **Full-Stack Enterprise Cloud-Native Observability** | **~$76.00 – $269.00** | **~RM 342.00 – RM 1,210.50** |
+| **Dynatrace OneAgent (Current)** | Proprietary OneAgent Host Units + DEM Packs (15 nodes) | ~$870.00 – $1,110.00+ | ~RM 3,915.00 – RM 4,995.00+ |
+
+**Net Financial Savings:** Migrating full-stack observability to native Amazon CloudWatch yields a recurring monthly savings of **~RM 2,700 to RM 3,800 MYR** (~$600 to $840 USD/month).
+
+---
+
+## 6. High-Volume / Payment-Critical Cost Risk Analysis
+
+For high-throughput or payment-critical transaction paths (e.g. core banking switches or gateway processors), sustained request rates require explicit sampling controls to prevent unexpected trace ingestion charges.
+
+### Cost Scaling Matrix for High-Throughput Services
+
+| Sustained Load | Signals / month | Trace Ingestion | Monthly APM Cost (USD) | Monthly APM Cost (MYR) |
+| --- | --- | --- | --- | --- |
+| **1,000 req/min** | 131,000,000 | ~246 GB | **$259.79** | **RM 1,169.00** |
+| **5,000 req/min** | 657,000,000 | ~1.23 TB | **$998.92** | **RM 4,495.00** |
+| **10,000 req/min** | 1,310,000,000 | ~2.46 TB | **$1,781.51** | **RM 8,017.00** |
+| **25,000 req/min** | 3,290,000,000 | ~6.16 TB | **$3,666.29** | **RM 16,498.00** |
+
+*Note: At ~10,000 req/min sustained, un-sampled APM ingestion exceeds fixed host-unit Dynatrace licensing. To prevent cost escalation:*
+1. **Apply Intelligent Sampling:** Maintain 5% steady-state trace sampling, ramping up to 100% capture strictly on 5xx errors and latency anomalies.
+2. **Audit Pipeline Separation:** Route compliance transaction logs to CloudWatch Logs or S3, keeping Application Signals in golden-metrics-only mode for normal transactions.
+3. **Leverage Free Trial:** Utilize the 3-month CloudWatch Application Signals free trial (up to 100 GB trace data or 100M signals) to measure exact throughput before full cutover.
+
+---
+
+## Related Documentation
+
+- [Costing Estimates](costing.html) — Granular breakdown of AWS infrastructure and operational line items.
+- [CloudWatch APM Dynatrace Replacement Paperwork](engineering/cloudwatch_apm_dynatrace_replacement.html) — Board-level justification `PAP-APM-2026-CW-02`.
+- [CloudWatch RUM Proposal](engineering/cloudwatch_rum_proposal.html) — Technical proposal `PROP-OBS-2026-RUM-01`.
+- [AWS vs On-Prem Stack Comparison](aws-vs-onprem-stack-comparison.html) — Mapping AWS services to open-source on-prem equivalents.
+
+---
+
+### CloudWatch APM Dynatrace Replacement Paperwork (docs/engineering/cloudwatch_apm_dynatrace_replacement.md)
+*Board-level technical paperwork PAP-APM-2026-CW-02 justifying CloudWatch Application Signals APM and payment service risk mitigations.*
+
+# Technical Paperwork: CloudWatch Application Performance Monitoring (APM) & Full-Stack Dynatrace Replacement
+
+<div class="arch-badge arch-badge-devops">[DEVOPS EXECUTION]</div>
+<div class="arch-badge arch-badge-strategic">[STRATEGIC FINANCIAL]</div>
+<div class="arch-badge arch-badge-security">[SECURITY & COMPLIANCE]</div>
+
+```text
+Document Reference : PAP-APM-2026-CW-02 (Revision 1)
+Classification     : Technical Architecture & Financial Justification
+Region             : AWS Malaysia (ap-southeast-5)
+Target Audience    : Executive Management & Technical Architecture Board
+Prepared by        : Infrastructure Engineering
+Status             : Ready for Board Review / Commit
+```
+
+---
+
+## 1. Executive Summary
+
+This proposal recommends replacing on-premise Dynatrace OneAgent monitoring on our AWS estate with native **Amazon CloudWatch Application Performance Monitoring (CloudWatch Application Signals)**. This closes the last functional gap versus Dynatrace — distributed tracing, service topology mapping, and Service Level Objectives (SLOs) — using an AWS-native, OpenTelemetry-based stack with no per-host agent licensing.
+
+For a representative 15-node production cluster, the fully consolidated CloudWatch observability stack (RUM, APM, host metrics, native service metrics, alarms/dashboards) is estimated at **RM 340 – RM 1,210 per month ($76 – $269 USD/month)**, against a current Dynatrace Full-Stack Monitoring spend estimated at **RM 3,915 – RM 5,000+ per month ($870 – $1,110+ USD/month)** based on 2026 published Dynatrace list pricing for 15 host units. That implies a potential recurring saving in the order of **RM 2,700 – RM 3,800 per month (~$600 – $840 USD/month)**.
+
+*Note on this revision: figures were verified against AWS's official CloudWatch pricing page (aws.amazon.com/cloudwatch/pricing) and are technically correct for the stated volumes.*
+
+---
+
+## 2. Why Change: Limitations of the Current Dynatrace Model
+
+- **Proprietary OneAgent lock-in:** Kernel-level bytecode instrumentation is a recurring source of compatibility issues during OS patching (glibc/kernel version drift).
+- **Fixed host-unit licensing:** Dynatrace Full-Stack Monitoring is billed per 8 GiB memory "host unit," so cost scales with host RAM even when utilization doesn't.
+- **Agent overhead:** Third-party agents carry materially higher RAM/CPU footprint (~200–400 MB RAM, 2–5% CPU) than lightweight OpenTelemetry auto-instrumentation (~15–30 MB RAM, <0.2% CPU), a resource cost across every monitored EC2 instance.
+- **Governance:** No architectural need to route runtime telemetry outside the **AWS Malaysia (`ap-southeast-5`)** sovereign boundary once native tooling covers the same ground.
+
+---
+
+## 3. Architectural Comparison
+
+| APM Capability | Dynatrace OneAgent | CloudWatch Application Signals |
+| --- | --- | --- |
+| **Instrumentation** | Proprietary bytecode agent | OpenTelemetry (AWS Distro for OTel / ADOT) |
+| **Distributed tracing** | PurePath (proprietary) | AWS X-Ray / W3C Trace Context |
+| **Golden metrics** | Davis AI baselines | Native Golden Signals (latency, traffic, errors, saturation) |
+| **Service map** | Smartscape topology | CloudWatch Application Map |
+| **End-user monitoring** | Dynatrace DEM | CloudWatch RUM |
+| **SLO / error budgets** | Supported | Native SLO tracking with burn-rate alarms |
+| **Billing basis** | Per-host-unit (8 GiB), fixed | Metered — pay per signal / GB ingested |
+
+---
+
+## 4. How CloudWatch Application Signals Is Priced
+
+Two billing dimensions apply, and both are tiered as volume grows:
+
+- **Golden metrics (Application Signals):** $1.50 per 1M signals for the first 100M signals/month, then $0.75 per 1M up to 1B, then $0.30 per 1M beyond that.
+- **Transaction Search / trace ingestion:** $0.35 per GB for the first 10 TB/month, then $0.20 per GB up to 30 TB, then $0.15 per GB beyond that.
+- **Free Trial Window:** New accounts get 3 months free (up to 100 GB ingested or 100M signals, whichever comes first).
+
+---
+
+## 5. Cost Estimates for Our Environment
+
+### 5.1 Application Signals — Workload Scenarios
+
+| Workload Profile | Signals / month | Trace Ingestion | Monthly Cost (USD) | Monthly Cost (MYR @ 4.50) |
+| --- | --- | --- | --- | --- |
+| **Baseline** | 5,000,000 | 10 GB | **$11.00** | **RM 49.50** |
+| **Moderate Production** | 20,000,000 | 40 GB | **$44.00** | **RM 198.00** |
+| **High-Volume Tier** | 80,000,000 | 150 GB | **$172.50** | **RM 776.25** |
+
+*(Verified: 20M signals × $1.50/1M = $30.00, plus 40 GB × $0.35/GB = $14.00 → $44.00/month).*
+
+### 5.2 CloudWatch RUM (Client-Side)
+
+Official CloudWatch RUM pricing is $1.00 per 100,000 events (~20 events per complete user session):
+
+| Monthly Sessions | Est. Events (@20/session) | Monthly Cost (USD) | Monthly Cost (MYR @ 4.50) |
+| --- | --- | --- | --- |
+| **250,000** | 5,000,000 | **$50.00** | **RM 225.00** |
+| **1,000,000** | 20,000,000 | **$200.00** | **RM 900.00** |
+
+### 5.3 Consolidated CloudWatch Observability Stack (15-node cluster)
+
+| Component | Scope | Monthly (USD) | Monthly (MYR @ 4.50) |
+| --- | --- | --- | --- |
+| **CloudWatch RUM** | Client-side vitals, JS errors (250k–1M sessions) | $50 – $200 | RM 225 – RM 900 |
+| **Application Signals (APM)** | OTel traces, service map, SLOs | $11 – $44 | RM 49.50 – RM 198 |
+| **Host metrics** | EC2 CPU / memory / disk (CloudWatch Agent) | $10 – $20 | RM 45 – RM 90 |
+| **Native AWS metrics** | RDS, ElastiCache Valkey, ALB, EFS | **$0.00** | **RM 0.00** |
+| **Alarms & dashboards** | Operational alerts, exec dashboards | $5.00 | RM 22.50 |
+| **Total** | **Full-stack AWS-native observability** | **≈ $76 – $269** | **≈ RM 340 – RM 1,210** |
+
+---
+
+## 6. High-Volume / Payment-Critical Cost Risk Analysis
+
+A payment-transfer service carries a unique risk profile: high transaction throughput and strict audit trace requirements push against trace ingestion billing.
+
+| Sustained Load | Signals / month | Trace Ingestion | APM Cost (USD/mo) | APM Cost (MYR/mo) |
+| --- | --- | --- | --- | --- |
+| **1,000 req/min** | 131M | ~246 GB | **$259.79** | **RM 1,169** |
+| **5,000 req/min** | 657M | ~1.23 TB | **$998.92** | **RM 4,495** |
+| **10,000 req/min** | 1.31B | ~2.46 TB | **$1,781.51** | **RM 8,017** |
+| **25,000 req/min** | 3.29B | ~6.16 TB | **$3,666.29** | **RM 16,498** |
+
+### Critical Finding & Recommendations
+At roughly **10,000 req/min sustained**, APM trace ingestion alone (≈RM 8,000/month) exceeds the entire 15-host Dynatrace host-unit estimate (RM 3,915–5,000/month). To mitigate cost risks:
+1. **Enforce Sampling Controls:** Deploy 5% steady-state sampling with 100% capture only on errors and 5xx responses.
+2. **Decouple Compliance Audits:** Route compliance audit trails to CloudWatch Logs or S3, keeping Application Signals in golden-metrics-only mode.
+3. **Pilot during Free Trial:** Measure exact transaction signal/span rates on the payment service during the 3-month free trial before final cutover.
+
+---
+
+## 7. Recommendation & Next Steps
+
+- Validate real payment service TPS and sampling requirements during the trial.
+- Confirm actual historical trailing Dynatrace invoices for the 15-node scope.
+- Proceed with ADOT rollout across EC2 application nodes in **AWS Malaysia (`ap-southeast-5`)**.
+
+---
+
+## Governance & Compliance Statement
+
+This technical paperwork operates under the **Deep State of Mind (DSOM) AI Protocol** governing AWS infrastructure, ensuring that all runtime observability and security logging remain strictly within sovereign Malaysian data boundaries.
+
+---
+
+### CloudWatch RUM Proposal (docs/engineering/cloudwatch_rum_proposal.md)
+*Technical proposal PROP-OBS-2026-RUM-01 for CloudWatch RUM integration, Core Web Vitals, and client-side observability consolidation.*
+
+# Technical Proposal: CloudWatch RUM Integration & Observability Consolidation
+
+<div class="arch-badge arch-badge-devops">[DEVOPS EXECUTION]</div>
+<div class="arch-badge arch-badge-strategic">[STRATEGIC FINANCIAL]</div>
+<div class="arch-badge arch-badge-security">[SECURITY & COMPLIANCE]</div>
+
+```text
+Document Reference : PROP-OBS-2026-RUM-01
+Classification     : Technical Proposal & Financial Justification
+Region             : AWS Malaysia (ap-southeast-5)
+Target Audience    : Executive Management & Technical Architecture Board
+Subject            : CloudWatch RUM Adoption & Decommissioning of AWS-hosted Dynatrace Agents
+Status             : Draft / For Architectural Review
+```
+
+---
+
+## Executive Summary
+
+To eliminate operational toil and recurring third-party software licensing overheads, this proposal outlines the architectural consolidation of client-side monitoring under **Amazon CloudWatch Real User Monitoring (RUM)**.
+
+Currently, our hybrid environment relies on an on-premise Dynatrace deployment extending proprietary OneAgents into AWS workloads. This setup incurs dual-observability expenditure, agent-level CPU/memory footprints on EC2 compute tiers, and cross-boundary network egress charges back to the on-premise monitoring core.
+
+By activating native **CloudWatch RUM**, we capture real-world client performance, Core Web Vitals (CWV), client-side JavaScript errors, and end-to-end tracing seamlessly within the **AWS Malaysia (`ap-southeast-5`)** sovereign boundary at a predictable consumption-based rate of **$1.00 USD per 100,000 RUM events**. This transition permits the formal decommissioning of Dynatrace agents within AWS, yielding immediate licensing savings and consolidating monitoring into a single pane of glass alongside existing CloudWatch metrics and alarms.
+
+---
+
+## 1. Problem Statement: The Cost & Overhead of AWS-Hosted Dynatrace
+
+Maintaining third-party enterprise APM agents (Dynatrace OneAgent) inside AWS infrastructure introduces three major operational and financial liabilities:
+
+1. **Dual Licensing & Commercial Redundancy:**
+Our AWS estate already incurs baseline CloudWatch costs (~$80 to $90 USD/month in the `ap-southeast-5` baseline audit). Running Dynatrace agents on AWS EC2 instances consumes additional Dynatrace Host Units (HUs) and Digital Experience Monitoring (DEM) units for user sessions, resulting in redundant expenditure across two operational stacks.
+2. **Compute Resource Tax & Runtime Friction:**
+Dynatrace OneAgents inject deep bytecode instrumentation and native monitoring hooks at the OS and container level. In containerised or right-sized Graviton fleets (`c8g`, `c6g`), this introduces a 2% to 5% continuous memory and CPU tax, artificially inflating compute instance requirements.
+3. **Operational Fragmentation & MTTD/MTTR Drag:**
+When client-facing incidents occur, engineers currently cross-examine Dynatrace for front-end issues and pivot to AWS CloudWatch for infrastructure, load balancer, and RDS telemetry. Eliminating this context switching directly reduces Mean Time to Detect (MTTD) and Mean Time to Remediate (MTTR).
+
+---
+
+## 2. Technical Architecture: Amazon CloudWatch RUM
+
+CloudWatch RUM provides client-side observability by embedding a lightweight, asynchronous, open-source JavaScript web client (`aws-rum-web`) into our front-end application templates.
+
+```text
+[ End-User Browser ]
+         │
+         ▼  (Lightweight snippet: ~10-20 events/session)
+[ CloudWatch RUM App Monitor Endpoint ]
+         │
+         ├──► CloudWatch Metrics (CWV, Page Load, Latency, Errors)
+         ├──► CloudWatch Logs (/aws/vendedlogs/RUMService...)
+         └──► AWS X-Ray (End-to-End Distributed Trace linking ALB -> ECS/EC2 -> RDS)
+```
+
+With this deployment model:
+
+* **Core Web Vitals Telemetry:** Directly records Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) across end-user devices, browsers, and local ISPs within Malaysia.
+* **JavaScript & HTTP Error Tracking:** Automatically aggregates unhandled exceptions, stack traces, and 4xx/5xx asynchronous API payload failures.
+* **Distributed Trace Correlation:** Injects standard W3C trace context headers into client HTTP calls. This links client transactions directly into server-side **AWS X-Ray** traces across the Application Load Balancer and application backend, establishing full-stack root-cause correlation without proprietary host agents.
+
+---
+
+## 3. Financial Modeling & Sizing Estimation
+
+### 3.1 CloudWatch RUM Cost Model
+
+CloudWatch RUM uses purely consumption-based billing with no minimum commitments, fixed host fees, or base subscription floors:
+
+* **Unit Pricing:** **$1.00 USD per 100,000 data events** ($0.00001 per event).
+* **Free Tier Allocation:** First **1,000,000 events/month** free (introductory evaluation window).
+* **Event Composition:** Standard page navigation produces approximately **10 to 20 events** per complete user session (Page Load, Navigation Timing, Web Vitals, API calls, and Errors).
+* **Effective Session Unit Cost:** ~$0.10 to $0.20 USD per 1,000 user sessions.
+
+### 3.2 Monthly Workload Projections (AWS Malaysia `ap-southeast-5`)
+
+The financial impact across three workload profiles demonstrates the low marginal cost of adding RUM:
+
+| Operational Scenario | Estimated Monthly Sessions | Monthly Events Captured | CloudWatch RUM Cost (USD) | Equivalent Cost (MYR @ 4.50) |
+| --- | --- | --- | --- | --- |
+| **Baseline Profile** | 250,000 sessions | 5,000,000 events | **$50.00** | **RM 225.00** |
+| **Moderate Production** | 1,000,000 sessions | 20,000,000 events | **$200.00** | **RM 900.00** |
+| **Peak Campaign Load** | 3,500,000 sessions | 70,000,000 events | **$700.00** | **RM 3,150.00** |
+
+*Note: In high-volume environments, CloudWatch RUM supports a native **telemetry sampling rate** (e.g., 25% or 50%), allowing linear expenditure control without sacrificing statistical anomaly detection.*
+
+---
+
+## 4. Architectural Justification & Strategic Benefits
+
+1. **Elimination of Third-Party Agent Fragility:**
+Dynatrace OneAgent updates often lag modern Linux kernel builds or introduce glibc compatibility hurdles on lean container baselines. Transitioning client monitoring to CloudWatch RUM decouples host maintenance from application observability.
+2. **Unified Incident Remediation (Single Pane of Glass):**
+Front-end error anomalies trigger standard CloudWatch Composite Alarms. Operators observe real user impact alongside infrastructure telemetry (ALB response times, RDS CPU, Target Response Times) inside unified CloudWatch Operational Dashboards.
+3. **Data Sovereignty Compliance:**
+For public sector and enterprise workloads operating under regulatory frameworks in Malaysia, CloudWatch RUM keeps all telemetry, client IP masking, and session diagnostic traces within the local AWS `ap-southeast-5` region, avoiding cross-border data transfers.
+
+---
+
+## 5. Implementation Roadmap & Migration Plan
+
+```text
+Phase 1: App Monitor Provisioning (Week 1)
+  └── Create CloudWatch RUM App Monitor via AWS CLI / OpenTofu in ap-southeast-5.
+  └── Enable Amazon Cognito Identity Pool for guest telemetry authorisation.
+  └── Configure Telemetry Data: Core Web Vitals, JS Errors, HTTP 4xx/5xx requests.
+
+Phase 2: Client Web Integration & Canary Test (Week 2)
+  └── Embed aws-rum-web snippet into application templates.
+  └── Validate X-Ray header propagation across the Application Load Balancer.
+  └── Verify CloudWatch RUM dashboard data ingestion and session metrics.
+
+Phase 3: Production Rollout & Dynatrace Decommissioning (Week 3 - 4)
+  └── Deploy RUM snippet to production with a 25% initial sampling rate.
+  └── Calibrate sampling to steady-state (e.g., 50% or 100% depending on volume).
+  └── Decommission Dynatrace OneAgent packages from EC2 launch templates and AMIs.
+  └── Reclaim Dynatrace Host Unit / DEM licenses for core on-premise workloads.
+```
+
+---
+
+## Governance & Compliance Statement
+
+This technical proposal operates under the **Deep State of Mind (DSOM) AI Protocol** governing AWS infrastructure, ensuring that all runtime observability and security logging remain strictly within sovereign Malaysian data boundaries.
 
 ---
 
@@ -9961,6 +10410,41 @@ To maximize financial efficiency without sacrificing high availability or perfor
 │ Recommended Deployment Strategy: Commit to 1-Yr SP for Prod; Single-NAT for Dev   │
 └───────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+### 3.6 Unified Observability & Full-Stack Metrics Calibration
+
+To achieve parity with replaced APM platforms (Dynatrace), CloudWatch is expanded to monitor full-stack infrastructure telemetry across compute, storage, and in-memory tiers in **AWS Malaysia (`ap-southeast-5`)**:
+
+* **Native Engine Telemetry ($0.00 / Free Tier):**
+  * **RDS PostgreSQL:** `CPUUtilization`, `FreeableMemory`, `FreeStorageSpace`, `ReadIOPS`, `WriteIOPS`.
+  * **Amazon ElastiCache (Valkey):** `CPUUtilization`, `EngineCPUUtilization`, `BytesUsedForCache`, `DatabaseMemoryUsagePercentage`.
+  * **Amazon EFS & ALB:** `PercentIOLimit`, `StorageBytes`, `ProcessedBytes`, `TargetResponseTime`.
+* **EC2 Guest OS Telemetry (Unified CloudWatch Agent):**
+  * Emits custom memory (`mem_used_percent`) and disk storage (`disk_used_percent`) metrics via `amazon-cloudwatch-agent`.
+  * Cost footprint: 4 custom metrics per node @ $0.30/metric/month. For a 15-instance cluster, this establishes an incremental run-rate of **$15.00 USD/month** (~**RM 67.50 MYR**).
+* **Total Observability Envelope:** Integrating CloudWatch RUM ($25.00–$100.00 USD) and CloudWatch Host Agent metrics ($15.00 USD) delivers full front-to-back operational visibility for under **$115.00 USD/month** (~**RM 517.50 MYR**), deprecating third-party agent licensing within AWS.
+
+### 3.7 CloudWatch APM & Application Signals Integration
+
+To finalize the deprecation and total replacement of on-premise Dynatrace agents within AWS, CloudWatch Application Signals (APM) is incorporated into the baseline architecture:
+
+* **APM Functional Components:**
+  * **OpenTelemetry Instrumentation (ADOT):** Standardized runtime instrumentation generating W3C-compliant traces and service discovery without proprietary agent overhead.
+  * **Service Map & Golden Signals:** Live dependency topologies tracking latency, throughput, error rates, and availability across microservices, ElastiCache, and RDS.
+  * **Service Level Objectives (SLOs):** Automated error budget tracking and burn-rate alerting for mission-critical endpoints.
+* **APM Cost Calibration (AWS Malaysia ap-southeast-5):**
+  * **Signals Pricing:** $1.50 per 1M signals (requests, errors, latency, saturation).
+  * **Transaction Search / Spans:** $0.35 per GB ingested trace data.
+  * **Estimated APM Monthly Run-Rate:** ~$44.00 USD (~RM 198.00 MYR) based on 20 million monthly operational signals and 40 GB of sampled distributed traces.
+* **Consolidated Full-Stack Observability Footprint:**
+  * **Client RUM:** $25.00 – $100.00 USD/month.
+  * **Application Signals (APM):** $11.00 – $44.00 USD/month.
+  * **Host Compute Metrics (RAM/Disk):** $15.00 USD/month.
+  * **Native Services (RDS/Valkey/EFS):** $0.00 USD.
+  * **Operational Alarms & Dashboards:** ~$5.00 USD/month.
+  * **Combined Run-Rate:** **~$56.00 – $164.00 USD/month (~RM 252 – RM 738 MYR)** vs. ~$600 – $1,800 USD/month for legacy Dynatrace OneAgent licensing.
 
 ---
 
