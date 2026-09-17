@@ -50,6 +50,41 @@ When client-facing incidents occur, engineers currently cross-examine Dynatrace 
 
 CloudWatch RUM provides client-side observability by embedding a lightweight, asynchronous, open-source JavaScript web client (`aws-rum-web`) into our front-end application templates.
 
+```javascript
+import { AwsRum } from 'aws-rum-web';
+
+try {
+  const config = {
+    sessionSampleRate: 1.0,
+    guestRoleArn: "arn:aws:iam::123456789012:role/RUM-Guest-Role",
+    identityPoolId: "ap-southeast-5:example-pool-id",
+    endpoint: "https://dataplane.rum.ap-southeast-5.amazonaws.com",
+    telemetries: [
+      "errors",
+      "performance",
+      [
+        "http",
+        {
+          addXRayTraceIdHeader: [ /https:\/\/api\.example\.com\/.*/ ],
+          urlsToInclude: [ /https:\/\/api\.example\.com\/.*/ ]
+        }
+      ]
+    ],
+    allowCookies: true,
+    enableXRay: true
+  };
+
+  const awsRum = new AwsRum(
+    'example-rum-app-id',
+    '1.0.0',
+    'ap-southeast-5',
+    config
+  );
+} catch (error) {
+  // Ignore RUM initialization errors
+}
+```
+
 ```text
 [ End-User Browser ]
          │
@@ -65,7 +100,7 @@ With this deployment model:
 
 * **Core Web Vitals Telemetry:** Directly records Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) across end-user devices, browsers, and local ISPs within Malaysia.
 * **JavaScript & HTTP Error Tracking:** Automatically aggregates unhandled exceptions, stack traces, and 4xx/5xx asynchronous API payload failures.
-* **AWS X-Ray Trace Context Propagation:** Enabling `enableXRay: true`, including `"http"` in `telemetries`, and setting `addXRayTraceIdHeader: true` (or defining allowed API target domain patterns) injects standard `X-Amzn-Trace-Id` headers into client HTTP requests.
+* **AWS X-Ray Trace Context Propagation:** Enabling `enableXRay: true` and configuring the `http` tuple `["http", { addXRayTraceIdHeader: [ /https:\/\/api\.example\.com\/.*/ ], urlsToInclude: [...] }]` in `telemetries` injects standard `X-Amzn-Trace-Id` headers into client HTTP requests.
   - *Prerequisites:* Requires backend microservices to be instrumented with AWS X-Ray SDK or OpenTelemetry, and downstream CORS policies on ALBs/servers to allow the `X-Amzn-Trace-Id` header for cross-origin requests before decommissioning Dynatrace.
 
 ---
