@@ -61,10 +61,10 @@ For a representative 15-node production cluster, the fully consolidated CloudWat
 CloudWatch Application Signals supports two distinct account-level operational modes:
 
 1. **Transaction Search Mode (Golden Signals + Trace Span Ingestion):**
-   - Golden Signals: $1.50 per 1M signals for the first 100M signals/month.
-   - Trace Span Ingestion: $0.35 per GB for the first 10 TB/month.
+   - Golden Signals Tiered Schedule: $1.50 per 1M signals (first 100M); $0.75 per 1M (next 900M); $0.30 per 1M (above 1B).
+   - Trace Span Ingestion Schedule: $0.35 per GB (first 10 TB); $0.20 per GB (next 20 TB); $0.15 per GB (above 30 TB).
 2. **Golden-Metrics-Only Mode (Trace Span Ingestion Disabled):**
-   - Golden Signals: $1.50 per 1M signals for the first 100M signals/month.
+   - Golden Signals Tiered Schedule: $1.50 per 1M signals (first 100M); $0.75 per 1M (next 900M); $0.30 per 1M (above 1B).
    - Trace Span Ingestion: $0.00 (span ingestion disabled).
 3. **Free Trial Window:** New accounts receive a 3-month free trial:
    - When **Transaction Search Mode** is enabled: 3 months up to **100 GB of trace data ingestion** or **1 million spans indexed as X-Ray trace summaries** (whichever comes first).
@@ -90,7 +90,7 @@ Below are cost estimates calculated under **Transaction Search Mode** (Golden Si
 
 Official CloudWatch RUM pricing is $1.00 per 100,000 events (~20 events per complete user session):
 
-| Monthly Sessions | Est. Events (@20/session) | Steady-State Cost (USD) | Initial Trial Period Cost (USD) | Monthly Cost (MYR @ 4.50) |
+| Monthly Sessions | Est. Events (@20/session) | Steady-State Cost (USD) | Cost After 1M Allowance (USD) | Monthly Cost (MYR @ 4.50) |
 | --- | --- | --- | --- | --- |
 | **250,000** | 5,000,000 | **$50.00** | **$40.00** | **RM 225.00** |
 | **1,000,000** | 20,000,000 | **$200.00** | **$190.00** | **RM 900.00** |
@@ -112,17 +112,19 @@ Official CloudWatch RUM pricing is $1.00 per 100,000 events (~20 events per comp
 
 A payment-transfer service carries a unique risk profile: high transaction throughput and strict audit trace requirements push against trace ingestion billing.
 
-| Sustained Load | Signals / month | Trace Ingestion | Transaction Search Cost (USD/mo) | Golden-Metrics-Only Cost (USD/mo) |
+*Trace Volume Assumptions:* Monthly operational duration = 730 hours (43,800 minutes). Each transaction includes 1 root span plus 2 downstream microservice spans (3 spans total per transaction @ ~1.8 KB average payload size per span + ~4% index storage overhead). Golden-Metrics-Only Mode calculations apply the tiered marginal signal schedule ($1.50/1M for first 100M; $0.75/1M for 100M–1B; $0.30/1M above 1B). Total Transaction Search cost represents the combined sum of Golden Signals and Trace Span Ingestion ($1,781.51 USD / RM 8,017 MYR at 10,000 req/min).
+
+| Sustained Load | Signals / month | Trace Ingestion | Total Transaction Search Cost (USD/mo) | Golden-Metrics-Only Cost (USD/mo) |
 | --- | --- | --- | --- | --- |
-| **1,000 req/min** | 131M | ~246 GB | **$259.79** | **$196.50** |
-| **5,000 req/min** | 657M | ~1.23 TB | **$998.92** | **$702.75** |
-| **10,000 req/min** | 1.31B | ~2.46 TB | **$1,781.51** | **$1,194.00** |
-| **25,000 req/min** | 3.29B | ~6.16 TB | **$3,666.29** | **$2,385.00** |
+| **1,000 req/min** | 131M | ~246 GB | **$259.79** | **$173.25** |
+| **5,000 req/min** | 657M | ~1.23 TB | **$998.92** | **$567.75** |
+| **10,000 req/min** | 1.31B | ~2.46 TB | **$1,781.51** | **$918.00** |
+| **25,000 req/min** | 3.29B | ~6.16 TB | **$3,666.29** | **$1,512.00** |
 
 ### Critical Finding & Recommendations
-At roughly **10,000 req/min sustained** under Transaction Search Mode, un-sampled trace span ingestion ($1,781.51 USD / RM 8,017 MYR) exceeds fixed host-unit Dynatrace licensing ($870–$1,110 USD / RM 3,915–4,995 MYR). To mitigate cost risks:
-1. **Apply Intelligent Sampling:** Under Transaction Search Mode, enforce 5% steady-state sampling with 100% capture only on 5xx errors and latency anomalies.
-2. **Switch Payment Path to Golden-Metrics-Only Mode:** Disable trace span ingestion for the payment service path to cap APM costs strictly at Golden Signals ($1.50/1M signals).
+At roughly **10,000 req/min sustained** under Transaction Search Mode, total Transaction Search cost ($1,781.51 USD / RM 8,017 MYR) exceeds fixed host-unit Dynatrace licensing ($870–$1,110 USD / RM 3,915–4,995 MYR). To mitigate cost risks:
+1. **Apply Intelligent Trace Sampling:** Under Transaction Search Mode, enforce 5% steady-state sampling with 100% capture only on 5xx errors and latency anomalies.
+2. **Switch Payment Path to Golden-Metrics-Only Mode:** Disable trace span ingestion for the payment service path to cap APM costs strictly at Golden Signals ($918.00 USD at 10,000 req/min under the tiered marginal schedule).
 3. **Decouple Compliance Audits:** Route compliance audit trails to CloudWatch Logs or S3, avoiding APM span ingestion for audit retention.
 4. **Pilot during Free Trial:** Measure exact signal and trace span volumes during the 3-month free trial before final cutover.
 

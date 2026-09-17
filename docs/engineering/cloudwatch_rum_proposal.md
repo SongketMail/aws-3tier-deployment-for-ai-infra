@@ -65,7 +65,8 @@ With this deployment model:
 
 * **Core Web Vitals Telemetry:** Directly records Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) across end-user devices, browsers, and local ISPs within Malaysia.
 * **JavaScript & HTTP Error Tracking:** Automatically aggregates unhandled exceptions, stack traces, and 4xx/5xx asynchronous API payload failures.
-* **Distributed Trace Correlation:** Injects standard W3C trace context headers into client HTTP calls. End-to-end trace correlation requires enabling X-Ray session tracing in `aws-rum-web`, configuring allowed request targets (`telemetry: ['tracer']`), instrumenting the application backend with AWS X-Ray SDK / OTel, and permitting the `X-Amzn-Trace-Id` header in downstream CORS rules before decommissioning Dynatrace.
+* **AWS X-Ray Trace Context Propagation:** Enabling `enableXRay: true`, including `"http"` in `telemetries`, and setting `addXRayTraceIdHeader: true` (or defining allowed API target domain patterns) injects standard `X-Amzn-Trace-Id` headers into client HTTP requests.
+  - *Prerequisites:* Requires backend microservices to be instrumented with AWS X-Ray SDK or OpenTelemetry, and downstream CORS policies on ALBs/servers to allow the `X-Amzn-Trace-Id` header for cross-origin requests before decommissioning Dynatrace.
 
 ---
 
@@ -76,7 +77,7 @@ With this deployment model:
 CloudWatch RUM uses purely consumption-based billing with no minimum commitments, fixed host fees, or base subscription floors:
 
 * **Unit Pricing:** **$1.00 USD per 100,000 data events** ($0.00001 per event).
-* **Free Trial Allocation:** First **1,000,000 events** free as a one-time initial free trial per account (standard $1.00 / 100,000 event charges apply after trial exhaustion).
+* **One-Time Account Allowance:** First **1,000,000 events** free as a one-time per-account allowance (standard $1.00 / 100,000 event charges apply thereafter).
 * **Event Composition:** Standard page navigation produces approximately **10 to 20 events** per complete user session (Page Load, Navigation Timing, Web Vitals, API calls, and Errors).
 * **Effective Session Unit Cost:** ~$0.10 to $0.20 USD per 1,000 user sessions.
 
@@ -84,11 +85,11 @@ CloudWatch RUM uses purely consumption-based billing with no minimum commitments
 
 The financial impact across three workload profiles demonstrates the low marginal cost of adding RUM:
 
-| Operational Scenario | Estimated Monthly Sessions | Monthly Events Captured | CloudWatch RUM Cost (USD) | Equivalent Cost (MYR @ 4.50) |
-| --- | --- | --- | --- | --- |
-| **Baseline Profile** | 250,000 sessions | 5,000,000 events | **$50.00** | **RM 225.00** |
-| **Moderate Production** | 1,000,000 sessions | 20,000,000 events | **$200.00** | **RM 900.00** |
-| **Peak Campaign Load** | 3,500,000 sessions | 70,000,000 events | **$700.00** | **RM 3,150.00** |
+| Operational Scenario | Estimated Monthly Sessions | Monthly Events Captured | Steady-State Cost (USD) | Cost After 1M Allowance (USD) | Equivalent MYR (Steady-State @ 4.50) |
+| --- | --- | --- | --- | --- | --- |
+| **Baseline Profile** | 250,000 sessions | 5,000,000 events | **$50.00** | **$40.00** | **RM 225.00** |
+| **Moderate Production** | 1,000,000 sessions | 20,000,000 events | **$200.00** | **$190.00** | **RM 900.00** |
+| **Peak Campaign Load** | 3,500,000 sessions | 70,000,000 events | **$700.00** | **$690.00** | **RM 3,150.00** |
 
 *Note: In high-volume environments, CloudWatch RUM supports a native **telemetry sampling rate** (e.g., 25% or 50%), allowing linear expenditure control without sacrificing statistical anomaly detection.*
 
