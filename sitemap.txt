@@ -1,4 +1,7 @@
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/
+https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/cloudwatch.html
+https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/engineering/cloudwatch_apm_dynatrace_replacement.html
+https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/engineering/cloudwatch_rum_proposal.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/wazuh.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/wazuh-detailed.html
 https://songketmail.github.io/aws-3tier-deployment-for-ai-infra/hybrid-onprem.html
